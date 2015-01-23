@@ -1,0 +1,10 @@
+{{ $isShort := . }}
+
+{{ $usersURL := `https://groups.google.com/a/cloudfoundry.org/forum/#!forum/bosh-users` }}
+{{ $devURL := `https://groups.google.com/a/cloudfoundry.org/forum/#!forum/bosh-dev` }}
+
+{{ if $isShort }}
+	<a href="{{ $usersURL }}">bosh-users mailing list</a>
+{{ else }}
+	<a href="{{ $usersURL }}">bosh-users</a> &amp; <a href="{{ $devURL }}">bosh-dev</a> mailing lists
+{{ end }}

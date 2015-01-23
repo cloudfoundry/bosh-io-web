@@ -1,0 +1,28 @@
+<div class="col-md-3">
+  <h3 class="page-header">Latest Stemcells</h3>
+
+  {{ if .LatestVersionStemcells }}
+    <table class="table table-condensed">
+      {{ range .LatestVersionStemcells.DistroGroups }}
+        {{ if .Stemcells }}
+          <tr><td class="distro-group-name">
+            {{ .Distro.Name }} {{ $.LatestVersionStemcells.Version }}</td></tr>
+
+          {{ range .Stemcells }}
+            <tr>
+              <td class="distro-group-stemcells">
+                <a href="{{ .URL }}" title="MD5 {{ .MD5 }}">
+                  {{ .Name }}{{ if .IsLight }} Light{{ end }}</a>
+                <span class="file-size">{{ .FormattedSize }}</span>
+              </td>
+            </tr>
+          {{ end }}
+        {{ end }}
+      {{ end }}
+    </table>
+
+    <p><a href="{{ .LatestVersionStemcells.AllURL }}">See all stemcells</a></p>
+  {{ else }}
+    <p class="empty">No stemcells</p>
+  {{ end }}
+</div>

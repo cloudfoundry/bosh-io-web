@@ -1,0 +1,13 @@
+<div class="col-md-9">
+  <h3 class="page-header">Published stemcells</h3>
+
+  {{ if .UniqueVersionStemcells }}
+    <table class="table table-condensed">
+      {{ range .UniqueVersionStemcells }}
+        {{ template "stemcells/_distro_groups" .DistroGroups }}
+      {{ end }}
+    </table>
+  {{ else }}
+    <p class="empty">No stemcells</p>
+  {{ end }}
+</div>

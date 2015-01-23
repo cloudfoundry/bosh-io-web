@@ -1,0 +1,44 @@
+{
+  "Description": "Configuration used by local server for testing.",
+
+  "Repos": {
+    "Type": "file",
+    "Dir": "/tmp",
+
+    "PredefinedReleaseSources": [
+      "github.com/cloudfoundry/bosh"
+    ],
+
+    "ReleaseTarballLinker": {
+      "Type": "S3",
+
+      "BaseURL": "https://s3.amazonaws.com/bosh-hub-release-tarballs"
+    }
+  },
+
+  "APIKey": "todo: not needed",
+
+  "Watcher": {
+    "Enabled": false,
+    "Period": 60000000000
+  },
+
+  "Importer": {
+    "Enabled": false,
+    "Period": 60000000000,
+
+    "BlobstoreType": "s3",
+    "BlobstoreOptions": {
+      "access_key_id": "AKI...",
+      "secret_access_key": "WG3L....",
+      "bucket_name": "bosh-hub-releases"
+    }
+  },
+
+  "StemcellImporter": {
+    "Enabled": false,
+    "Period": 30000000000,
+
+    "Buckets": []
+  }
+}

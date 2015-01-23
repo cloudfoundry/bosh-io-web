@@ -1,0 +1,9 @@
+{{ $isShort := . }}
+
+{{ $url := `https://github.com/cloudfoundry/bosh` }}
+
+{{ if $isShort }}
+	<a href="{{ $url }}">github</a>
+{{ else }}
+	<a href="{{ $url }}">cloudfoundry/bosh</a> on github
+{{ end }}

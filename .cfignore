@@ -1,0 +1,10 @@
+# Important!
+prod-conf/aws/
+prod-conf/local.json
+prod-conf/worker.json
+conf/local.json
+
+build.sh
+push-cf.sh
+push-aws.sh
+run-local.sh

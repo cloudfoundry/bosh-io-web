@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <title>bosh&#405;b</title>
+
+    <link href="{{ cssPath "bootstrap.min.css" }}" media="all" rel="stylesheet" type="text/css" />
+    <link href="{{ cssPath "base.css" }}" media="all" rel="stylesheet" type="text/css" />
+    <link href="{{ cssPath "docs.css" }}" media="all" rel="stylesheet" type="text/css" />
+    <link href="{{ cssPath "syntax.css" }}" media="all" rel="stylesheet" type="text/css" />
+    <link href="{{ cssPath "releases.css" }}" media="all" rel="stylesheet" type="text/css" />
+    <link href="{{ cssPath "job.css" }}" media="all" rel="stylesheet" type="text/css" />
+    <link href="{{ cssPath "stemcells.css" }}" media="all" rel="stylesheet" type="text/css" />
+
+    <script src="{{ jsPath "jquery.js" }}"></script>
+    <script src="{{ jsPath "bootstrap.min.js" }}"></script>
+    <script src="{{ jsPath "docs.js" }}"></script>
+    <script src="{{ jsPath "job.js" }}"></script>
+
+    <link rel="shortcut icon" href="{{ imgPath "favicon.ico" }}" type="image/x-icon">
+    <link rel="icon" href="{{ imgPath "favicon.ico" }}" type="image/x-icon">
+  </head>
+
+  <body data-spy="scroll" data-target="#sidebar">
+    <div class="gradient">&nbsp;</div>
+
+    {{ yield }}
+
+    {{ template "shared/footer" }}
+  </body>
+</html>

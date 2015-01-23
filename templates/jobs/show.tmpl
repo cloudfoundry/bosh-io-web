@@ -1,0 +1,29 @@
+{{ template "jobs/_header" . }}
+
+<main>
+  <div class="container page-sep">
+    <h3 class="page-header">Job <span>'{{ .Name }}'</span></h3>
+
+    {{ if .Description }}
+      <p>{{ .Description }}</p>
+    {{ end }}
+
+    {{ if .IsErrand }}
+      <p>With default configuration (see below) to run this errand job use</p>
+      <pre class="prettyprint terminal">
+bosh run errand {{ .Name }}</pre>
+    {{ end }}
+
+    {{ if .HasGithubURL }}
+      <p>
+        Github source:
+        <a href="{{ .GithubURL }}"><code>{{ .Release.CommitHash }}</code></a> or
+        <a href="{{ .GithubURLOnMaster }}">master</a> branch
+      </p>
+    {{ end }}
+
+    {{ template "jobs/_properties" . }}
+
+    {{ template "jobs/_templates_and_pkgs" . }}
+  </div>
+</main>

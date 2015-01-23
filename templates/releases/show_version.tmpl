@@ -1,0 +1,97 @@
+<header>
+  <div class="container">
+    <h2>
+      {{ template "shared/logo" }}
+
+      <span>release:</span>
+      <a href="{{ .AllVersionsURL }}">{{ .Source }}</a>
+
+      <span>/</span>
+      {{ .Version }}
+    </h2>
+  </div>
+</header>
+
+<main>
+  <div class="container page-sep">
+    <div class="row">
+      <div class="col-md-12">
+        <h3 class="page-header">Release <span>'{{ .Name }}' v{{ .Version }}</span></h3>
+
+        {{ if .IsCPI }}
+          <p>This is a CPI release.</p>
+        {{ end }}
+
+        {{ if .HasGithubURL }}
+          <p>
+            Github source:
+            <a href="{{ .GithubURL }}"><code>{{ .CommitHash }}</code></a> or
+            <a href="{{ .GithubURLOnMaster }}">master</a> branch
+          </p>
+        {{ end }}
+
+        <p><a href="{{ .GraphURL }}">Explore dependencies diagram</a></p>
+
+        <h3 class="page-header">Usage</h3>
+
+        <p>Upload (or <a href="{{ .DownloadURL }}">download</a>) this release version to your BOSH Director</p>
+        <pre class="prettyprint terminal">
+bosh upload release {{ .UserVisibleDownloadURL }}</pre>
+
+        <p>Modify deployment manifest to use this release in addition to any other used releases</p>
+        <pre class="prettyprint terminal">
+releases:
+- {name: {{ .Name }}, version: "{{ .Version }}"}
+</pre>
+
+        <p>Finally add needed deployment jobs and specify values for required properties.</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-3">
+        <h3 class="page-header">Jobs</h3>
+
+        {{ if .Jobs }}
+          <ul class="list-group list-group-condensed">
+            {{ range .Jobs }}
+              <li class="list-group-item"><a href="{{ .URL }}">{{ .Name }}</a></li>
+            {{ end }}
+          </ul>
+        {{ else }}
+          <p class="empty">No templates</p>
+        {{ end }}
+      </div>
+
+      <div class="col-md-3">
+        <h3 class="page-header">Packages</h3>
+
+        {{ if .Packages }}
+          <ul class="list-group list-group-condensed">
+            {{ range .Packages }}
+              <li class="list-group-item"><a href="{{ .URL }}">{{ .Name }}</a></li>
+            {{ end }}
+          </ul>
+        {{ else }}
+          <p class="empty">No packages</p>
+        {{ end }}
+      </div>
+
+      {{ if .CommitHash }}
+        <div class="col-md-6">
+          <h3 class="page-header">Notes</h3>
+          <ul>
+            <li>
+              Git SHA
+              {{ if .Source.FromGithub }}
+                <a href="{{ .Source.GithubURL }}"><code>{{ .CommitHash }}</code></a>
+              {{ else }}
+                <code>{{ .CommitHash }}</code>
+              {{ end }}
+            </li>
+          </ul>
+        </div>
+      {{ end }}
+    </div>
+  </div>
+</main>

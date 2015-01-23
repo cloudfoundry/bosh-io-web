@@ -1,0 +1,55 @@
+<header>
+  <div class="container">
+    <h2>
+      {{ template "shared/logo" }}
+
+      <span>release:</span>
+      {{ .Source }}
+    </h2>
+  </div>
+</header>
+
+<main>
+  <div class="container page-sep">
+    <div class="row">
+      <div class="col-md-12">
+        <h3 class="page-header">Release <span>'{{ .Source.Short }}'</span></h3>
+
+        {{ if .Source.FromGithub }}
+          <p>Github source: <a href="{{ .Source.GithubURL }}">master</a> branch</p>
+        {{ end }}
+
+        <h3 class="page-header">Final versions</h3>
+
+        {{ if .Releases }}
+          <ul class="list-group list-group-condensed">
+
+            {{ range .Releases }}
+              <li class="list-group-item">
+                <a href="{{ .URL }}">Version {{ .Version }}</a>
+
+                &mdash; <a href="{{ .DownloadURL }}">Download</a>
+
+                {{ if .IsLatest }}
+                <pre class="prettyprint terminal"># Upload latest version, currently {{ .Version }}
+bosh upload release {{ .UserVisibleLatestDownloadURL }}
+
+# ...or download it directly using curl
+curl -L -J -O {{ .UserVisibleLatestDownloadURL }}
+
+# or with wget...
+wget --content-disposition {{ .UserVisibleLatestDownloadURL }}
+</pre>{{ end }}
+
+<pre class="prettyprint terminal">{{ if .IsLatest }}# Upload specific version
+{{ end }}bosh upload release {{ .UserVisibleDownloadURL }}</pre>
+              </li>
+            {{ end }}
+          </ul>
+        {{ else }}
+          <p class="empty">No release versions</p>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+</main>

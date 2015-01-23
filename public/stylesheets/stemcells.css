@@ -1,0 +1,25 @@
+.deprecated {
+  text-decoration: line-through;
+  color: #aaa;
+}
+
+.distro-group-ver, .distro-group-name { width: 130px; }
+
+.distro-group-name {
+  vertical-align: top;
+  color: #777;
+}
+
+.file-size {
+  font-size: 12px;
+  color: #777;
+}
+
+.file-md5 {
+  font-family: Courier;
+  font-size: 12px;
+  color: #777;
+  margin-top: 3px;
+}
+
+table tr td.distro-group-stemcells { padding-left: 25px; }

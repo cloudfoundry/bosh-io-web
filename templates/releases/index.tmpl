@@ -1,0 +1,17 @@
+<header>
+  <div class="container">
+    <h2>
+      {{ template "shared/logo" }}
+    </h2>
+  </div>
+</header>
+
+<main>
+  <div class="container page-sep">
+    <div class="row">
+      {{ template "releases/_about" }}
+
+      {{ template "releases/_unique_sources" . }}
+    </div>
+  </div>
+</main>

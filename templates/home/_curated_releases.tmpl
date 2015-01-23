@@ -1,0 +1,33 @@
+<div class="col-md-6">
+  <h3 class="page-header">Curated releases</h3>
+
+  {{ if .UniqueSourceReleases }}
+    <ul class="list-group list-group-condensed curated-releases">
+      {{ range .UniqueSourceReleases }}
+        <li class="list-group-item">
+          <a href="{{ .URL }}">{{ .Source.Short }}</a>
+
+          {{ if .Source.FromGithub }}
+            <a href="{{ .Source.GithubURL }}" title="Source on GitHub" class="github-link pull-right">gh</a>
+          {{ end }}
+
+          {{ if .Releases }}
+            <br/>Versions:
+
+            {{ range .FirstXReleases 3 }}
+              <a href="{{ .URL }}" class="curated-release-version">{{ .Version }}</a>
+            {{ end }}
+
+            {{ if .HasMoreThanXReleases 3 }}
+              <a href="{{ .URL }}">...</a>
+            {{ end }}
+          {{ end }}
+        </li>
+      {{ end }}
+    </ul>
+  {{ else }}
+    <p class="empty">No releases</p>
+  {{ end }}
+
+  <p><a href="{{ .UniqueSourceReleases.AllURL }}">See all releases</a></p>
+</div>

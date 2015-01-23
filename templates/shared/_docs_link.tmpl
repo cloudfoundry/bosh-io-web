@@ -1,0 +1,9 @@
+{{ $isShort := . }}
+
+{{ $url := "/docs" }}
+
+{{ if $isShort }}
+	<a href="{{ $url }}">docs</a>
+{{ else }}
+	<a href="{{ $url }}">Documentation</a>
+{{ end }}

@@ -1,0 +1,32 @@
+<header>
+  <div class="container">
+    <h2>{{ template "shared/logo" }}</h2>
+
+    {{ template "shared/_header_menu" }}
+  </div>
+</header>
+
+<main>
+  <div class="container page-sep docs">
+    <div class="row">
+      <div class="col-md-8">
+        <% if current_page.destination_path == "docs/index.html" %>
+          <ol class="breadcrumb">
+            <li class="active">Table of Contents</li>
+          </ol>
+        <% else %>
+          <ol class="breadcrumb">
+            <li><a href="/docs">Table of Contents</a></li>
+            <li class="active"><%= current_page.data.title %></li>
+          </ol>
+
+          <%= quick_links %>
+        <% end %>
+
+        <hr/>
+
+        <%= yield %>
+      </div>
+    </div>
+  </div>
+</main>

@@ -1,0 +1,25 @@
+{{ range $i, $distroGroup := . }}
+  {{ range $j, $stemcells := .Stemcells }}
+    <tr>
+      {{ if eq $j 0 }}
+        {{ if eq $i 0 }}
+          <td class="distro-group-ver" rowspan="{{ $.AllStemcellsLen }}">
+            <a href="#{{ .Version }}" id="{{ .Version }}">Version {{ .Version }}</a>
+          </td>
+        {{ end }}
+
+        <td rowspan="{{ len $distroGroup.Stemcells }}" class="distro-group-name">
+          {{ $distroGroup.Distro.Name }}
+        </td>
+      {{ end }}
+
+      <td class="distro-group-stemcell-name">
+        <a href="{{ .URL }}" class="{{ if .IsDeprecated }}deprecated{{ end }}">
+          {{ .Name }}{{ if .IsLight }} Light{{ end }}</a>
+
+        <span class="file-size">{{ .FormattedSize }}</span>
+        <span class="file-md5 pull-right">{{ .MD5 }}</span>
+      </td>
+    </tr>
+  {{ end }}
+{{ end }}

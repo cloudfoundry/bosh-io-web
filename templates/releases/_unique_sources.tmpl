@@ -1,0 +1,19 @@
+<div class="col-md-9">
+  <h3 class="page-header">Community releases</h3>
+
+  {{ if .UniqueSources }}
+    <ul class="list-group list-group-condensed">
+      {{ range .UniqueSources }}
+        <li class="list-group-item">
+          <a href="{{ .URL }}">{{ .Short }}</a>
+
+          {{ if .FromGithub }}
+            <a href="{{ .GithubURL }}" title="Source on GitHub" class="github-link pull-right">gh</a>
+          {{ end }}
+        </li>
+      {{ end }}
+    </ul>
+  {{ else }}
+    <p class="empty">No releases</p>
+  {{ end }}
+</div>

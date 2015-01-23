@@ -1,0 +1,34 @@
+<header>
+  <div class="container">
+    <h2>
+      {{ template "shared/logo" }}
+
+      <span>release:</span>
+      <a href="{{ .Release.AllVersionsURL }}">{{ .Release.Source }}</a>
+
+      <span>/</span>
+      <a href="{{ .Release.URL }}">{{ .Release.Version }}</a>
+
+      <span>package:</span>
+
+      {{ if .Release.Packages }}
+        <div class="dropdown">
+          <button class="btn btn-default btn-xs dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+            {{ .Name }}
+            <span class="caret"></span>
+          </button>
+
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+            {{ range .Release.Packages }}
+              <li role="presentation">
+                <a role="menuitem" tabindex="-1" href="{{ .URL }}">{{ .Name }}</a>
+              </li>
+            {{ end }}
+          </ul>
+        </div>
+      {{ else }}
+        {{ .Name }}
+      {{ end }}
+    </h2>
+  </div>
+</header>

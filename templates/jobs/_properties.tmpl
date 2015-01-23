@@ -1,0 +1,60 @@
+<h3 class="page-header">Configuration Properties</h3>
+
+<p>
+  Replace <code>???</code>s with appropriate values.
+  Following example does not account for release job
+  collocation or for optional/conflicting properties.
+</p>
+
+<div class="well well-sm">
+  <a href="#" class="hide-properties-with-defaults btn btn-info btn-xs">
+    <span class="h">Hide</span><span class="s">Show</span> properties with defaults
+  </a>
+  <a href="#" class="hide-property-descriptions btn btn-info btn-xs">
+    <span class="h">Hide</span><span class="s">Show</span> property descriptions
+  </a>
+</div>
+
+<!-- pre must be at the end of the line -->
+<pre class="prettyprint terminal job-manifest-snippet">
+jobs:
+- name: {{ .Name }}
+  instances: 1
+{{ if .IsErrand }}  lifecycle: errand
+{{ end }}  resource_pool: default
+  networks:
+  - name: default
+  templates:
+  - {name: {{ .Name }}, release: {{ .Release.Name }}}
+{{ if .PropertyItems }}  properties:{{ end }}</pre>
+
+<!-- Show ul regardless if there are properties -->
+<ul class="property-items terminal">
+  {{ range .PropertyItems }}
+    <li class="{{ if not .MissingValues }}all-values-present{{ end }}">
+      <div class="key">
+        {{ if .Property }}
+          {{ if .Property.HasDefault }}
+            <span>{{ .IndentedKey }}: {{ .IndentedDefaultAsYAML }}</span>
+          {{ else }}
+            <span>{{ .IndentedKey }}: <span class="placeholder">???</span></span>
+          {{ end }}
+        {{ else }}
+          <span>{{ .IndentedKey }}:</span>
+        {{ end }}
+        <br/>
+      </div>
+
+      <div class="description {{ if .Property }}{{ if .Property.HasExample }}with-example{{ end }}{{ end }}">
+        {{ if .Property }}
+          <p># {{ .Property.Description }}</p>
+
+          {{ if .Property.HasExample }}
+            <p>Example:</p>
+            <pre class="example prettyprint terminal">{{ .Property.ExampleAsYAML }}</pre>
+          {{ end }}
+        {{ end }}
+      </div>
+    </li>
+  {{ end }}
+</ul>

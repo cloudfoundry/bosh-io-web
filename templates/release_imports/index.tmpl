@@ -1,0 +1,39 @@
+<header>
+  <div class="container">
+    <h2 class="logo">
+      {{ template "shared/logo" }}
+    </h2>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h3 class="page-header">Release imports</h3>
+
+        {{ template "shared/misc_menu" }}
+
+        {{ if .Imports }}
+          <ul class="list-group list-group-condensed">
+            {{ range .Imports }}
+              <li class="list-group-item">
+                {{ .RelSource }} v={{ .Version }}
+
+                <form action="/release_imports" method="post" class="remove-form pull-right">
+                  <input type="hidden" name="relSource" value="{{ .RelSource }}" />
+                  <input type="hidden" name="version" value="{{ .Version }}" />
+                  <button type="submit" class="btn btn-danger btn-xs">Remove</button>
+                </form>
+              </li>
+            {{ end }}
+          </ul>
+
+          <p class="note">{{ .Imports | len }} import(s)</p>
+        {{ else }}
+          <p class="empty">No imports</p>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+</main>

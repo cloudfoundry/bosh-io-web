@@ -1,0 +1,199 @@
+body {
+  -webkit-font-smoothing: antialiased;
+  font: 17px "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  background: #F7F8FF;
+}
+
+strong { font-weight: 500; }
+
+.empty, .note {
+  font-style: italic;
+  color: #777;
+}
+
+/* Page links */
+a {
+  text-decoration: underline;
+  color: #333;
+}
+
+.dropdown a { text-decoration: none; }
+
+.btn { text-decoration: none; }
+
+.terminal {
+  background: #000;
+  color: #fff;
+  margin-top: 5px;
+  border-width: 0;
+  border-radius: 0;
+}
+
+/* Lists */
+ul { padding-left: 17px; }
+
+/* List groups */
+.list-group {
+  border-radius: 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.list-group-item {
+  color: #777;
+  border-color: #eee;
+}
+
+.list-group-item:first-child {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.list-group-item:last-child {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.list-group-condensed .list-group-item { padding: 5px 10px; }
+
+/* List groups without left/right borders */
+.list-group { box-shadow: none; }
+
+.list-group-item,
+.list-group-condensed .list-group-item {
+  padding-left: 0;
+  padding-right: 0;
+  border-left-width: 0;
+  border-right-width: 0;
+}
+
+/* Main */
+main {
+  padding-bottom: 30px;
+  border-top: 1px solid #777;
+  border-bottom: 1px solid #ddd;
+  box-shadow: inset 0px -1px 5px 0px rgba(0, 0, 0, 0.05);
+  background: #fff;
+}
+
+/* Page sections */
+.page-header {
+  border-width: 0;
+  padding: 0;
+  color: #777;
+  font-size: 20px;
+  font-weight: 100;
+  -webkit-font-smoothing: subpixel-antialiased;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.page-header > span { text-transform: none; }
+
+/* Header */
+header {
+  box-shadow: inset 0px -1px 1px 0px rgba(0, 0, 0, 0.4);
+}
+
+.gradient {
+  position: absolute;
+  z-index: -1;
+  width: 100%;
+  height: 250px;
+  /* https://vis4.net/labs/multihue/#colors=teal darkblue purple|steps=1000|bez=1|coL=0 */
+  background: linear-gradient(to right, #008080 0%, #4a2986 50%, #800080 100%);
+}
+
+h2 {
+  margin: 15px 0 15px;
+  padding: 10px 0;
+  font-size: 23px;
+  font-weight: normal;
+  color: #fff;
+}
+
+header h2 > a, 
+header h2 > a:hover, 
+header h2 > a:visited { color: #fff; }
+
+header h2 span {
+  margin-left: 5px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+header h2 > .dropdown { display: inline; }
+
+header h2 > .dropdown .btn { line-height: 1; }
+
+header h2 > .dropdown .caret { color: #000; }
+
+header h2 { float: left; }
+
+header .menu {
+  float: right;
+  margin: 15px 0 15px;
+  padding: 0;
+  border-left: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+header .menu li { 
+  float: left;
+  display: inline;
+  border-right: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+header .menu a {
+  float: left;
+  margin: 0;
+  padding: 10px 20px;
+  text-transform: lowercase;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Misc menu */
+menu {
+  padding-left: 0;
+  width: 600px;
+}
+
+menu ul {
+  padding-left: 0;
+  clear: both;
+  overflow: hidden;
+}
+
+menu li {
+  float: left;
+  border-left: 1px solid #eee;
+  border-right: 1px solid #eee;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-right: -1px;
+}
+
+/* Misc */
+.remove-form { margin: 0; }
+
+.err-log {
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+
+/* Footer */
+footer { padding-bottom: 30px; }
+
+footer .page-header { display: inline-block; }
+
+svg { display: block; }
+
+.well {
+  border-width: 1px 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.curated-releases .curated-release-version + .curated-release-version {
+  padding-left: 6px;
+  border-left: 1px solid #ccc;
+}

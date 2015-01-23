@@ -1,0 +1,11 @@
+---
+book_repo: cppforlife/docs-bosh-io
+cred_repo: n/a
+
+sections:
+- directory: docs
+  repository:
+    name: cloudfoundry/docs-bosh
+
+public_host: bosh.io
+template_variables: {}

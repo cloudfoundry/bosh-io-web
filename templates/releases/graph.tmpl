@@ -1,0 +1,38 @@
+<header>
+  <div class="container">
+    <h2>
+      {{ template "shared/logo" }}
+
+      <span>release:</span>
+      <a href="{{ .AllVersionsURL }}">{{ .Source }}</a>
+
+      <span>/</span>
+      <a href="{{ .URL }}">{{ .Version }}</a>
+    </h2>
+  </div>
+</header>
+
+<main>
+  <div class="container page-sep">
+    <div class="row">
+      <div class="col-md-12">
+        <h3 class="page-header">Release <span>'{{ .Name }}' v{{ .Version }}</span></h3>
+
+        <ul>
+          <li>Solid nodes represent jobs</li>
+          <li>Solid arrows represent jobs' runtime package dependencies</li>
+          <li>Text nodes represent packages</li>
+          <li>Dotted arrows represent packages' compilation dependencies</li>
+        </ul>
+
+        <hr/>
+
+        {{ if .Graph }}
+          <center>{{ .Graph.SVG }}</center>
+        {{ else }}
+          <p class="empty">No packages</p>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+</main>
