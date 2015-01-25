@@ -7,9 +7,15 @@ import (
 
 	bprel "github.com/cppforlife/bosh-provisioner/release"
 	semiver "github.com/cppforlife/go-semi-semantic/version"
+	"github.com/microcosm-cc/bluemonday"
+	"github.com/russross/blackfriday"
+
+	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
 )
 
 type Release struct {
+	relVerRec bhrelsrepo.ReleaseVersionRec
+
 	Source Source
 
 	Name    string
@@ -24,6 +30,9 @@ type Release struct {
 	Packages []Package
 
 	Graph Graph
+
+	// memoized notes
+	notesInMarkdown *[]byte
 }
 
 type Graph interface {
@@ -50,10 +59,12 @@ func NewRelease(source string, r bprel.Release) Release {
 	return rel
 }
 
-func NewIncompleteRelease(source string, version semiver.Version) Release {
+func NewIncompleteRelease(relVerRec bhrelsrepo.ReleaseVersionRec) Release {
 	return Release{
-		Source:  NewSource(source),
-		Version: version,
+		Source:  NewSource(relVerRec.Source),
+		Version: relVerRec.Version(),
+
+		relVerRec: relVerRec,
 	}
 }
 
@@ -109,6 +120,24 @@ func (r Release) GithubURLForPath(path, ref string) string {
 
 func (r Release) IsCPI() bool {
 	return strings.HasSuffix(r.Name, "-cpi")
+}
+
+func (r *Release) NotesInMarkdown() (template.HTML, error) {
+	if r.notesInMarkdown == nil {
+		// Do not care about found -> no UI indicator
+		noteRec, _, err := r.relVerRec.Notes()
+		if err != nil {
+			return template.HTML(""), err
+		}
+
+		unsafeMarkdown := blackfriday.MarkdownCommon([]byte(noteRec.Content))
+		safeMarkdown := bluemonday.UGCPolicy().SanitizeBytes(unsafeMarkdown)
+
+		r.notesInMarkdown = &safeMarkdown
+	}
+
+	// todo sanitized markdown
+	return template.HTML(*r.notesInMarkdown), nil
 }
 
 func (s ReleaseSorting) Len() int           { return len(s) }

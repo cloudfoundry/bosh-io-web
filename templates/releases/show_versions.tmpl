@@ -43,6 +43,11 @@ wget --content-disposition {{ .UserVisibleLatestDownloadURL }}
 
 <pre class="prettyprint terminal">{{ if .IsLatest }}# Upload specific version
 {{ end }}bosh upload release {{ .UserVisibleDownloadURL }}</pre>
+
+                {{ if .NotesInMarkdown }}
+                  <h4>Release notes</h4>
+                  <div class="release-notes">{{ .NotesInMarkdown }}</div>
+                {{ end }}
               </li>
             {{ end }}
           </ul>

@@ -18,7 +18,7 @@ func NewSameSourceReleases(source string, relVerRecs []bhrelsrepo.ReleaseVersion
 	}
 
 	for _, relVerRec := range relVerRecs {
-		rel := NewIncompleteRelease(source, relVerRec.Version())
+		rel := NewIncompleteRelease(relVerRec)
 		rels.Releases = append(rels.Releases, rel)
 	}
 

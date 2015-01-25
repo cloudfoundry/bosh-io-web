@@ -1,1 +1,23 @@
 .github-link { color: #777; }
+
+.release-notes {
+  padding-left: 15px;
+  border-left: 1px solid #ccc;
+  font-size: 13px;
+}
+
+.release-notes ul { margin-bottom: 10px; }
+
+.release-notes h1,
+.release-notes h2,
+.release-notes h3,
+.release-notes h4,
+.release-notes h5,
+.release-notes h6 {
+  margin: 0 0 3px;
+  padding: 5px 0;
+  border-bottom: 1px solid #efefef;
+  color: #333;
+  font-size: inherit;
+  font-weight: normal;
+}

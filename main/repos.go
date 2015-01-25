@@ -12,6 +12,7 @@ import (
 	bhimperrsrepo "github.com/cppforlife/bosh-hub/release/importerrsrepo"
 	bhimpsrepo "github.com/cppforlife/bosh-hub/release/importsrepo"
 	bhjobsrepo "github.com/cppforlife/bosh-hub/release/jobsrepo"
+	bhnotesrepo "github.com/cppforlife/bosh-hub/release/notesrepo"
 	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
 	bhreltarsrepo "github.com/cppforlife/bosh-hub/release/releasetarsrepo"
 	bhwatchersrepo "github.com/cppforlife/bosh-hub/release/watchersrepo"
@@ -87,8 +88,10 @@ func NewRepos(options ReposOptions, fs boshsys.FileSystem, logger boshlog.Logger
 		return Repos{}, err
 	}
 
+	releaseNotesRepo := bhnotesrepo.NewConcreteNotesRepository(i.releaseNotesIndex, logger)
+
 	repos := Repos{
-		releasesRepo: bhrelsrepo.NewConcreteReleasesRepository(relSourcesOpt, i.releasesIndex, logger),
+		releasesRepo: bhrelsrepo.NewConcreteReleasesRepository(relSourcesOpt, i.releasesIndex, releaseNotesRepo, logger),
 
 		releaseTarsRepo:     bhreltarsrepo.NewConcreteReleaseTarballsRepository(i.releaseTarsIndex, linkerFactory, logger),
 		releaseVersionsRepo: bhrelsrepo.NewConcreteReleaseVersionsRepository(i.releaseVersionsIndex, logger),
@@ -126,6 +129,7 @@ func (r Repos) WatchersRepo() bhwatchersrepo.WatchersRepository { return r.watch
 
 type repoIndicies struct {
 	releasesIndex        bpindex.Index
+	releaseNotesIndex    bpindex.Index
 	releaseTarsIndex     bpindex.Index
 	releaseVersionsIndex bpindex.Index
 	jobsIndex            bpindex.Index
@@ -140,6 +144,7 @@ type repoIndicies struct {
 func newFileRepoIndicies(dir string, fs boshsys.FileSystem) repoIndicies {
 	return repoIndicies{
 		releasesIndex:        bpindex.NewFileIndex(filepath.Join(dir, "releases.json"), fs),
+		releaseNotesIndex:    bpindex.NewFileIndex(filepath.Join(dir, "release_notes.json"), fs),
 		releaseTarsIndex:     bpindex.NewFileIndex(filepath.Join(dir, "release_tarballs.json"), fs),
 		releaseVersionsIndex: bpindex.NewFileIndex(filepath.Join(dir, "release_versions.json"), fs),
 		jobsIndex:            bpindex.NewFileIndex(filepath.Join(dir, "jobs.json"), fs),
@@ -159,6 +164,11 @@ func newDBRepoIndicies(url string, logger boshlog.Logger) (repoIndicies, error) 
 	}
 
 	releasesAdapter, err := adapterPool.NewAdapter("releases")
+	if err != nil {
+		return repoIndicies{}, err
+	}
+
+	releaseNotesAdapter, err := adapterPool.NewAdapter("release_notes")
 	if err != nil {
 		return repoIndicies{}, err
 	}
@@ -200,6 +210,7 @@ func newDBRepoIndicies(url string, logger boshlog.Logger) (repoIndicies, error) 
 
 	indicies := repoIndicies{
 		releasesIndex:        bhindex.NewDBIndex(releasesAdapter, logger),
+		releaseNotesIndex:    bhindex.NewDBIndex(releaseNotesAdapter, logger),
 		releaseTarsIndex:     bhindex.NewDBIndex(releasesTarballsAdapter, logger),
 		releaseVersionsIndex: bhindex.NewDBIndex(releaseVersionsAdapter, logger),
 		jobsIndex:            bhindex.NewDBIndex(jobsAdapter, logger),

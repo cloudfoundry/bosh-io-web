@@ -7,11 +7,15 @@ import (
 	boshlog "github.com/cloudfoundry/bosh-agent/logger"
 
 	bpindex "github.com/cppforlife/bosh-provisioner/index"
+
+	bhnotesrepo "github.com/cppforlife/bosh-hub/release/notesrepo"
 )
 
 type CRRepository struct {
 	predefinedSources []string
 	index             bpindex.Index
+
+	notesRepo bhnotesrepo.NotesRepository
 
 	logTag string
 	logger boshlog.Logger
@@ -24,11 +28,14 @@ type sourceToRelVerRecKey struct {
 func NewConcreteReleasesRepository(
 	predefinedSources []string,
 	index bpindex.Index,
+	notesRepo bhnotesrepo.NotesRepository,
 	logger boshlog.Logger,
 ) CRRepository {
 	return CRRepository{
 		predefinedSources: predefinedSources,
 		index:             index,
+
+		notesRepo: notesRepo,
 
 		logTag: "CRRepository",
 		logger: logger,
@@ -81,6 +88,11 @@ func (r CRRepository) FindAll(source string) ([]ReleaseVersionRec, bool, error) 
 		}
 
 		return relVerRecs, false, bosherr.WrapError(err, "Finding release version records")
+	}
+
+	for i, _ := range relVerRecs {
+		// Make sure to change real relVerRec
+		relVerRecs[i].notesRepo = r.notesRepo
 	}
 
 	return relVerRecs, true, nil

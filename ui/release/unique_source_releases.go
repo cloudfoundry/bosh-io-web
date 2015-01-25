@@ -14,7 +14,7 @@ func NewUniqueSourceReleases(relVerRecs []bhrelsrepo.ReleaseVersionRec) UniqueSo
 	bySource := map[string]*SameSourceReleases{}
 
 	for _, relVerRec := range relVerRecs {
-		rel := NewIncompleteRelease(relVerRec.Source, relVerRec.Version())
+		rel := NewIncompleteRelease(relVerRec)
 
 		sameRels, found := bySource[relVerRec.Source]
 		if found {

@@ -6,9 +6,13 @@ import (
 
 	bosherr "github.com/cloudfoundry/bosh-agent/errors"
 	semiver "github.com/cppforlife/go-semi-semantic/version"
+
+	bhnotesrepo "github.com/cppforlife/bosh-hub/release/notesrepo"
 )
 
 type ReleaseVersionRec struct {
+	notesRepo bhnotesrepo.NotesRepository
+
 	Source     string
 	VersionRaw string
 }
@@ -31,6 +35,10 @@ func (r ReleaseVersionRec) Version() semiver.Version {
 	}
 
 	return ver
+}
+
+func (r ReleaseVersionRec) Notes() (bhnotesrepo.NoteRec, bool, error) {
+	return r.notesRepo.Find(r.Source, r.VersionRaw)
 }
 
 func (r ReleaseVersionRec) Validate() error {
