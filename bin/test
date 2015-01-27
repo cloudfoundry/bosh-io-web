@@ -1,0 +1,31 @@
+#!/bin/bash
+
+result=0
+
+bin=$(dirname $0)
+
+go install github.com/onsi/ginkgo/ginkgo
+
+echo -e "\n Formatting packages..."
+go fmt github.com/cppforlife/bosh-hub/...
+let "result+=$?"
+
+echo -e "\n Testing packages..."
+env ginkgo -r $bin/..
+let "result+=$?"
+
+echo -e "\n Vetting packages for potential issues..."
+go vet github.com/cppforlife/bosh-hub/...
+let "result+=$?"
+
+echo -e "\n Running build script to confirm everything compiles..."
+go build -o bosh-hub github.com/cppforlife/bosh-hub/main
+let "result+=$?"
+
+if [ $result -eq 0 ]; then
+  echo -e "\nSUITE SUCCESS"
+else
+  echo -e "\nSUITE FAILURE"
+fi
+
+exit $result

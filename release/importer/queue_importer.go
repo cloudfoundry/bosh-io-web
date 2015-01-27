@@ -136,7 +136,12 @@ func (i QueueImporter) importRelease(importRec bhimpsrepo.ImportRec) error {
 
 		err = tarballRel.Import(importRec.RelSource)
 		if err != nil {
-			saveErr := i.importErrsRepo.Add(bhimperrsrepo.ImportErrRec{importRec, err.Error()})
+			importErr := bhimperrsrepo.ImportErrRec{
+				ImportRec: importRec,
+				Err:       err.Error(),
+			}
+
+			saveErr := i.importErrsRepo.Add(importErr)
 			if saveErr != nil {
 				i.logger.Debug(i.logTag, "Failed to add import err '%s' for import '%v'", importRec, saveErr.Error())
 			}
@@ -167,6 +172,4 @@ func (i QueueImporter) trackProgress(importRec bhimpsrepo.ImportRec, stopCh <-ch
 			return
 		}
 	}
-
-	return
 }
