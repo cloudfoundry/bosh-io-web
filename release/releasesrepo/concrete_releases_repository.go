@@ -59,7 +59,6 @@ func (r CRRepository) ListCurated() ([]ReleaseVersionRec, error) {
 
 func (r CRRepository) ListAll() ([]Source, error) {
 	var sourceKeys []sourceToRelVerRecKey
-
 	var sources []Source
 
 	err := r.index.ListKeys(&sourceKeys)

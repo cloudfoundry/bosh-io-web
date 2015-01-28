@@ -45,7 +45,6 @@ wget --content-disposition {{ .UserVisibleLatestDownloadURL }}
 {{ end }}bosh upload release {{ .UserVisibleDownloadURL }}</pre>
 
                 {{ if .NotesInMarkdown }}
-                  <h4>Release notes</h4>
                   <div class="release-notes">{{ .NotesInMarkdown }}</div>
                 {{ end }}
               </li>

@@ -7,6 +7,7 @@ import (
 	boshsys "github.com/cloudfoundry/bosh-agent/system"
 
 	bhimporter "github.com/cppforlife/bosh-hub/release/importer"
+	bhnoteimporter "github.com/cppforlife/bosh-hub/release/noteimporter"
 	bhwatcher "github.com/cppforlife/bosh-hub/release/watcher"
 	bhstemsimp "github.com/cppforlife/bosh-hub/stemcell/importer"
 )
@@ -19,8 +20,9 @@ type Config struct {
 	// Does not start web server; just does background work
 	ActAsWorker bool
 
-	Watcher  bhwatcher.FactoryOptions
-	Importer bhimporter.FactoryOptions
+	Watcher      bhwatcher.FactoryOptions
+	Importer     bhimporter.FactoryOptions
+	NoteImporter bhnoteimporter.FactoryOptions
 
 	StemcellImporter bhstemsimp.FactoryOptions
 }

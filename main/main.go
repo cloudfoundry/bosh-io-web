@@ -19,6 +19,7 @@ import (
 	bhctrls "github.com/cppforlife/bosh-hub/controllers"
 	bhfetcher "github.com/cppforlife/bosh-hub/release/fetcher"
 	bhimporter "github.com/cppforlife/bosh-hub/release/importer"
+	bhnoteimporter "github.com/cppforlife/bosh-hub/release/noteimporter"
 	bhwatcher "github.com/cppforlife/bosh-hub/release/watcher"
 	bhstemsimp "github.com/cppforlife/bosh-hub/stemcell/importer"
 )
@@ -62,6 +63,13 @@ func main() {
 		ensureNoErr(logger, "Failed building importer factory", err)
 
 		go importerFactory.Importer.Import()
+	}
+
+	{
+		noteImporterFactory, err := bhnoteimporter.NewFactory(config.NoteImporter, repos, logger)
+		ensureNoErr(logger, "Failed building note importer factory", err)
+
+		go noteImporterFactory.Importer.Import()
 	}
 
 	{

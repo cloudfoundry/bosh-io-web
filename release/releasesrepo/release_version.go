@@ -19,6 +19,10 @@ type ReleaseVersionRec struct {
 
 type ReleaseVersionRecSorting []ReleaseVersionRec
 
+func (r ReleaseVersionRec) String() string {
+	return fmt.Sprintf("%s %s", r.Source, r.VersionRaw)
+}
+
 func (r ReleaseVersionRec) SourceShortName() string {
 	parts := strings.Split(r.Source, "/")
 
@@ -39,6 +43,10 @@ func (r ReleaseVersionRec) Version() semiver.Version {
 
 func (r ReleaseVersionRec) Notes() (bhnotesrepo.NoteRec, bool, error) {
 	return r.notesRepo.Find(r.Source, r.VersionRaw)
+}
+
+func (r ReleaseVersionRec) SetNotes(noteRec bhnotesrepo.NoteRec) error {
+	return r.notesRepo.Save(r.Source, r.VersionRaw, noteRec)
 }
 
 func (r ReleaseVersionRec) Validate() error {
