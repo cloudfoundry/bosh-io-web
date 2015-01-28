@@ -8,7 +8,12 @@ if [ ! -d ./docs-bosh ]; then
 fi
 
 echo "Regenerate doc assets"
-( cd ./docs-bosh-io && bundle exec bookbinder publish local )
+(
+  set -e
+  cd ./docs-bosh-io
+  ruby -v # best known to work with ruby 2.0.0p451
+  bundle exec bookbinder publish local
+)
 
 echo "Remove old copy of docs"
 rm -rf ./templates/docs

@@ -8,7 +8,7 @@ if [ -d $docs ]; then
   exit 1
 fi
 
-git clone -b update_aws_setup https://github.com/cppforlife/docs-bosh $docs
+git clone -b master https://github.com/cppforlife/docs-bosh $docs
 
 if [ -d $conf ]; then
   echo "Repo $conf already exists"
