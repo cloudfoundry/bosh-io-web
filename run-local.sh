@@ -2,6 +2,12 @@
 
 set -e
 
+config=$1
+
+if [ -z "$config" ]; then
+  config=conf/local.json
+fi
+
 go build -o bosh-hub github.com/cppforlife/bosh-hub/main
 
 if [ ! `which bosh` ]; then
@@ -9,15 +15,9 @@ if [ ! `which bosh` ]; then
   exit 1
 fi
 
-config=prod-conf/local.json
-
 if [ ! -f $config ]; then
-  config=conf/local.json
-
-  if [ ! -f $config ]; then
-    echo "Missing $config file"
-	exit 1
-  fi
+  echo "Missing $config file"
+  exit 1
 fi
 
 exec ./run.sh $config -debug

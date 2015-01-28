@@ -9,7 +9,7 @@ import (
 
 var (
 	s3StemcellAgentRegexp = regexp.MustCompile(`ruby|go|agent`)
-	s3StemcellRegexp      = regexp.MustCompile(`\A([\w-]+/\w+/)?(?P<name>[\w-]+)-stemcell-(?P<version>[\.\d]+)-(?P<inf_name>\w+)-(?P<hv_name>\w+(-\w+)?)-(?P<os_name>centos|ubuntu)(?P<os_version>-trusty|-lucid)?(?P<agent_type>-go_agent)?\.tgz\z`)
+	s3StemcellRegexp      = regexp.MustCompile(`\A([\w-]+/\w+/)?(?P<name>[\w-]+)-stemcell-(?P<version>[\.\d]+)-(?P<inf_name>\w+)-(?P<hv_name>\w+(-\w+)?)-(?P<os_name>centos|ubuntu)(?P<os_version>-trusty|-lucid)?(?P<agent_type>-go_agent)?(?P<disk_fmt>-raw)?\.tgz\z`)
 )
 
 type S3Stemcell struct {
@@ -21,8 +21,9 @@ type S3Stemcell struct {
 	size uint64
 	etag string
 
-	infName string // e.g. aws
-	hvName  string // e.g. kvm
+	infName    string // e.g. aws
+	hvName     string // e.g. kvm
+	diskFormat string // e.g. raw
 
 	osName    string // e.g. Ubuntu
 	osVersion string // e.g. Trusty
@@ -81,8 +82,9 @@ func NewS3Stemcell(key, etag string, size uint64, lastModified, url string) *S3S
 		size: size,
 		etag: strings.Trim(etag, "\""),
 
-		infName: m["inf_name"],
-		hvName:  m["hv_name"],
+		infName:    m["inf_name"],
+		hvName:     m["hv_name"],
+		diskFormat: strings.Trim(m["disk_fmt"], "-"),
 
 		osName:    osName,
 		osVersion: osVersion,
@@ -103,8 +105,9 @@ func (f S3Stemcell) UpdatedAt() string        { return f.updatedAt }
 func (f S3Stemcell) Size() uint64 { return f.size }
 func (f S3Stemcell) MD5() string  { return f.etag }
 
-func (f S3Stemcell) InfName() string { return f.infName }
-func (f S3Stemcell) HvName() string  { return f.hvName }
+func (f S3Stemcell) InfName() string    { return f.infName }
+func (f S3Stemcell) HvName() string     { return f.hvName }
+func (f S3Stemcell) DiskFormat() string { return f.diskFormat }
 
 func (f S3Stemcell) OSName() string    { return f.osName }
 func (f S3Stemcell) OSVersion() string { return f.osVersion }

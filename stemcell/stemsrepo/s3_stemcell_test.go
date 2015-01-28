@@ -14,8 +14,9 @@ var _ = Describe("NewS3Stemcell", func() {
 		Version string
 		Name    string
 
-		InfName string
-		HvName  string
+		InfName    string
+		HvName     string
+		DiskFormat string
 
 		OSName    string
 		OSVersion string
@@ -167,6 +168,21 @@ var _ = Describe("NewS3Stemcell", func() {
 
 			AgentType: "go_agent",
 		},
+
+		// Disk format
+		"bosh-stemcell/openstack/bosh-stemcell-56-openstack-kvm-ubuntu-trusty-go_agent-raw.tgz": ExtractedPieces{
+			Name:    "bosh",
+			Version: "56",
+
+			InfName:    "openstack",
+			HvName:     "kvm",
+			DiskFormat: "raw",
+
+			OSName:    "ubuntu",
+			OSVersion: "trusty",
+
+			AgentType: "go_agent",
+		},
 	}
 
 	for p, e := range examples {
@@ -182,6 +198,7 @@ var _ = Describe("NewS3Stemcell", func() {
 
 			Expect(s3Stemcell.InfName()).To(Equal(example.InfName))
 			Expect(s3Stemcell.HvName()).To(Equal(example.HvName))
+			Expect(s3Stemcell.DiskFormat()).To(Equal(example.DiskFormat))
 
 			Expect(s3Stemcell.OSName()).To(Equal(example.OSName))
 			Expect(s3Stemcell.OSVersion()).To(Equal(example.OSVersion))

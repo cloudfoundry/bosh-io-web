@@ -56,8 +56,13 @@ func NewStemcell(s bhstemsrepo.Stemcell) Stemcell {
 		hvName = s.HvName()
 	}
 
+	optionalDiskFormat := ""
+	if len(s.DiskFormat()) > 0 {
+		optionalDiskFormat = fmt.Sprintf(" (%s)", s.DiskFormat())
+	}
+
 	return Stemcell{
-		Name:    fmt.Sprintf("%s %s", infName, hvName),
+		Name:    fmt.Sprintf("%s %s%s", infName, hvName, optionalDiskFormat),
 		Version: s.Version(),
 
 		Size: s.Size(),

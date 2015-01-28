@@ -46,6 +46,6 @@
     "Enabled": false,
     "Period": 30000000000,
 
-    "Buckets": []
+    "Buckets": [{ "URL": "https://s3.amazonaws.com/bosh-jenkins-artifacts" }]
   }
 }

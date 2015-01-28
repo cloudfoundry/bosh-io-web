@@ -13,8 +13,9 @@ type Stemcell interface {
 	Size() uint64
 	MD5() string
 
-	InfName() string // e.g. aws
-	HvName() string  // e.g. kvm
+	InfName() string    // e.g. aws
+	HvName() string     // e.g. kvm
+	DiskFormat() string // e.g. raw
 
 	OSName() string    // e.g. Ubuntu
 	OSVersion() string // e.g. Trusty
