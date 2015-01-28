@@ -11,8 +11,9 @@ type ReleasesRepository interface {
 	ListCurated() ([]ReleaseVersionRec, error)
 	ListAll() ([]Source, error)
 
-	FindAll(string) ([]ReleaseVersionRec, bool, error)
-	FindLatest(string) (ReleaseVersionRec, bool, error)
+	FindAll(source string) ([]ReleaseVersionRec, bool, error)
+	FindLatest(source string) (ReleaseVersionRec, bool, error)
+	Find(source, version string) (ReleaseVersionRec, error)
 
 	Add(ReleaseVersionRec) error
 	Contains(ReleaseVersionRec) (bool, error)

@@ -80,7 +80,7 @@ func (c JobsController) Show(req *http.Request, r martrend.Render, params mart.P
 		return
 	}
 
-	viewRel := bhrelui.NewRelease(relSource, rel)
+	viewRel := bhrelui.NewRelease(relVerRec, rel)
 
 	for _, relJob := range relJobs {
 		if relJob.Name == jobName {

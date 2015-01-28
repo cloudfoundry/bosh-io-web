@@ -69,7 +69,7 @@ func (c PackagesController) Show(req *http.Request, r martrend.Render, params ma
 		return
 	}
 
-	viewRel := bhrelui.NewRelease(relSource, rel)
+	viewRel := bhrelui.NewRelease(relVerRec, rel)
 
 	for _, viewPkg := range viewRel.Packages {
 		if viewPkg.Name == pkgName {

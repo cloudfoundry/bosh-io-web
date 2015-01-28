@@ -161,9 +161,10 @@ func (c ReleasesController) showMultipleReleases(r martrend.Render, relSource st
 }
 
 func (c ReleasesController) showSingleRelease(r martrend.Render, relSource, relVersion, tmpl string) {
-	relVerRec := bhrelsrepo.ReleaseVersionRec{
-		Source:     relSource,
-		VersionRaw: relVersion,
+	relVerRec, err := c.releasesRepo.Find(relSource, relVersion)
+	if err != nil {
+		r.HTML(500, c.errorTmpl, err)
+		return
 	}
 
 	rel, found, err := c.releaseVersionsRepo.Find(relVerRec)
@@ -184,7 +185,7 @@ func (c ReleasesController) showSingleRelease(r martrend.Render, relSource, relV
 		return
 	}
 
-	viewRel := bhrelui.NewRelease(relSource, rel)
+	viewRel := bhrelui.NewRelease(relVerRec, rel)
 
 	viewJobs := []bhjobui.Job{}
 
@@ -194,5 +195,5 @@ func (c ReleasesController) showSingleRelease(r martrend.Render, relSource, relV
 
 	viewRel.Graph = bhmiscui.NewReleaseGraph(viewRel.Packages, viewJobs, c.runner, c.logger)
 
-	r.HTML(200, tmpl, viewRel)
+	r.HTML(200, tmpl, &viewRel)
 }

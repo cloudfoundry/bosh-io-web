@@ -36,7 +36,14 @@
 
         <p>Upload (or <a href="{{ .DownloadURL }}">download</a>) this release version to your BOSH Director</p>
         <pre class="prettyprint terminal">
-bosh upload release {{ .UserVisibleDownloadURL }}</pre>
+bosh upload release {{ .UserVisibleDownloadURL }}
+
+# ...or download it directly using curl
+curl -L -J -O {{ .UserVisibleDownloadURL }}
+
+# or with wget...
+wget --content-disposition {{ .UserVisibleDownloadURL }}
+</pre>
 
         <p>Modify deployment manifest to use this release in addition to any other used releases</p>
         <pre class="prettyprint terminal">
@@ -77,19 +84,10 @@ releases:
         {{ end }}
       </div>
 
-      {{ if .CommitHash }}
+      {{ if .NotesInMarkdown }}
         <div class="col-md-6">
           <h3 class="page-header">Notes</h3>
-          <ul>
-            <li>
-              Git SHA
-              {{ if .Source.FromGithub }}
-                <a href="{{ .Source.GithubURL }}"><code>{{ .CommitHash }}</code></a>
-              {{ else }}
-                <code>{{ .CommitHash }}</code>
-              {{ end }}
-            </li>
-          </ul>
+          <div class="release-notes">{{ .NotesInMarkdown }}</div>
         </div>
       {{ end }}
     </div>

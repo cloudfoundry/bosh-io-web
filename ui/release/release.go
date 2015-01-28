@@ -41,12 +41,14 @@ type Graph interface {
 
 type ReleaseSorting []Release
 
-func NewRelease(source string, r bprel.Release) Release {
+func NewRelease(relVerRec bhrelsrepo.ReleaseVersionRec, r bprel.Release) Release {
 	rel := Release{
-		Source: NewSource(source),
+		relVerRec: relVerRec,
+
+		Source: NewSource(relVerRec.Source),
 
 		Name:    r.Name,
-		Version: parseVersion(r.Version),
+		Version: relVerRec.Version(),
 
 		CommitHash: r.CommitHash,
 
@@ -61,10 +63,10 @@ func NewRelease(source string, r bprel.Release) Release {
 
 func NewIncompleteRelease(relVerRec bhrelsrepo.ReleaseVersionRec) Release {
 	return Release{
+		relVerRec: relVerRec,
+
 		Source:  NewSource(relVerRec.Source),
 		Version: relVerRec.Version(),
-
-		relVerRec: relVerRec,
 	}
 }
 

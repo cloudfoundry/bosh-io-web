@@ -118,6 +118,22 @@ func (r CRRepository) FindLatest(source string) (ReleaseVersionRec, bool, error)
 	return relVerRec, true, nil
 }
 
+func (r CRRepository) Find(source, version string) (ReleaseVersionRec, error) {
+	relVerRec := ReleaseVersionRec{
+		notesRepo: r.notesRepo,
+
+		Source:     source,
+		VersionRaw: version,
+	}
+
+	err := relVerRec.Validate()
+	if err != nil {
+		return relVerRec, bosherr.WrapError(err, "Validating release version record")
+	}
+
+	return relVerRec, nil
+}
+
 func (r CRRepository) Add(relVerRec ReleaseVersionRec) error {
 	r.logger.Debug(r.logTag, "Adding release '%v'", relVerRec)
 
