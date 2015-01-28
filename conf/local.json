@@ -6,7 +6,7 @@
     "Dir": "/tmp",
 
     "PredefinedReleaseSources": [
-      "github.com/cloudfoundry/bosh"
+      "github.com/concourse/concourse"
     ],
 
     "ReleaseTarballLinker": {
@@ -19,12 +19,12 @@
   "APIKey": "todo: not needed",
 
   "Watcher": {
-    "Enabled": false,
+    "Enabled": true,
     "Period": 60000000000
   },
 
   "Importer": {
-    "Enabled": false,
+    "Enabled": true,
     "Period": 60000000000,
 
     "BlobstoreType": "s3",
@@ -33,6 +33,13 @@
       "secret_access_key": "WG3L....",
       "bucket_name": "bosh-hub-releases"
     }
+  },
+
+  "NoteImporter": {
+    "Enabled": false,
+    "Period": 60000000000,
+
+    "GithubPersonalAccessToken": "858...."
   },
 
   "StemcellImporter": {
