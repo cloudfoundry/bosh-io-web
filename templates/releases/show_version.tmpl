@@ -36,17 +36,17 @@
 
         <p>Upload (or <a href="{{ .DownloadURL }}">download</a>) this release version to your BOSH Director</p>
         <pre class="prettyprint terminal">
-bosh upload release {{ .UserVisibleDownloadURL }}
+$ bosh upload release {{ .UserVisibleDownloadURL }}
 
 # ...or download it directly using curl
-curl -L -J -O {{ .UserVisibleDownloadURL }}
+$ curl -L -J -O {{ .UserVisibleDownloadURL }}
 
 # or with wget...
-wget --content-disposition {{ .UserVisibleDownloadURL }}
+$ wget --content-disposition {{ .UserVisibleDownloadURL }}
 </pre>
 
         <p>Modify deployment manifest to use this release in addition to any other used releases</p>
-        <pre class="prettyprint terminal">
+        <pre class="prettyprint">
 releases:
 - {name: {{ .Name }}, version: "{{ .Version }}"}
 </pre>

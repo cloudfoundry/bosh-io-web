@@ -32,17 +32,17 @@
 
                 {{ if .IsLatest }}
                 <pre class="prettyprint terminal"># Upload latest version, currently {{ .Version }}
-bosh upload release {{ .UserVisibleLatestDownloadURL }}
+$ bosh upload release {{ .UserVisibleLatestDownloadURL }}
 
 # ...or download it directly using curl
-curl -L -J -O {{ .UserVisibleLatestDownloadURL }}
+$ curl -L -J -O {{ .UserVisibleLatestDownloadURL }}
 
 # or with wget...
-wget --content-disposition {{ .UserVisibleLatestDownloadURL }}
+$ wget --content-disposition {{ .UserVisibleLatestDownloadURL }}
 </pre>{{ end }}
 
 <pre class="prettyprint terminal">{{ if .IsLatest }}# Upload specific version
-{{ end }}bosh upload release {{ .UserVisibleDownloadURL }}</pre>
+{{ end }}$ bosh upload release {{ .UserVisibleDownloadURL }}</pre>
 
                 {{ if .NotesInMarkdown }}
                   <div class="release-notes">{{ .NotesInMarkdown }}</div>

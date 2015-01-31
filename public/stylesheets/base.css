@@ -176,6 +176,8 @@ menu li {
   margin-bottom: 0;
 }
 
+pre, .prettyprint { border-width: 0; }
+
 /* Footer */
 footer { padding-bottom: 30px; }
 

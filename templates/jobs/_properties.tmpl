@@ -16,7 +16,7 @@
 </div>
 
 <!-- pre must be at the end of the line -->
-<pre class="prettyprint terminal job-manifest-snippet">
+<pre class="prettyprint job-manifest-snippet">
 jobs:
 - name: {{ .Name }}
   instances: 1
@@ -29,7 +29,7 @@ jobs:
 {{ if .PropertyItems }}  properties:{{ end }}</pre>
 
 <!-- Show ul regardless if there are properties -->
-<ul class="property-items terminal">
+<ul class="property-items">
   {{ range .PropertyItems }}
     <li class="{{ if not .MissingValues }}all-values-present{{ end }}">
       <div class="key">
@@ -51,7 +51,7 @@ jobs:
 
           {{ if .Property.HasExample }}
             <p>Example:</p>
-            <pre class="example prettyprint terminal">{{ .Property.ExampleAsYAML }}</pre>
+            <pre class="example prettyprint">{{ .Property.ExampleAsYAML }}</pre>
           {{ end }}
         {{ end }}
       </div>

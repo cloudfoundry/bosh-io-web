@@ -1,6 +1,7 @@
 .job-manifest-snippet {
   margin-bottom: 0;
   padding-bottom: 0;
+  border-width: 0;
 }
 
 /* Hide all properties that have default */
@@ -29,13 +30,14 @@
   font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
   font-size: 13px;
   line-height: 1.42857143;
+  background: #f5f5f5;
 }
 
 .property-items li {
   float: left;
   width: 100%;
   list-style-type: none;
-  border-top: 1px solid #1a1a1a;
+  border-top: 1px solid #e7e7e7;
 }
 
 .property-items .key,
@@ -51,15 +53,18 @@
 
 .property-items .key .placeholder {
   padding: 0 3px 0 4px;
-  background: #333;
+  background: #ccc;
   border-radius: 2px;
 }
 
-.property-items .description { color: #aaa; }
+.property-items .description { color: #999; }
 
 .property-items .description p { margin-bottom: 0; }
 
 /* Hacky .with-example */
 .property-items .description.with-example p { margin-bottom: 10px; }
 
-.property-items .description .example { padding: 0; }
+.property-items .description .example { 
+  padding: 0; 
+  border-width: 0;
+}
