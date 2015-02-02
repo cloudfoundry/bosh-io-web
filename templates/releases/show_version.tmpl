@@ -36,8 +36,11 @@
 
         <p>Upload (or <a href="{{ .DownloadURL }}">download</a>) this release version to your BOSH Director</p>
         <pre class="prettyprint terminal">
-$ bosh upload release {{ .UserVisibleDownloadURL }}
+$ bosh upload release {{ .UserVisibleDownloadURL }}</pre>
 
+        <p class="note">Note: To upload release from bosh.io, make sure to use the Director v1.2827.0 and above (cloudfoundry/bosh v137+).</p>
+
+        <pre class="prettyprint terminal">
 # ...or download it directly using curl
 $ curl -L -J -O {{ .UserVisibleDownloadURL }}
 

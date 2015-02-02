@@ -30,19 +30,17 @@
 
                 &mdash; <a href="{{ .DownloadURL }}">Download</a>
 
-                {{ if .IsLatest }}
-                <pre class="prettyprint terminal"># Upload latest version, currently {{ .Version }}
+                <pre class="prettyprint terminal">{{ if .IsLatest }}
+# Upload latest version, currently {{ .Version }}
 $ bosh upload release {{ .UserVisibleLatestDownloadURL }}
 
-# ...or download it directly using curl
-$ curl -L -J -O {{ .UserVisibleLatestDownloadURL }}
+# Upload specific version{{ end }}
+$ bosh upload release {{ .UserVisibleDownloadURL }}
+</pre>
 
-# or with wget...
-$ wget --content-disposition {{ .UserVisibleLatestDownloadURL }}
-</pre>{{ end }}
-
-<pre class="prettyprint terminal">{{ if .IsLatest }}# Upload specific version
-{{ end }}$ bosh upload release {{ .UserVisibleDownloadURL }}</pre>
+                {{ if .IsLatest }}
+                  <p class="note">Note: To upload release tarballs from bosh.io, make sure to use the Director v1.2827.0 and above (cloudfoundry/bosh v137+).</p>
+                {{ end }}
               </li>
             {{ end }}
           </ul>
