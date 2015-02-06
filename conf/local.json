@@ -16,8 +16,6 @@
     }
   },
 
-  "APIKey": "todo: not needed",
-
   "Watcher": {
     "Enabled": true,
     "Period": 60000000000

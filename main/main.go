@@ -82,7 +82,7 @@ func main() {
 	if config.ActAsWorker {
 		select {}
 	} else {
-		runControllers(controllerFactory, logger)
+		runControllers(controllerFactory, config.Analytics, logger)
 	}
 }
 
@@ -108,10 +108,10 @@ func ensureNoErr(logger boshlog.Logger, errPrefix string, err error) {
 	}
 }
 
-func runControllers(controllerFactory bhctrls.Factory, logger boshlog.Logger) {
+func runControllers(controllerFactory bhctrls.Factory, analyticsConfig AnalyticsConfig, logger boshlog.Logger) {
 	m := mart.Classic()
 
-	configureAssets(m, logger)
+	configureAssets(m, analyticsConfig, logger)
 
 	homeController := controllerFactory.HomeController
 	m.Get("/", homeController.Home)
@@ -165,7 +165,7 @@ func runControllers(controllerFactory bhctrls.Factory, logger boshlog.Logger) {
 	m.Run()
 }
 
-func configureAssets(m *mart.ClassicMartini, logger boshlog.Logger) {
+func configureAssets(m *mart.ClassicMartini, analyticsConfig AnalyticsConfig, logger boshlog.Logger) {
 	assetsIDBytes, err := ioutil.ReadFile("./public/assets-id")
 	ensureNoErr(logger, "Failed to find assets ID", err)
 
@@ -180,6 +180,12 @@ func configureAssets(m *mart.ClassicMartini, logger boshlog.Logger) {
 		},
 		"imgPath": func(fileName string) (string, error) {
 			return "/" + assetsID + "/images/" + fileName, nil
+		},
+	}
+
+	analyticsConfigFuncs := template.FuncMap{
+		"analyticsConfig": func() AnalyticsConfig {
+			return analyticsConfig
 		},
 	}
 
@@ -204,7 +210,7 @@ func configureAssets(m *mart.ClassicMartini, logger boshlog.Logger) {
 			Layout:     "layout",
 			Directory:  "./templates",
 			Extensions: []string{".tmpl", ".html"},
-			Funcs:      []template.FuncMap{assetsFuncs},
+			Funcs:      []template.FuncMap{assetsFuncs, analyticsConfigFuncs},
 		},
 	))
 }

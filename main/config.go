@@ -17,6 +17,8 @@ type Config struct {
 
 	APIKey string
 
+	Analytics AnalyticsConfig
+
 	// Does not start web server; just does background work
 	ActAsWorker bool
 
@@ -25,6 +27,10 @@ type Config struct {
 	NoteImporter bhnoteimporter.FactoryOptions
 
 	StemcellImporter bhstemsimp.FactoryOptions
+}
+
+type AnalyticsConfig struct {
+	GoogleAnalyticsID string
 }
 
 func NewConfigFromPath(path string, fs boshsys.FileSystem) (Config, error) {
