@@ -21,11 +21,10 @@ type Stemcell interface {
 	OSVersion() string // e.g. Trusty
 
 	IsLight() bool
-	IsDeprecated() bool
 
 	URL() string
 }
 
 type StemcellsRepository interface {
-	FindAll() ([]Stemcell, error)
+	FindAll(string) ([]Stemcell, error)
 }

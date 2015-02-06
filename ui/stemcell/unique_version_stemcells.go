@@ -3,57 +3,95 @@ package stemcell
 import (
 	"sort"
 
+	semiver "github.com/cppforlife/go-semi-semantic/version"
+
 	bhstemsrepo "github.com/cppforlife/bosh-hub/stemcell/stemsrepo"
 )
 
 type UniqueVersionStemcells []*SameVersionStemcells
 
+type SameVersionStemcells struct {
+	Version   semiver.Version
+	Stemcells []Stemcell
+
+	ShowingAllVersions bool
+}
+
 type UniqueVersionStemcellsSorting UniqueVersionStemcells
 
-func NewUniqueVersionStemcells(ss []bhstemsrepo.Stemcell, limit *int) UniqueVersionStemcells {
-	var uniqueStems UniqueVersionStemcells
+func NewUniqueVersionStemcells(ss []bhstemsrepo.Stemcell, filter StemcellFilter) UniqueVersionStemcells {
+	var result UniqueVersionStemcells
 
-	byVersion := map[string]*SameVersionStemcells{}
+	groups := map[string][]bhstemsrepo.Stemcell{}
 
 	for _, s := range ss {
-		stemcell := NewStemcell(s)
-		verStr := stemcell.Version.AsString()
+		key := s.Version().AsString()
+		groups[key] = append(groups[key], s)
+	}
 
-		sameStems, found := byVersion[verStr]
-		if found {
-			sameStems.Stemcells = append(sameStems.Stemcells, stemcell)
+	for _, sameSs := range groups {
+		sameStems := NewSameVersionStemcells(sameSs[0].Version(), sameSs)
+		sameStems.ShowingAllVersions = filter.ShowingAllVersions()
+		result = append(result, &sameStems)
+	}
+
+	sort.Sort(sort.Reverse(UniqueVersionStemcellsSorting(result)))
+
+	if len(result) > filter.Limit() {
+		result = result[0:filter.Limit()]
+	}
+
+	return result
+}
+
+func NewSameVersionStemcells(version semiver.Version, ss []bhstemsrepo.Stemcell) SameVersionStemcells {
+	var stemcells []Stemcell
+
+	groups := map[string]*Stemcell{}
+
+	// Collapse light and non-light stemcells into a single Stemcell UI
+	for _, s := range ss {
+		if stemcell, ok := groups[s.Name()]; ok {
+			stemcell.AddAsSource(s)
 		} else {
-			sameStems := &SameVersionStemcells{
-				Version:   stemcell.Version,
-				Stemcells: []Stemcell{stemcell},
-			}
-			byVersion[verStr] = sameStems
-			uniqueStems = append(uniqueStems, sameStems)
+			stemcell := NewStemcell(s)
+			groups[s.Name()] = &stemcell
 		}
 	}
 
-	for _, sameStems := range uniqueStems {
-		sort.Sort(StemcellSorting(sameStems.Stemcells))
+	for _, stemcell := range groups {
+		stemcells = append(stemcells, *stemcell)
 	}
 
-	sort.Sort(sort.Reverse(UniqueVersionStemcellsSorting(uniqueStems)))
+	sort.Sort(StemcellFriendlyNameSorting(stemcells))
 
-	if limit != nil && len(uniqueStems) > *limit {
-		uniqueStems = uniqueStems[0:*limit]
-	}
-
-	return uniqueStems
+	return SameVersionStemcells{Version: version, Stemcells: stemcells}
 }
 
-func NewLatestVersionStemcells(ss []bhstemsrepo.Stemcell) *SameVersionStemcells {
-	uniqStems := NewUniqueVersionStemcells(ss, nil)
-
-	if len(uniqStems) > 0 {
-		return uniqStems[0]
+func (s UniqueVersionStemcells) HasAnyStemcells() bool {
+	for _, s_ := range s {
+		if len(s_.Stemcells) > 0 {
+			return true
+		}
 	}
 
-	return nil
+	return false
 }
+
+func (s UniqueVersionStemcells) ForAPI() []Stemcell {
+	// API should return empty array, not null!
+	stemcells := []Stemcell{}
+
+	for _, uniqueStems := range s {
+		for _, stem := range uniqueStems.Stemcells {
+			stemcells = append(stemcells, stem)
+		}
+	}
+
+	return stemcells
+}
+
+func (s SameVersionStemcells) AllURL() string { return "/stemcells" }
 
 func (s UniqueVersionStemcellsSorting) Len() int           { return len(s) }
 func (s UniqueVersionStemcellsSorting) Less(i, j int) bool { return s[i].Version.IsLt(s[j].Version) }

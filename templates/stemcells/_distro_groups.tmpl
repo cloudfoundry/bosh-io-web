@@ -1,25 +1,26 @@
-{{ range $i, $distroGroup := . }}
-  {{ range $j, $stemcells := .Stemcells }}
-    <tr>
-      {{ if eq $j 0 }}
-        {{ if eq $i 0 }}
-          <td class="distro-group-ver" rowspan="{{ $.AllStemcellsLen }}">
-            <a href="#{{ .Version }}" id="{{ .Version }}">Version {{ .Version }}</a>
-          </td>
-        {{ end }}
+<div class="col-md-9">
+  <h3 class="page-header">
+    {{ if .Filter.ShowingAllVersions }}
+      Stemcell <span>'{{ .Filter.Name }}'</span>
+    {{ else }}
+      Latest stemcells
+    {{ end }}
+  </h3>
 
-        <td rowspan="{{ len $distroGroup.Stemcells }}" class="distro-group-name">
-          {{ $distroGroup.Distro.Name }}
-        </td>
+  {{ if .DistroGroups }}
+    <ul class="list-group list-group-condensed stemcell-distro-groups">
+      {{ range .DistroGroups }}
+        <li class="list-group-item">
+          <h4 class="section">{{ .Distro.Name }}</h4>
+
+          {{ range .ByName }}
+            {{ template "stemcells/_distro_group" . }}  
+          {{ end }}
+
+        </li>
       {{ end }}
-
-      <td class="distro-group-stemcell-name">
-        <a href="{{ .URL }}" class="{{ if .IsDeprecated }}deprecated{{ end }}">
-          {{ .Name }}{{ if .IsLight }} Light{{ end }}</a>
-
-        <span class="file-size">{{ .FormattedSize }}</span>
-        <span class="file-md5 pull-right">{{ .MD5 }}</span>
-      </td>
-    </tr>
+    </ul>
+  {{ else }}
+    <p class="empty">No stemcells</p>
   {{ end }}
-{{ end }}
+</div>

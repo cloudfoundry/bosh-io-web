@@ -39,8 +39,8 @@ func NewHomeController(
 }
 
 type homeControllerPage struct {
-	UniqueSourceReleases   bhrelui.UniqueSourceReleases
-	LatestVersionStemcells *bhstemui.SameVersionStemcells
+	UniqueSourceReleases bhrelui.UniqueSourceReleases
+	StemcellDistroGroups bhstemui.DistroGroups
 }
 
 func (c HomeController) Home(r martrend.Render) {
@@ -50,15 +50,17 @@ func (c HomeController) Home(r martrend.Render) {
 		return
 	}
 
-	stemcells, err := c.stemcellsRepo.FindAll()
+	stemcells, err := c.stemcellsRepo.FindAll("")
 	if err != nil {
 		r.HTML(500, c.errorTmpl, err)
 		return
 	}
 
 	page := homeControllerPage{
-		UniqueSourceReleases:   bhrelui.NewUniqueSourceReleases(relVerRecs),
-		LatestVersionStemcells: bhstemui.NewLatestVersionStemcells(stemcells),
+		UniqueSourceReleases: bhrelui.NewUniqueSourceReleases(relVerRecs),
+
+		// Show either groups of stemcells by OS
+		StemcellDistroGroups: bhstemui.NewDistroGroups(stemcells, bhstemui.StemcellFilter{}),
 	}
 
 	r.HTML(200, c.homeTmpl, page)

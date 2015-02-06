@@ -1,28 +1,40 @@
 <div class="col-md-3">
   <h3 class="page-header">Latest Stemcells</h3>
 
-  {{ if .LatestVersionStemcells }}
-    <table class="table table-condensed">
-      {{ range .LatestVersionStemcells.DistroGroups }}
-        {{ if .Stemcells }}
-          <tr><td class="distro-group-name">
-            {{ .Distro.Name }} {{ $.LatestVersionStemcells.Version }}</td></tr>
+  {{ if .StemcellDistroGroups }}
+    <ul class="list-group list-group-condensed stemcell-distro-groups">
+      {{ range .StemcellDistroGroups }}
+        <li class="list-group-item">
+          <h4>{{ .Distro.Name }}</h4>
 
-          {{ range .Stemcells }}
-            <tr>
-              <td class="distro-group-stemcells">
-                <a href="{{ .URL }}" title="MD5 {{ .MD5 }}">
-                  {{ .Name }}{{ if .IsLight }} Light{{ end }}</a>
-                <span class="file-size">{{ .FormattedSize }}</span>
-              </td>
-            </tr>
+          {{ range .ByName }}
+            {{ range $j, $a := .ByVersion }}
+              <ul class="list-group list-group-condensed">
+                {{ range $i, $s := .Stemcells }}
+                  {{ with .RegularSource }}
+                    <li class="list-group-item">
+                      <span class="stemcell-name">{{ $s.FriendlyName }}</span>
+                      <a href="{{ .URL }}">{{ $a.Version }}</a>
+                    </li>
+                  {{ end }}
+
+                  {{ with .LightSource }}
+                    <li class="list-group-item">
+                      <span class="stemcell-name">{{ $s.FriendlyName }} Light</span>
+                      <a href="{{ .URL }}">{{ $a.Version }}</a>
+                    </li>
+                  {{ end }}
+                {{ end }}
+              </ul>
+            {{ end }}
           {{ end }}
-        {{ end }}
-      {{ end }}
-    </table>
 
-    <p><a href="{{ .LatestVersionStemcells.AllURL }}">See all stemcells</a></p>
+        </li>
+      {{ end }}
+    </ul>
   {{ else }}
     <p class="empty">No stemcells</p>
   {{ end }}
+
+  <p><a href="{{ .StemcellDistroGroups.AllURL }}">See all stemcells</a></p>
 </div>

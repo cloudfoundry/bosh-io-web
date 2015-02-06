@@ -1,6 +1,7 @@
 package stemcell
 
 import (
+	"encoding/json"
 	"fmt"
 
 	semiver "github.com/cppforlife/go-semi-semantic/version"
@@ -28,22 +29,37 @@ var (
 )
 
 type Stemcell struct {
-	Name    string
-	Version semiver.Version
-
-	Size uint64
-	MD5  string
+	ManifestName string
+	FriendlyName string
+	Version      semiver.Version
 
 	OSName    string
 	OSVersion string
 
-	IsLight      bool
-	IsDeprecated bool
-
-	URL string
+	RegularSource *StemcellSource
+	LightSource   *StemcellSource
 }
 
-type StemcellSorting []Stemcell
+type StemcellSource struct {
+	URL  string `json:"url"`
+	Size uint64 `json:"size"`
+	MD5  string `json:"md5"`
+
+	UpdatedAt string `json:"-"`
+}
+
+type stemcellAPIRecord struct {
+	Name    string `json:"name"`
+	Version string `json:"version"`
+
+	// Use StemcellSource for now for convenience
+	Regular *StemcellSource `json:"regular,omitempty"`
+	Light   *StemcellSource `json:"light,omitempty"`
+}
+
+type StemcellFriendlyNameSorting []Stemcell
+
+type StemcellVersionSorting []Stemcell
 
 func NewStemcell(s bhstemsrepo.Stemcell) Stemcell {
 	infName, ok := prettyInfNames[s.InfName()]
@@ -61,27 +77,55 @@ func NewStemcell(s bhstemsrepo.Stemcell) Stemcell {
 		optionalDiskFormat = fmt.Sprintf(" (%s)", s.DiskFormat())
 	}
 
-	return Stemcell{
-		Name:    fmt.Sprintf("%s %s%s", infName, hvName, optionalDiskFormat),
-		Version: s.Version(),
-
-		Size: s.Size(),
-		MD5:  s.MD5(),
+	stemcell := &Stemcell{
+		ManifestName: s.Name(),
+		FriendlyName: fmt.Sprintf("%s %s%s", infName, hvName, optionalDiskFormat),
+		Version:      s.Version(),
 
 		OSName:    s.OSName(),
 		OSVersion: s.OSVersion(),
+	}
 
-		IsLight:      s.IsLight(),
-		IsDeprecated: s.IsDeprecated(),
+	stemcell.AddAsSource(s)
 
-		URL: s.URL(),
+	return *stemcell
+}
+
+func (s *Stemcell) AddAsSource(s_ bhstemsrepo.Stemcell) {
+	source := &StemcellSource{
+		URL:  s_.URL(),
+		Size: s_.Size(),
+		MD5:  s_.MD5(),
+
+		UpdatedAt: s_.UpdatedAt(),
+	}
+
+	if s_.IsLight() {
+		s.LightSource = source
+	} else {
+		s.RegularSource = source
 	}
 }
 
-func (s Stemcell) FormattedSize() string { return humanize.Bytes(s.Size) }
+func (s Stemcell) MarshalJSON() ([]byte, error) {
+	record := stemcellAPIRecord{
+		Name:    s.ManifestName,
+		Version: s.Version.AsString(),
+		Regular: s.RegularSource,
+		Light:   s.LightSource,
+	}
 
-func (s Stemcell) HasURL() bool { return len(s.URL) > 0 }
+	return json.Marshal(record)
+}
 
-func (s StemcellSorting) Len() int           { return len(s) }
-func (s StemcellSorting) Less(i, j int) bool { return s[i].Name < s[j].Name }
-func (s StemcellSorting) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
+func (s Stemcell) AllVersionsURL() string { return fmt.Sprintf("/stemcells?name=%s", s.ManifestName) }
+
+func (s StemcellSource) FormattedSize() string { return humanize.Bytes(s.Size) }
+
+func (s StemcellFriendlyNameSorting) Len() int           { return len(s) }
+func (s StemcellFriendlyNameSorting) Less(i, j int) bool { return s[i].ManifestName < s[j].ManifestName }
+func (s StemcellFriendlyNameSorting) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
+
+func (s StemcellVersionSorting) Len() int           { return len(s) }
+func (s StemcellVersionSorting) Less(i, j int) bool { return s[i].Version.IsLt(s[j].Version) }
+func (s StemcellVersionSorting) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }

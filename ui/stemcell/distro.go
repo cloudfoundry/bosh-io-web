@@ -1,11 +1,14 @@
 package stemcell
 
+import (
+	bhstemsrepo "github.com/cppforlife/bosh-hub/stemcell/stemsrepo"
+)
+
 type Distro struct {
 	Name string // e.g. 'Ubuntu Trusty'
+	Sort uint8  // smaller == more important
 
 	OSMatches []StemcellOSMatch
-
-	MatchAll bool
 }
 
 type StemcellOSMatch struct {
@@ -13,11 +16,7 @@ type StemcellOSMatch struct {
 	OSVersion string // e.g. trusty, ''
 }
 
-func (d Distro) Matches(s Stemcell) bool {
-	if d.MatchAll {
-		return true
-	}
-
+func (d Distro) Matches(s bhstemsrepo.Stemcell) bool {
 	for _, m := range d.OSMatches {
 		if m.Matches(s) {
 			return true
@@ -27,6 +26,6 @@ func (d Distro) Matches(s Stemcell) bool {
 	return false
 }
 
-func (m StemcellOSMatch) Matches(s Stemcell) bool {
-	return s.OSName == m.OSName && s.OSVersion == m.OSVersion
+func (m StemcellOSMatch) Matches(s bhstemsrepo.Stemcell) bool {
+	return s.OSName() == m.OSName && s.OSVersion() == m.OSVersion
 }

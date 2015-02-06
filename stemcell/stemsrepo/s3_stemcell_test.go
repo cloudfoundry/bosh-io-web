@@ -26,7 +26,7 @@ var _ = Describe("NewS3Stemcell", func() {
 
 	var examples = map[string]ExtractedPieces{
 		"bosh-stemcell/aws/bosh-stemcell-891-aws-xen-ubuntu.tgz": ExtractedPieces{
-			Name:    "bosh",
+			Name:    "bosh-aws-xen-ubuntu",
 			Version: "891",
 
 			InfName: "aws",
@@ -35,11 +35,11 @@ var _ = Describe("NewS3Stemcell", func() {
 			OSName:    "ubuntu",
 			OSVersion: "lucid",
 
-			AgentType: "ruby_agent",
+			AgentType: "ruby",
 		},
 
 		"bosh-stemcell/aws/bosh-stemcell-2311-aws-xen-centos-go_agent.tgz": ExtractedPieces{
-			Name:    "bosh",
+			Name:    "bosh-aws-xen-centos-go_agent",
 			Version: "2311",
 
 			InfName: "aws",
@@ -48,11 +48,11 @@ var _ = Describe("NewS3Stemcell", func() {
 			OSName:    "centos",
 			OSVersion: "",
 
-			AgentType: "go_agent",
+			AgentType: "go",
 		},
 
 		"bosh-stemcell/aws/bosh-stemcell-2446-aws-xen-ubuntu-lucid-go_agent.tgz": ExtractedPieces{
-			Name:    "bosh",
+			Name:    "bosh-aws-xen-ubuntu-lucid-go_agent",
 			Version: "2446",
 
 			InfName: "aws",
@@ -61,11 +61,11 @@ var _ = Describe("NewS3Stemcell", func() {
 			OSName:    "ubuntu",
 			OSVersion: "lucid",
 
-			AgentType: "go_agent",
+			AgentType: "go",
 		},
 
 		"micro-bosh-stemcell/aws/light-micro-bosh-stemcell-891-aws-xen-ubuntu.tgz": ExtractedPieces{
-			Name:    "light-micro-bosh",
+			Name:    "bosh-aws-xen-ubuntu",
 			Version: "891",
 
 			InfName: "aws",
@@ -74,11 +74,11 @@ var _ = Describe("NewS3Stemcell", func() {
 			OSName:    "ubuntu",
 			OSVersion: "lucid",
 
-			AgentType: "ruby_agent",
+			AgentType: "ruby",
 		},
 
 		"micro-bosh-stemcell/warden/bosh-stemcell-56-warden-boshlite-ubuntu-lucid-go_agent.tgz": ExtractedPieces{
-			Name:    "bosh",
+			Name:    "bosh-warden-boshlite-ubuntu-lucid-go_agent",
 			Version: "56",
 
 			InfName: "warden",
@@ -87,11 +87,11 @@ var _ = Describe("NewS3Stemcell", func() {
 			OSName:    "ubuntu",
 			OSVersion: "lucid",
 
-			AgentType: "go_agent",
+			AgentType: "go",
 		},
 
 		"bosh-stemcell/aws/light-bosh-stemcell-2579-aws-xen-centos.tgz": ExtractedPieces{
-			Name:    "light-bosh",
+			Name:    "bosh-aws-xen-centos",
 			Version: "2579",
 
 			InfName: "aws",
@@ -100,11 +100,11 @@ var _ = Describe("NewS3Stemcell", func() {
 			OSName:    "centos",
 			OSVersion: "",
 
-			AgentType: "ruby_agent",
+			AgentType: "ruby",
 		},
 
 		"bosh-stemcell/aws/light-bosh-stemcell-2579-aws-xen-centos-go_agent.tgz": ExtractedPieces{
-			Name:    "light-bosh",
+			Name:    "bosh-aws-xen-centos-go_agent",
 			Version: "2579",
 
 			InfName: "aws",
@@ -113,11 +113,11 @@ var _ = Describe("NewS3Stemcell", func() {
 			OSName:    "centos",
 			OSVersion: "",
 
-			AgentType: "go_agent",
+			AgentType: "go",
 		},
 
 		"bosh-stemcell/aws/light-bosh-stemcell-2579.1-aws-xen-centos-go_agent.tgz": ExtractedPieces{
-			Name:    "light-bosh",
+			Name:    "bosh-aws-xen-centos-go_agent",
 			Version: "2579.1",
 
 			InfName: "aws",
@@ -126,11 +126,11 @@ var _ = Describe("NewS3Stemcell", func() {
 			OSName:    "centos",
 			OSVersion: "",
 
-			AgentType: "go_agent",
+			AgentType: "go",
 		},
 
 		"bosh-stemcell/aws/light-bosh-stemcell-2579.1-aws-xen-hvm-centos-go_agent.tgz": ExtractedPieces{
-			Name:    "light-bosh",
+			Name:    "bosh-aws-xen-hvm-centos-go_agent",
 			Version: "2579.1",
 
 			InfName: "aws",
@@ -139,11 +139,11 @@ var _ = Describe("NewS3Stemcell", func() {
 			OSName:    "centos",
 			OSVersion: "",
 
-			AgentType: "go_agent",
+			AgentType: "go",
 		},
 
 		"bosh-stemcell/aws/light-bosh-stemcell-2579.1-aws-xen-hvm-ubuntu-trusty-go_agent.tgz": ExtractedPieces{
-			Name:    "light-bosh",
+			Name:    "bosh-aws-xen-hvm-ubuntu-trusty-go_agent",
 			Version: "2579.1",
 
 			InfName: "aws",
@@ -152,12 +152,12 @@ var _ = Describe("NewS3Stemcell", func() {
 			OSName:    "ubuntu",
 			OSVersion: "trusty",
 
-			AgentType: "go_agent",
+			AgentType: "go",
 		},
 
 		// Notice no folder prefix
 		"bosh-stemcell-2776-warden-boshlite-centos-go_agent.tgz": ExtractedPieces{
-			Name:    "bosh",
+			Name:    "bosh-warden-boshlite-centos-go_agent",
 			Version: "2776",
 
 			InfName: "warden",
@@ -166,12 +166,12 @@ var _ = Describe("NewS3Stemcell", func() {
 			OSName:    "centos",
 			OSVersion: "",
 
-			AgentType: "go_agent",
+			AgentType: "go",
 		},
 
 		// Disk format
 		"bosh-stemcell/openstack/bosh-stemcell-56-openstack-kvm-ubuntu-trusty-go_agent-raw.tgz": ExtractedPieces{
-			Name:    "bosh",
+			Name:    "bosh-openstack-kvm-ubuntu-trusty-go_agent-raw",
 			Version: "56",
 
 			InfName:    "openstack",
@@ -181,7 +181,7 @@ var _ = Describe("NewS3Stemcell", func() {
 			OSName:    "ubuntu",
 			OSVersion: "trusty",
 
-			AgentType: "go_agent",
+			AgentType: "go",
 		},
 	}
 

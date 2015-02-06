@@ -43,7 +43,7 @@ func NewS3StemcellsRepository(
 	}
 }
 
-func (r S3StemcellsRepository) FindAll() ([]Stemcell, error) {
+func (r S3StemcellsRepository) FindAll(name string) ([]Stemcell, error) {
 	var stems []Stemcell
 
 	var s3StemcellRecs []s3StemcellRec
@@ -57,6 +57,8 @@ func (r S3StemcellsRepository) FindAll() ([]Stemcell, error) {
 		return stems, bosherr.WrapError(err, "Finding all S3 stemcell recs")
 	}
 
+	filterByName := len(name) > 0
+
 	for _, rec := range s3StemcellRecs {
 		stemcell := NewS3Stemcell(
 			rec.Key,
@@ -65,7 +67,11 @@ func (r S3StemcellsRepository) FindAll() ([]Stemcell, error) {
 			rec.LastModified,
 			rec.URL,
 		)
-		if stemcell != nil {
+		if stemcell == nil || stemcell.IsDeprecated() {
+			continue
+		}
+
+		if !filterByName || filterByName && stemcell.Name() == name {
 			stems = append(stems, stemcell)
 		}
 	}

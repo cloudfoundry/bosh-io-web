@@ -10,10 +10,6 @@ import (
 	bhstemui "github.com/cppforlife/bosh-hub/ui/stemcell"
 )
 
-var (
-	UniqueVersionStemcellsLimit int = 30
-)
-
 type StemcellsController struct {
 	stemcellsRepo bhstemsrepo.StemcellsRepository
 
@@ -40,26 +36,41 @@ func NewStemcellsController(
 }
 
 type stemcellsControllerIndexPage struct {
-	UniqueVersionStemcells []*bhstemui.SameVersionStemcells
+	DistroGroups bhstemui.DistroGroups
+	Filter       bhstemui.StemcellFilter
 }
 
 func (c StemcellsController) Index(req *http.Request, r martrend.Render) {
-	stemcells, err := c.stemcellsRepo.FindAll()
+	filter := bhstemui.StemcellFilter{Name: req.URL.Query().Get("name")}
+
+	stemcells, err := c.stemcellsRepo.FindAll(filter.Name)
 	if err != nil {
 		r.HTML(500, c.errorTmpl, err)
 		return
 	}
 
-	var limit *int
+	// Show either groups of stemcells by OS or for a specific stemcell name
+	distroGroups := bhstemui.NewDistroGroups(stemcells, filter)
 
-	// Limit number of stemcells shown by default
-	if len(req.URL.Query().Get("all")) == 0 {
-		limit = &UniqueVersionStemcellsLimit
+	r.HTML(200, c.indexTmpl, stemcellsControllerIndexPage{distroGroups, filter})
+}
+
+func (c StemcellsController) APIV1Index(req *http.Request, r martrend.Render) {
+	filter := bhstemui.StemcellFilter{Name: req.URL.Query().Get("name")}
+
+	if len(filter.Name) == 0 {
+		r.JSON(404, map[string]string{"error": "Param 'name' must be non-empty"})
+		return
 	}
 
-	page := stemcellsControllerIndexPage{
-		UniqueVersionStemcells: bhstemui.NewUniqueVersionStemcells(stemcells, limit),
+	stemcells, err := c.stemcellsRepo.FindAll(filter.Name)
+	if err != nil {
+		r.JSON(500, map[string]string{"error": err.Error()})
+		return
 	}
 
-	r.HTML(200, c.indexTmpl, page)
+	// Show list of latest versions for the specific stemcell name
+	uniqVerStems := bhstemui.NewUniqueVersionStemcells(stemcells, filter)
+
+	r.JSON(200, uniqVerStems.ForAPI())
 }

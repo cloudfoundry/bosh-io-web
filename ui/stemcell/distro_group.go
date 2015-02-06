@@ -2,52 +2,59 @@ package stemcell
 
 import (
 	"sort"
+
+	bhstemsrepo "github.com/cppforlife/bosh-hub/stemcell/stemsrepo"
 )
 
 type DistroGroup struct {
 	Distro Distro
+	ByName UniqueNameStemcells
 
-	Stemcells []Stemcell
+	ss []bhstemsrepo.Stemcell // temp state
 }
 
 type DistroGroups []DistroGroup
 
 type DistroGroupSorting []DistroGroup
 
-func NewDistroGroups(stemcells []Stemcell) DistroGroups {
+func NewDistroGroups(ss []bhstemsrepo.Stemcell, filter StemcellFilter) DistroGroups {
 	var groups []DistroGroup
 
-	for _, d := range supportedDistros {
+	for _, d := range allDistros {
 		groups = append(groups, DistroGroup{Distro: d})
 	}
 
-	// Catch any other stemcell
-	groups = append(groups, DistroGroup{Distro: unknownDistro})
-
-	for _, stemcell := range stemcells {
+	for _, s := range ss {
 		for i, g := range groups {
-			if g.Distro.Matches(stemcell) {
-				groups[i].Stemcells = append(groups[i].Stemcells, stemcell)
+			if g.Distro.Matches(s) {
+				groups[i].ss = append(groups[i].ss, s)
 				break
 			}
 		}
 	}
 
-	sort.Sort(sort.Reverse(DistroGroupSorting(groups)))
+	var supportedGroups []DistroGroup
 
-	return groups
-}
+	for _, g := range groups {
+		uniqueStems := NewUniqueNameStemcells(g.ss, filter)
 
-func (gs DistroGroups) AllStemcellsLen() int {
-	result := 0
-
-	for _, g := range gs {
-		result += len(g.Stemcells)
+		if uniqueStems.HasAnyStemcells() {
+			g.ByName = uniqueStems
+			supportedGroups = append(supportedGroups, g)
+		}
 	}
 
-	return result
+	sort.Sort(DistroGroupSorting(supportedGroups))
+
+	return supportedGroups
 }
 
+func (g DistroGroup) HasAnyStemcells() bool {
+	return g.ByName.HasAnyStemcells()
+}
+
+func (g DistroGroups) AllURL() string { return "/stemcells" }
+
 func (s DistroGroupSorting) Len() int           { return len(s) }
-func (s DistroGroupSorting) Less(i, j int) bool { return len(s[i].Stemcells) < len(s[j].Stemcells) }
+func (s DistroGroupSorting) Less(i, j int) bool { return s[i].Distro.Sort < s[j].Distro.Sort }
 func (s DistroGroupSorting) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }

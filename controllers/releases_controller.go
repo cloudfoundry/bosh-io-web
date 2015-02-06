@@ -25,7 +25,6 @@ type ReleasesController struct {
 
 	stemcellsRepo bhstemsrepo.StemcellsRepository
 
-	homeTmpl         string
 	indexTmpl        string
 	showVersionsTmpl string
 	showVersionTmpl  string
@@ -53,7 +52,6 @@ func NewReleasesController(
 
 		stemcellsRepo: stemcellsRepo,
 
-		homeTmpl:         "releases/home",
 		indexTmpl:        "releases/index",
 		showVersionsTmpl: "releases/show_versions",
 		showVersionTmpl:  "releases/show_version",
@@ -74,27 +72,6 @@ type releasesControllerHomePage struct {
 
 type releasesControllerIndexPage struct {
 	UniqueSources bhrelui.UniqueSources
-}
-
-func (c ReleasesController) Home(r martrend.Render) {
-	relVerRecs, err := c.releasesRepo.ListCurated()
-	if err != nil {
-		r.HTML(500, c.errorTmpl, err)
-		return
-	}
-
-	stemcells, err := c.stemcellsRepo.FindAll()
-	if err != nil {
-		r.HTML(500, c.errorTmpl, err)
-		return
-	}
-
-	page := releasesControllerHomePage{
-		UniqueSourceReleases:   bhrelui.NewUniqueSourceReleases(relVerRecs),
-		LatestVersionStemcells: bhstemui.NewLatestVersionStemcells(stemcells),
-	}
-
-	r.HTML(200, c.homeTmpl, page)
 }
 
 func (c ReleasesController) Index(r martrend.Render) {

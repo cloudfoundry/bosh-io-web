@@ -1,25 +1,36 @@
-.deprecated {
-  text-decoration: line-through;
-  color: #aaa;
+.stemcell-distro-groups .list-group {
+  margin-bottom: 0;
+  padding: 0;
+  border-bottom: 0;
 }
 
-.distro-group-ver, .distro-group-name { width: 130px; }
-
-.distro-group-name {
-  vertical-align: top;
-  color: #777;
+.stemcell-distro-groups .list-group-item { 
+  overflow: hidden;
+  margin-top: -1px;
+  margin-bottom: -1px;
 }
 
-.file-size {
-  font-size: 12px;
-  color: #777;
+.stemcell-distro-groups > .list-group-item { 
+  padding-bottom: 0;
 }
 
-.file-md5 {
+.stemcell-distro-groups h4 {
+  margin-top: 0;
+  margin-bottom: 7px;
+  font-weight: normal;
+}
+
+.stemcell-distro-groups .stemcell-name { color: #555; }
+
+.file-size,
+.file-md5,
+.file-updated-at {
   font-family: Courier;
-  font-size: 12px;
+  font-size: 11px;
   color: #777;
-  margin-top: 3px;
 }
 
-table tr td.distro-group-stemcells { padding-left: 25px; }
+.file-md5,
+.file-updated-at {
+  display: block;
+}

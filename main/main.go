@@ -151,6 +151,7 @@ func runControllers(controllerFactory bhctrls.Factory, analyticsConfig Analytics
 	// Stemcell viewing
 	stemcellsController := controllerFactory.StemcellsController
 	m.Get("/stemcells", stemcellsController.Index)
+	m.Get("/api/v1/stemcells", stemcellsController.APIV1Index)
 
 	// todo turn on based on config
 	// m.Get("/debug/pprof", http.HandlerFunc(pprof.Index))

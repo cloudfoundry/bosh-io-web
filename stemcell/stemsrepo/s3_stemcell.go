@@ -9,11 +9,12 @@ import (
 
 var (
 	s3StemcellAgentRegexp = regexp.MustCompile(`ruby|go|agent`)
-	s3StemcellRegexp      = regexp.MustCompile(`\A([\w-]+/\w+/)?(?P<name>[\w-]+)-stemcell-(?P<version>[\.\d]+)-(?P<inf_name>\w+)-(?P<hv_name>\w+(-\w+)?)-(?P<os_name>centos|ubuntu)(?P<os_version>-trusty|-lucid)?(?P<agent_type>-go_agent)?(?P<disk_fmt>-raw)?\.tgz\z`)
+	s3StemcellRegexp      = regexp.MustCompile(`\A([\w-]+/\w+/)?(?P<flavor>[\w-]+)-stemcell-(?P<version>[\.\d]+)-(?P<name>(?P<inf_name>\w+)-(?P<hv_name>\w+(-\w+)?)-(?P<os_name>centos|ubuntu)(?P<os_version>-trusty|-lucid)?(?P<agent_type>-go_agent)?(?P<disk_fmt>-raw)?)\.tgz\z`)
 )
 
 type S3Stemcell struct {
-	name string
+	name   string
+	flavor string // e.g. bosh vs light-bosh
 
 	version   semiver.Version
 	updatedAt string
@@ -74,7 +75,10 @@ func NewS3Stemcell(key, etag string, size uint64, lastModified, url string) *S3S
 	}
 
 	s3Stemcell := &S3Stemcell{
-		name: m["name"],
+		// todo assume that piece of the stemcell file name
+		// matches actual stemcell name used in a manifest
+		name:   "bosh-" + m["name"],
+		flavor: m["flavor"],
 
 		version:   version,
 		updatedAt: lastModified,
@@ -89,7 +93,7 @@ func NewS3Stemcell(key, etag string, size uint64, lastModified, url string) *S3S
 		osName:    osName,
 		osVersion: osVersion,
 
-		agentType: agentType,
+		agentType: strings.Replace(agentType, "_agent", "", 1),
 
 		url: url,
 	}
@@ -115,7 +119,7 @@ func (f S3Stemcell) OSVersion() string { return f.osVersion }
 func (f S3Stemcell) AgentType() string { return f.agentType }
 
 func (f S3Stemcell) IsLight() bool {
-	return strings.Index(f.Name(), "light-") == 0
+	return strings.Index(f.flavor, "light-") == 0
 }
 
 func (f S3Stemcell) IsDeprecated() bool {
