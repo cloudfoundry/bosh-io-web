@@ -34,11 +34,12 @@
 
         <h3 class="page-header">Usage</h3>
 
-        <p>Upload (or <a href="{{ .DownloadURL }}">download</a>) this release version to your BOSH Director</p>
+        <p>Upload (or <a href="{{ .DownloadURL }}">download</a>) this release version to your BOSH Director:</p>
+
+        {{ template "shared/_upload_release_version_warning" }}
+
         <pre class="prettyprint terminal">
 $ bosh upload release {{ .UserVisibleDownloadURL }}</pre>
-
-        <p class="note">Note: To upload release from bosh.io, make sure to use the Director v1.2827.0 and above (cloudfoundry/bosh v137+).</p>
 
         <pre class="prettyprint terminal">
 # ...or download it directly using curl
@@ -48,7 +49,7 @@ $ curl -L -J -O {{ .UserVisibleDownloadURL }}
 $ wget --content-disposition {{ .UserVisibleDownloadURL }}
 </pre>
 
-        <p>Modify deployment manifest to use this release in addition to any other used releases</p>
+        <p>Modify deployment manifest to use this release in addition to any other used releases:</p>
         <pre class="prettyprint">
 releases:
 - {name: {{ .Name }}, version: "{{ .Version }}"}
