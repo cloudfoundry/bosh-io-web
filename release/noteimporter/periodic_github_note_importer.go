@@ -105,7 +105,13 @@ func (i PeriodicGithubNoteImporter) importNotesForRelease(ghSource githubSource,
 
 	for _, relVerRec := range relVerRecs {
 		for _, ghRelease := range allGhReleases {
-			if ghRelease.TagName != nil && *ghRelease.TagName == "v"+relVerRec.VersionRaw {
+			expectedLabel := "v" + relVerRec.VersionRaw
+
+			// Either release name or git tag name match
+			matchesName := ghRelease.Name != nil && *ghRelease.Name == expectedLabel
+			matchesTagName := ghRelease.TagName != nil && *ghRelease.TagName == expectedLabel
+
+			if matchesName || matchesTagName {
 				noteRec := bhnotesrepo.NoteRec{}
 
 				// Always overwrite bosh.io release notes with GH notes;
