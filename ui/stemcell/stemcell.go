@@ -107,6 +107,15 @@ func (s *Stemcell) AddAsSource(s_ bhstemsrepo.Stemcell) {
 	}
 }
 
+func (s Stemcell) ActualDownloadURL() string {
+	// Prefer light stemcells
+	if s.LightSource != nil {
+		return s.LightSource.URL
+	}
+
+	return s.RegularSource.URL
+}
+
 func (s Stemcell) MarshalJSON() ([]byte, error) {
 	record := stemcellAPIRecord{
 		Name:    s.ManifestName,
@@ -118,7 +127,7 @@ func (s Stemcell) MarshalJSON() ([]byte, error) {
 	return json.Marshal(record)
 }
 
-func (s Stemcell) AllVersionsURL() string { return fmt.Sprintf("/stemcells?name=%s", s.ManifestName) }
+func (s Stemcell) AllVersionsURL() string { return fmt.Sprintf("/stemcells/%s", s.ManifestName) }
 
 func (s StemcellSource) FormattedSize() string { return humanize.Bytes(s.Size) }
 

@@ -8,6 +8,17 @@
   </h3>
 
   {{ if .DistroGroups }}
+    {{ if .Filter.ShowingAllVersions }}
+      {{ template "shared/_upload_version_warning" }}
+
+      <pre class="terminal">
+# Upload latest version
+$ bosh upload stemcell https://bosh.io/d/stemcells/{{ .Filter.Name }}
+</pre>
+
+      <h3 class="page-header">All versions</h3>
+    {{ end }}
+
     <ul class="list-group list-group-condensed stemcell-distro-groups">
       {{ range .DistroGroups }}
         <li class="list-group-item">

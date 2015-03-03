@@ -29,7 +29,7 @@
                 <p><a href="{{ .URL }}">Version {{ .Version }}</a> &mdash; <a href="{{ .DownloadURL }}">Download</a></p>
 
                 {{ if .IsLatest }}
-                  {{ template "shared/_upload_release_version_warning" }}
+                  {{ template "shared/_upload_version_warning" }}
                 {{ end }}
 
                 <pre class="prettyprint terminal">{{ if .IsLatest }}

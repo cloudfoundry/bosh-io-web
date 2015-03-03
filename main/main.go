@@ -140,9 +140,6 @@ func runControllers(controllerFactory bhctrls.Factory, analyticsConfig Analytics
 	m.Get("/releases/**", releasesController.Show)
 	m.Get("/api/v1/releases/**", releasesController.APIV1Index)
 
-	releaseTarballsController := controllerFactory.ReleaseTarballsController
-	m.Get("/d/**", releaseTarballsController.Download)
-
 	jobsController := controllerFactory.JobsController
 	m.Get("/jobs/:name", jobsController.Show)
 
@@ -152,7 +149,13 @@ func runControllers(controllerFactory bhctrls.Factory, analyticsConfig Analytics
 	// Stemcell viewing
 	stemcellsController := controllerFactory.StemcellsController
 	m.Get("/stemcells", stemcellsController.Index)
+	m.Get("/stemcells/**", stemcellsController.Index)
+	m.Get("/d/stemcells/**", stemcellsController.Download)
 	m.Get("/api/v1/stemcells", stemcellsController.APIV1Index)
+
+	// ...make sure /d/** is after /d/stemcells/**
+	releaseTarballsController := controllerFactory.ReleaseTarballsController
+	m.Get("/d/**", releaseTarballsController.Download)
 
 	// todo turn on based on config
 	// m.Get("/debug/pprof", http.HandlerFunc(pprof.Index))
