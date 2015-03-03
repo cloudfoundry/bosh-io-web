@@ -151,7 +151,7 @@ func runControllers(controllerFactory bhctrls.Factory, analyticsConfig Analytics
 	m.Get("/stemcells", stemcellsController.Index)
 	m.Get("/stemcells/**", stemcellsController.Index)
 	m.Get("/d/stemcells/**", stemcellsController.Download)
-	m.Get("/api/v1/stemcells", stemcellsController.APIV1Index)
+	m.Get("/api/v1/stemcells/**", stemcellsController.APIV1Index)
 
 	// ...make sure /d/** is after /d/stemcells/**
 	releaseTarballsController := controllerFactory.ReleaseTarballsController
