@@ -43,6 +43,8 @@ func (r SameSourceReleases) HasMoreThanXReleases(x int) bool {
 	return len(r.Releases) > x
 }
 
+func (s SameSourceReleases) ForAPI() []Release { return s.Releases }
+
 func (r SameSourceReleases) AllURL() string { return "/releases" }
 
 func (r SameSourceReleases) URL() string {

@@ -138,6 +138,7 @@ func runControllers(controllerFactory bhctrls.Factory, analyticsConfig Analytics
 	releasesController := controllerFactory.ReleasesController
 	m.Get("/releases", releasesController.Index)
 	m.Get("/releases/**", releasesController.Show)
+	m.Get("/api/v1/releases/**", releasesController.APIV1Index)
 
 	releaseTarballsController := controllerFactory.ReleaseTarballsController
 	m.Get("/d/**", releaseTarballsController.Download)

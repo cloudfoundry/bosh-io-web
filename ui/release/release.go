@@ -1,6 +1,7 @@
 package release
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"strings"
@@ -37,6 +38,13 @@ type Release struct {
 
 type Graph interface {
 	SVG() template.HTML
+}
+
+type releaseAPIRecord struct {
+	Name    string `json:"name"`
+	Version string `json:"version"`
+
+	URL string `json:"url"`
 }
 
 type ReleaseSorting []Release
@@ -140,6 +148,18 @@ func (r *Release) NotesInMarkdown() (template.HTML, error) {
 
 	// todo sanitized markdown
 	return template.HTML(*r.notesInMarkdown), nil
+}
+
+func (r Release) MarshalJSON() ([]byte, error) {
+	record := releaseAPIRecord{
+		Name:    r.Source.Full,
+		Version: r.Version.AsString(),
+
+		// todo MD5 is expensive to get
+		URL: r.UserVisibleDownloadURL(),
+	}
+
+	return json.Marshal(record)
 }
 
 func (s ReleaseSorting) Len() int           { return len(s) }

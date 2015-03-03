@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	bosherr "github.com/cloudfoundry/bosh-agent/errors"
@@ -173,4 +174,29 @@ func (c ReleasesController) showSingleRelease(r martrend.Render, relSource, relV
 	viewRel.Graph = bhmiscui.NewReleaseGraph(viewRel.Packages, viewJobs, c.runner, c.logger)
 
 	r.HTML(200, tmpl, &viewRel)
+}
+
+func (c ReleasesController) APIV1Index(req *http.Request, r martrend.Render, params mart.Params) {
+	relSource := params["_1"]
+
+	if len(relSource) == 0 {
+		r.JSON(400, map[string]string{"error": "Param 'source' must be non-empty"})
+		return
+	}
+
+	relVerRecs, found, err := c.releasesRepo.FindAll(relSource)
+	if err != nil {
+		r.HTML(500, c.errorTmpl, err)
+		return
+	}
+
+	if !found {
+		r.JSON(404, map[string]string{"error": fmt.Sprintf("Release '%s' is not found", relSource)})
+		return
+	}
+
+	// Show list of latest versions for the specific stemcell name
+	viewRels := bhrelui.NewSameSourceReleases(relSource, relVerRecs)
+
+	r.JSON(200, viewRels.ForAPI())
 }

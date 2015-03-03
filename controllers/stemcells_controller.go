@@ -59,7 +59,7 @@ func (c StemcellsController) APIV1Index(req *http.Request, r martrend.Render) {
 	filter := bhstemui.StemcellFilter{Name: req.URL.Query().Get("name")}
 
 	if len(filter.Name) == 0 {
-		r.JSON(404, map[string]string{"error": "Param 'name' must be non-empty"})
+		r.JSON(400, map[string]string{"error": "Param 'name' must be non-empty"})
 		return
 	}
 
