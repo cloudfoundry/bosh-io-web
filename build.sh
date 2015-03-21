@@ -14,7 +14,9 @@ echo "Building bosh-blobstore-s3"
 tar=s3cli.tar.gz
 src_dir=s3cli-src
 rm -rf $src_dir
-curl -L -o $tar https://github.com/pivotal-golang/s3cli/tarball/2c4a7f0ceef411532bb051e7ca55a490a565cf60
+# Use cppforlife/s3cli which now uses s3gof3r to take advantage of parallel uploads.
+# (Had a problem uploading 5gb files with pivotal-golang/s3cli).
+curl -L -o $tar https://github.com/cppforlife/s3cli/tarball/403686805a37d59babe5719568d78a16dbf8d8c4
 mkdir $src_dir
 tar -xzf $tar -C $src_dir/ --strip-components 1
 ( set -e; cd $src_dir; bin/build )
