@@ -44,7 +44,7 @@ ssh -t vcap@$ip "cd $src_path && bundle install"
 
 echo "Running new version of bosh-hub with BOSH_HUB_KILL env var"
 nohup_cmd="nohup ./run.sh ./worker.json >$log_path/stdout.log 2>$log_path/stderr.log"
-ssh vcap@$ip "cd $src_path && $kill_marker=1 TMPDIR=$tmp_path exec $nohup_cmd &"
+ssh vcap@$ip "cd $src_path && $kill_marker=1 HOME=$tmp_path TMPDIR=$tmp_path exec $nohup_cmd &"
 
 echo "Check if bosh-hub is running after 10 secs"
 sleep 10
