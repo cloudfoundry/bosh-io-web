@@ -9,12 +9,21 @@
 
   {{ if .DistroGroups }}
     {{ if .Filter.ShowingAllVersions }}
-      {{ template "shared/_upload_version_warning" }}
+      <p>Upload latest version to your BOSH Director:</p>
 
       <pre class="terminal">
-# Upload latest version
 $ bosh upload stemcell https://bosh.io/d/stemcells/{{ .Filter.Name }}
 </pre>
+
+      {{ template "shared/_upload_version_warning" }}
+
+      <hr/>
+
+      <p>
+        Alternatively,
+        <a href="https://bosh.io/d/stemcells/{{ .Filter.Name }}">download</a>
+        stemcell tarball locally:
+      </p>
 
       <pre class="terminal">
 # ...or download it directly using curl

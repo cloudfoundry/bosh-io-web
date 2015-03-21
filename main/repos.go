@@ -43,7 +43,6 @@ type ReleaseTarballLinkerOptions struct {
 
 type Repos struct {
 	releasesRepo        bhrelsrepo.ReleasesRepository
-	releaseTarsRepo     bhreltarsrepo.ReleaseTarballsRepository
 	releaseVersionsRepo bhrelsrepo.ReleaseVersionsRepository
 	jobsRepo            bhjobsrepo.JobsRepository
 
@@ -93,19 +92,20 @@ func NewRepos(options ReposOptions, fs boshsys.FileSystem, logger boshlog.Logger
 	}
 
 	releaseNotesRepo := bhnotesrepo.NewConcreteNotesRepository(i.releaseNotesIndex, logger)
+	releaseTarsRepo := bhreltarsrepo.NewConcreteReleaseTarballsRepository(i.releaseTarsIndex, linkerFactory, logger)
 
 	releasesRepo := bhrelsrepo.NewConcreteReleasesRepository(
 		options.PredefinedReleaseSources,
 		predefinedAvatars,
 		i.releasesIndex,
 		releaseNotesRepo,
+		releaseTarsRepo,
 		logger,
 	)
 
 	repos := Repos{
 		releasesRepo: releasesRepo,
 
-		releaseTarsRepo:     bhreltarsrepo.NewConcreteReleaseTarballsRepository(i.releaseTarsIndex, linkerFactory, logger),
 		releaseVersionsRepo: bhrelsrepo.NewConcreteReleaseVersionsRepository(i.releaseVersionsIndex, logger),
 		jobsRepo:            bhjobsrepo.NewConcreteJobsRepository(i.jobsIndex, logger),
 
@@ -120,8 +120,6 @@ func NewRepos(options ReposOptions, fs boshsys.FileSystem, logger boshlog.Logger
 }
 
 func (r Repos) ReleasesRepo() bhrelsrepo.ReleasesRepository { return r.releasesRepo }
-
-func (r Repos) ReleaseTarsRepo() bhreltarsrepo.ReleaseTarballsRepository { return r.releaseTarsRepo }
 
 func (r Repos) ReleaseVersionsRepo() bhrelsrepo.ReleaseVersionsRepository {
 	return r.releaseVersionsRepo

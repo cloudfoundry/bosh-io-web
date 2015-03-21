@@ -9,14 +9,16 @@ import (
 	bpindex "github.com/cppforlife/bosh-provisioner/index"
 
 	bhnotesrepo "github.com/cppforlife/bosh-hub/release/notesrepo"
+	bhreltarsrepo "github.com/cppforlife/bosh-hub/release/releasetarsrepo"
 )
 
 type CRRepository struct {
 	predefinedSources []string
 	avatarsResolver   avatarsResolver
 
-	index     bpindex.Index
-	notesRepo bhnotesrepo.NotesRepository
+	index           bpindex.Index
+	releaseTarsRepo bhreltarsrepo.ReleaseTarballsRepository
+	notesRepo       bhnotesrepo.NotesRepository
 
 	logTag string
 	logger boshlog.Logger
@@ -39,14 +41,16 @@ func NewConcreteReleasesRepository(
 	predefinedAvatars map[string]string,
 	index bpindex.Index,
 	notesRepo bhnotesrepo.NotesRepository,
+	releaseTarsRepo bhreltarsrepo.ReleaseTarballsRepository,
 	logger boshlog.Logger,
 ) CRRepository {
 	return CRRepository{
 		predefinedSources: predefinedSources,
 		avatarsResolver:   predefinedAvatarsResolver{predefinedAvatars},
 
-		index:     index,
-		notesRepo: notesRepo,
+		index:           index,
+		releaseTarsRepo: releaseTarsRepo,
+		notesRepo:       notesRepo,
 
 		logTag: "CRRepository",
 		logger: logger,
@@ -111,6 +115,7 @@ func (r CRRepository) FindAll(source string) ([]ReleaseVersionRec, bool, error) 
 	for i, _ := range relVerRecs {
 		// Make sure to change real relVerRec
 		relVerRecs[i].notesRepo = r.notesRepo
+		relVerRecs[i].releaseTarsRepo = r.releaseTarsRepo
 	}
 
 	return relVerRecs, true, nil
@@ -139,7 +144,8 @@ func (r CRRepository) FindLatest(source string) (ReleaseVersionRec, bool, error)
 
 func (r CRRepository) Find(source, version string) (ReleaseVersionRec, error) {
 	relVerRec := ReleaseVersionRec{
-		notesRepo: r.notesRepo,
+		notesRepo:       r.notesRepo,
+		releaseTarsRepo: r.releaseTarsRepo,
 
 		Source:     source,
 		VersionRaw: version,

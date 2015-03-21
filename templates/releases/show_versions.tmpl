@@ -26,11 +26,11 @@
 
             {{ range .Releases }}
               <li class="list-group-item">
-                <p><a href="{{ .URL }}">Version {{ .Version }}</a> &mdash; <a href="{{ .DownloadURL }}">Download</a></p>
-
-                {{ if .IsLatest }}
-                  {{ template "shared/_upload_version_warning" }}
-                {{ end }}
+                <p>
+                  <a href="{{ .URL }}">Version {{ .Version }}</a> &mdash;
+                  <a href="{{ .DownloadURL }}">Download</a>
+                  <span class="sha1">sha1: {{ .TarballSHA1 }}</span>
+                </p>
 
                 <pre class="prettyprint terminal">{{ if .IsLatest }}
 # Upload latest version, currently {{ .Version }}
@@ -39,6 +39,10 @@ $ bosh upload release {{ .UserVisibleLatestDownloadURL }}
 # Upload specific version{{ end }}
 $ bosh upload release {{ .UserVisibleDownloadURL }}
 </pre>
+
+                {{ if .IsLatest }}
+                  {{ template "shared/_upload_version_warning" }}
+                {{ end }}
               </li>
             {{ end }}
           </ul>

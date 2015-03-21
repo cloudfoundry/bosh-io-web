@@ -34,12 +34,20 @@
 
         <h3 class="page-header">Usage</h3>
 
-        <p>Upload (or <a href="{{ .DownloadURL }}">download</a>) this release version to your BOSH Director:</p>
-
-        {{ template "shared/_upload_version_warning" }}
+        <p>Upload this release version to your BOSH Director:</p>
 
         <pre class="prettyprint terminal">
 $ bosh upload release {{ .UserVisibleDownloadURL }}</pre>
+
+        {{ template "shared/_upload_version_warning" }}
+
+        <hr/>
+
+        <p>
+          Alternatively, <a href="{{ .DownloadURL }}">download</a>
+          <span class="sha1">sha1: {{ .TarballSHA1 }}</span>
+          release tarball locally:
+        </p>
 
         <pre class="prettyprint terminal">
 # ...or download it directly using curl
@@ -48,6 +56,8 @@ $ curl -L -J -O {{ .UserVisibleDownloadURL }}
 # or with wget...
 $ wget --content-disposition {{ .UserVisibleDownloadURL }}
 </pre>
+
+        <hr/>
 
         <p>Modify deployment manifest to use this release in addition to any other used releases:</p>
         <pre class="prettyprint">

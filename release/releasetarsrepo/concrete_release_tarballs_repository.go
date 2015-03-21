@@ -5,7 +5,6 @@ import (
 	boshlog "github.com/cloudfoundry/bosh-agent/logger"
 	bpindex "github.com/cppforlife/bosh-provisioner/index"
 
-	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
 	bhs3 "github.com/cppforlife/bosh-hub/s3"
 )
 
@@ -13,6 +12,11 @@ type CRTRepository struct {
 	index      bpindex.Index
 	urlFactory bhs3.URLFactory
 	logger     boshlog.Logger
+}
+
+type releaseVersionRecKey struct {
+	Source     string
+	VersionRaw string
 }
 
 func NewConcreteReleaseTarballsRepository(
@@ -27,10 +31,12 @@ func NewConcreteReleaseTarballsRepository(
 	}
 }
 
-func (r CRTRepository) Find(relVerRec bhrelsrepo.ReleaseVersionRec) (ReleaseTarballRec, bool, error) {
+func (r CRTRepository) Find(source, version string) (ReleaseTarballRec, bool, error) {
 	var relTarRec ReleaseTarballRec
 
-	err := r.index.Find(relVerRec, &relTarRec)
+	key := releaseVersionRecKey{Source: source, VersionRaw: version}
+
+	err := r.index.Find(key, &relTarRec)
 	if err != nil {
 		if err == bpindex.ErrNotFound {
 			return relTarRec, false, nil
@@ -40,13 +46,16 @@ func (r CRTRepository) Find(relVerRec bhrelsrepo.ReleaseVersionRec) (ReleaseTarb
 	}
 
 	relTarRec.urlFactory = r.urlFactory
-	relTarRec.relVerRec = relVerRec
+	relTarRec.source = source
+	relTarRec.versionRaw = version
 
 	return relTarRec, true, nil
 }
 
-func (r CRTRepository) Save(relVerRec bhrelsrepo.ReleaseVersionRec, relTarRec ReleaseTarballRec) error {
-	err := r.index.Save(relVerRec, relTarRec)
+func (r CRTRepository) Save(source, version string, relTarRec ReleaseTarballRec) error {
+	key := releaseVersionRecKey{Source: source, VersionRaw: version}
+
+	err := r.index.Save(key, relTarRec)
 	if err != nil {
 		return bosherr.WrapError(err, "Saving release tarball")
 	}

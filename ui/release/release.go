@@ -134,6 +134,15 @@ func (r Release) IsCPI() bool {
 	return strings.HasSuffix(r.Name, "-cpi")
 }
 
+func (r Release) TarballSHA1() (string, error) {
+	relTarRec, _, err := r.relVerRec.Tarball()
+	if err != nil {
+		return "", err
+	}
+
+	return relTarRec.SHA1, nil
+}
+
 func (r *Release) NotesInMarkdown() (template.HTML, error) {
 	if r.notesInMarkdown == nil {
 		// Do not care about found -> no UI indicator

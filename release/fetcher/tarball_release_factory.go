@@ -10,7 +10,6 @@ import (
 	bhtarball "github.com/cppforlife/bosh-hub/release/fetcher/tarball"
 	bhjobsrepo "github.com/cppforlife/bosh-hub/release/jobsrepo"
 	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
-	bhreltarsrepo "github.com/cppforlife/bosh-hub/release/releasetarsrepo"
 )
 
 type TarballReleaseFactory struct {
@@ -22,7 +21,6 @@ type TarballReleaseFactory struct {
 	jobReaderFactory     bpreljob.ReaderFactory
 
 	releasesRepo        bhrelsrepo.ReleasesRepository
-	releaseTarsRepo     bhreltarsrepo.ReleaseTarballsRepository
 	releaseVersionsRepo bhrelsrepo.ReleaseVersionsRepository
 	jobsRepo            bhjobsrepo.JobsRepository
 
@@ -36,7 +34,6 @@ func NewTarballReleaseFactory(
 	releaseReaderFactory bprel.ReaderFactory,
 	jobReaderFactory bpreljob.ReaderFactory,
 	releasesRepo bhrelsrepo.ReleasesRepository,
-	releaseTarsRepo bhreltarsrepo.ReleaseTarballsRepository,
 	releaseVersionsRepo bhrelsrepo.ReleaseVersionsRepository,
 	jobsRepo bhjobsrepo.JobsRepository,
 	logger boshlog.Logger,
@@ -50,7 +47,6 @@ func NewTarballReleaseFactory(
 		jobReaderFactory:     jobReaderFactory,
 
 		releasesRepo:        releasesRepo,
-		releaseTarsRepo:     releaseTarsRepo,
 		releaseVersionsRepo: releaseVersionsRepo,
 		jobsRepo:            jobsRepo,
 
@@ -64,6 +60,7 @@ func (f TarballReleaseFactory) NewTarballRelease(manifestPath string) TarballRel
 	extractor := bhtarball.NewExtractor(
 		f.releaseReaderFactory,
 		f.jobReaderFactory,
+		f.releasesRepo,
 		f.releaseVersionsRepo,
 		f.jobsRepo,
 		f.logger,
@@ -71,7 +68,6 @@ func (f TarballReleaseFactory) NewTarballRelease(manifestPath string) TarballRel
 
 	uploader := bhtarball.NewUploader(
 		f.blobstore,
-		f.releaseTarsRepo,
 		f.logger,
 	)
 

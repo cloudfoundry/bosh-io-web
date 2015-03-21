@@ -30,6 +30,15 @@ a {
   border-radius: 0;
 }
 
+.sha1 {
+  color: #777;
+  border: 1px solid #ccc;
+  padding: 0 3px;
+  background: #eee;
+  font: 12px Menlo, Monaco, Consolas, 'Courier New', monospace;
+  border-radius: 5px;
+}
+
 /* Lists */
 ul { padding-left: 17px; }
 

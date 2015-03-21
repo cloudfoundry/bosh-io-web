@@ -1,10 +1,7 @@
 package releasetarsrepo
 
-import (
-	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
-)
-
 type ReleaseTarballsRepository interface {
-	Find(bhrelsrepo.ReleaseVersionRec) (ReleaseTarballRec, bool, error)
-	Save(bhrelsrepo.ReleaseVersionRec, ReleaseTarballRec) error
+	Find(source, version string) (ReleaseTarballRec, bool, error)
+	Save(source, version string, relTarRec ReleaseTarballRec) error
+	// todo figure out source/version vs relVerRec
 }

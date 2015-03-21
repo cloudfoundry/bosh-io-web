@@ -9,12 +9,10 @@ import (
 	martrend "github.com/martini-contrib/render"
 
 	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
-	bhreltarsrepo "github.com/cppforlife/bosh-hub/release/releasetarsrepo"
 )
 
 type ReleaseTarballsController struct {
-	releasesRepo    bhrelsrepo.ReleasesRepository
-	releaseTarsRepo bhreltarsrepo.ReleaseTarballsRepository
+	releasesRepo bhrelsrepo.ReleasesRepository
 
 	errorTmpl string
 
@@ -23,12 +21,10 @@ type ReleaseTarballsController struct {
 
 func NewReleaseTarballsController(
 	releasesRepo bhrelsrepo.ReleasesRepository,
-	releaseTarsRepo bhreltarsrepo.ReleaseTarballsRepository,
 	logger boshlog.Logger,
 ) ReleaseTarballsController {
 	return ReleaseTarballsController{
-		releasesRepo:    releasesRepo,
-		releaseTarsRepo: releaseTarsRepo,
+		releasesRepo: releasesRepo,
 
 		errorTmpl: "error",
 
@@ -49,10 +45,10 @@ func (c ReleaseTarballsController) Download(req *http.Request, r martrend.Render
 	relVersion := req.URL.Query().Get("v")
 
 	var relVerRec bhrelsrepo.ReleaseVersionRec
+	var err error
 
 	if relVersion == "" {
 		var found bool
-		var err error
 
 		relVerRec, found, err = c.releasesRepo.FindLatest(relSource)
 		if err != nil {
@@ -66,13 +62,14 @@ func (c ReleaseTarballsController) Download(req *http.Request, r martrend.Render
 			return
 		}
 	} else {
-		relVerRec = bhrelsrepo.ReleaseVersionRec{
-			Source:     relSource,
-			VersionRaw: relVersion,
+		relVerRec, err = c.releasesRepo.Find(relSource, relVersion)
+		if err != nil {
+			r.HTML(500, c.errorTmpl, err)
+			return
 		}
 	}
 
-	relTarRec, found, err := c.releaseTarsRepo.Find(relVerRec)
+	relTarRec, found, err := relVerRec.Tarball()
 	if err != nil {
 		r.HTML(500, c.errorTmpl, err)
 		return

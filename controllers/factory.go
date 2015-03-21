@@ -8,14 +8,12 @@ import (
 	bhimpsrepo "github.com/cppforlife/bosh-hub/release/importsrepo"
 	bhjobsrepo "github.com/cppforlife/bosh-hub/release/jobsrepo"
 	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
-	bhreltarsrepo "github.com/cppforlife/bosh-hub/release/releasetarsrepo"
 	bhwatchersrepo "github.com/cppforlife/bosh-hub/release/watchersrepo"
 	bhstemsrepo "github.com/cppforlife/bosh-hub/stemcell/stemsrepo"
 )
 
 type FactoryRepos interface {
 	ReleasesRepo() bhrelsrepo.ReleasesRepository
-	ReleaseTarsRepo() bhreltarsrepo.ReleaseTarballsRepository
 	ReleaseVersionsRepo() bhrelsrepo.ReleaseVersionsRepository
 	JobsRepo() bhjobsrepo.JobsRepository
 
@@ -58,16 +56,12 @@ func NewFactory(apiKey string, r FactoryRepos, runner boshsys.CmdRunner, logger 
 			logger,
 		),
 
-		ReleaseTarballsController: NewReleaseTarballsController(
-			r.ReleasesRepo(),
-			r.ReleaseTarsRepo(),
-			logger,
-		),
+		ReleaseTarballsController: NewReleaseTarballsController(r.ReleasesRepo(), logger),
 
 		StemcellsController: NewStemcellsController(r.StemcellsRepo(), logger),
 
-		JobsController:     NewJobsController(r.ReleaseVersionsRepo(), r.JobsRepo(), logger),
-		PackagesController: NewPackagesController(r.ReleaseVersionsRepo(), runner, logger),
+		JobsController:     NewJobsController(r.ReleasesRepo(), r.ReleaseVersionsRepo(), r.JobsRepo(), logger),
+		PackagesController: NewPackagesController(r.ReleasesRepo(), r.ReleaseVersionsRepo(), runner, logger),
 
 		ReleaseWatchersController:   NewReleaseWatchersController(apiKey, r.WatchersRepo(), logger),
 		ReleaseImportsController:    NewReleaseImportsController(r.ImportsRepo(), logger),

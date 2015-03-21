@@ -14,6 +14,7 @@ type Extractor struct {
 	releaseReaderFactory bprel.ReaderFactory
 	jobReaderFactory     bpreljob.ReaderFactory
 
+	releasesRepo        bhrelsrepo.ReleasesRepository
 	releaseVersionsRepo bhrelsrepo.ReleaseVersionsRepository
 	jobsRepo            bhjobsrepo.JobsRepository
 
@@ -24,6 +25,7 @@ type Extractor struct {
 func NewExtractor(
 	releaseReaderFactory bprel.ReaderFactory,
 	jobReaderFactory bpreljob.ReaderFactory,
+	releasesRepo bhrelsrepo.ReleasesRepository,
 	releaseVersionsRepo bhrelsrepo.ReleaseVersionsRepository,
 	jobsRepo bhjobsrepo.JobsRepository,
 	logger boshlog.Logger,
@@ -32,6 +34,7 @@ func NewExtractor(
 		releaseReaderFactory: releaseReaderFactory,
 		jobReaderFactory:     jobReaderFactory,
 
+		releasesRepo:        releasesRepo,
 		releaseVersionsRepo: releaseVersionsRepo,
 		jobsRepo:            jobsRepo,
 
@@ -50,9 +53,9 @@ func (e Extractor) Extract(url, tgzPath string) (bhrelsrepo.ReleaseVersionRec, e
 		return relVerRec, bosherr.WrapError(err, "Extracting release and jobs")
 	}
 
-	relVerRec = bhrelsrepo.ReleaseVersionRec{
-		Source:     url,
-		VersionRaw: rel.Version,
+	relVerRec, err = e.releasesRepo.Find(url, rel.Version)
+	if err != nil {
+		return relVerRec, bosherr.WrapError(err, "Finding release")
 	}
 
 	err = e.jobsRepo.SaveAll(relVerRec, relJobs)

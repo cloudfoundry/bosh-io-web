@@ -17,7 +17,6 @@ import (
 	bhimpsrepo "github.com/cppforlife/bosh-hub/release/importsrepo"
 	bhjobsrepo "github.com/cppforlife/bosh-hub/release/jobsrepo"
 	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
-	bhreltarsrepo "github.com/cppforlife/bosh-hub/release/releasetarsrepo"
 )
 
 type FactoryOptions struct {
@@ -30,7 +29,6 @@ type FactoryOptions struct {
 
 type FactoryRepos interface {
 	ReleasesRepo() bhrelsrepo.ReleasesRepository
-	ReleaseTarsRepo() bhreltarsrepo.ReleaseTarballsRepository
 	ReleaseVersionsRepo() bhrelsrepo.ReleaseVersionsRepository
 	JobsRepo() bhjobsrepo.JobsRepository
 	ImportsRepo() bhimpsrepo.ImportsRepository
@@ -78,7 +76,6 @@ func NewFactory(
 			releaseReaderFactory,
 			jobReaderFactory,
 			repos.ReleasesRepo(),
-			repos.ReleaseTarsRepo(),
 			repos.ReleaseVersionsRepo(),
 			repos.JobsRepo(),
 			logger,

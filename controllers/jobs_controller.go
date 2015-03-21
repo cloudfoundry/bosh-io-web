@@ -15,6 +15,7 @@ import (
 )
 
 type JobsController struct {
+	releasesRepo        bhrelsrepo.ReleasesRepository
 	releaseVersionsRepo bhrelsrepo.ReleaseVersionsRepository
 	jobsRepo            bhjobsrepo.JobsRepository
 
@@ -26,11 +27,13 @@ type JobsController struct {
 }
 
 func NewJobsController(
+	releasesRepo bhrelsrepo.ReleasesRepository,
 	releaseVersionsRepo bhrelsrepo.ReleaseVersionsRepository,
 	jobsRepo bhjobsrepo.JobsRepository,
 	logger boshlog.Logger,
 ) JobsController {
 	return JobsController{
+		releasesRepo:        releasesRepo,
 		releaseVersionsRepo: releaseVersionsRepo,
 		jobsRepo:            jobsRepo,
 
@@ -51,9 +54,10 @@ func (c JobsController) Show(req *http.Request, r martrend.Render, params mart.P
 
 	c.logger.Debug(c.logTag, "Release source '%s'", relSource)
 
-	relVerRec := bhrelsrepo.ReleaseVersionRec{
-		Source:     relSource,
-		VersionRaw: relVersion,
+	relVerRec, err := c.releasesRepo.Find(relSource, relVersion)
+	if err != nil {
+		r.HTML(500, c.errorTmpl, err)
+		return
 	}
 
 	rel, found, err := c.releaseVersionsRepo.Find(relVerRec)

@@ -102,9 +102,9 @@ func (w PeriodicWatcher) lookAtRelease(watcherRec bhwatchersrepo.WatcherRec) err
 	}
 
 	for _, manifest := range pathToManifests {
-		relVerRec := bhrelsrepo.ReleaseVersionRec{
-			Source:     watcherRec.RelSource,
-			VersionRaw: manifest.Release.Version,
+		relVerRec, err := w.releasesRepo.Find(watcherRec.RelSource, manifest.Release.Version)
+		if err != nil {
+			return bosherr.WrapError(err, "Finding release version '%v'", relVerRec)
 		}
 
 		if relVerRec.Version().IsLt(watcherMinVersion) {

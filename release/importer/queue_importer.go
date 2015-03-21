@@ -85,14 +85,15 @@ func (i QueueImporter) pickUpNext() (bool, error) {
 		return true, nil // There are no more pending imports
 	}
 
-	relVerRec := bhrelsrepo.ReleaseVersionRec{
-		Source:     importRec.RelSource,
-		VersionRaw: importRec.Version,
+	// todo releasesRepo.Find vs Contains is weird
+	relVerRec, err := i.releasesRepo.Find(importRec.RelSource, importRec.Version)
+	if err != nil {
+		return false, bosherr.WrapError(err, "Finding release version '%v'", relVerRec)
 	}
 
 	found, err = i.releasesRepo.Contains(relVerRec)
 	if err != nil {
-		return false, bosherr.WrapError(err, "Finding release version '%v'", relVerRec)
+		return false, bosherr.WrapError(err, "Contains check release version '%v'", relVerRec)
 	} else if found {
 		return false, nil // Already imported by someone else; skipping
 	}

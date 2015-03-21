@@ -7,10 +7,12 @@ import (
 	semiver "github.com/cppforlife/go-semi-semantic/version"
 
 	bhnotesrepo "github.com/cppforlife/bosh-hub/release/notesrepo"
+	bhreltarsrepo "github.com/cppforlife/bosh-hub/release/releasetarsrepo"
 )
 
 type ReleaseVersionRec struct {
 	notesRepo       bhnotesrepo.NotesRepository
+	releaseTarsRepo bhreltarsrepo.ReleaseTarballsRepository
 	avatarsResolver avatarsResolver
 
 	Source     string
@@ -48,6 +50,14 @@ func (r ReleaseVersionRec) Version() semiver.Version {
 
 func (r ReleaseVersionRec) AvatarURL() string {
 	return r.AsSource().AvatarURL()
+}
+
+func (r ReleaseVersionRec) Tarball() (bhreltarsrepo.ReleaseTarballRec, bool, error) {
+	return r.releaseTarsRepo.Find(r.Source, r.VersionRaw)
+}
+
+func (r ReleaseVersionRec) SetTarball(relTarRec bhreltarsrepo.ReleaseTarballRec) error {
+	return r.releaseTarsRepo.Save(r.Source, r.VersionRaw, relTarRec)
 }
 
 func (r ReleaseVersionRec) Notes() (bhnotesrepo.NoteRec, bool, error) {

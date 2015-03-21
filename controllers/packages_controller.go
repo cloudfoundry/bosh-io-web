@@ -14,6 +14,7 @@ import (
 )
 
 type PackagesController struct {
+	releasesRepo        bhrelsrepo.ReleasesRepository
 	releaseVersionsRepo bhrelsrepo.ReleaseVersionsRepository
 
 	showTmpl  string
@@ -26,11 +27,13 @@ type PackagesController struct {
 }
 
 func NewPackagesController(
+	releasesRepo bhrelsrepo.ReleasesRepository,
 	releaseVersionsRepo bhrelsrepo.ReleaseVersionsRepository,
 	runner boshsys.CmdRunner,
 	logger boshlog.Logger,
 ) PackagesController {
 	return PackagesController{
+		releasesRepo:        releasesRepo,
 		releaseVersionsRepo: releaseVersionsRepo,
 
 		showTmpl:  "packages/show",
@@ -52,9 +55,10 @@ func (c PackagesController) Show(req *http.Request, r martrend.Render, params ma
 
 	c.logger.Debug(c.logTag, "Release source '%s'", relSource)
 
-	relVerRec := bhrelsrepo.ReleaseVersionRec{
-		Source:     relSource,
-		VersionRaw: relVersion,
+	relVerRec, err := c.releasesRepo.Find(relSource, relVersion)
+	if err != nil {
+		r.HTML(500, c.errorTmpl, err)
+		return
 	}
 
 	rel, found, err := c.releaseVersionsRepo.Find(relVerRec)

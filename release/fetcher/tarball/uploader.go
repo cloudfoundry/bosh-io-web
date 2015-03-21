@@ -10,8 +10,7 @@ import (
 )
 
 type Uploader struct {
-	blobstore       boshblob.Blobstore
-	releaseTarsRepo bhreltarsrepo.ReleaseTarballsRepository
+	blobstore boshblob.Blobstore
 
 	logTag string
 	logger boshlog.Logger
@@ -19,12 +18,10 @@ type Uploader struct {
 
 func NewUploader(
 	blobstore boshblob.Blobstore,
-	releaseTarsRepo bhreltarsrepo.ReleaseTarballsRepository,
 	logger boshlog.Logger,
 ) Uploader {
 	return Uploader{
-		blobstore:       blobstore,
-		releaseTarsRepo: releaseTarsRepo,
+		blobstore: blobstore,
 
 		logTag: "Uploader",
 		logger: logger,
@@ -44,7 +41,7 @@ func (u Uploader) Upload(relVerRec bhrelsrepo.ReleaseVersionRec, tgzPath string)
 		SHA1:   sha,
 	}
 
-	err = u.releaseTarsRepo.Save(relVerRec, relTarRec)
+	err = relVerRec.SetTarball(relTarRec)
 	if err != nil {
 		return bosherr.WrapError(err, "Saving release into release tarballs repository")
 	}
