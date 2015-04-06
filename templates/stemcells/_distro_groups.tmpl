@@ -16,6 +16,14 @@
 $ bosh upload stemcell https://bosh.io/d/stemcells/{{ .Filter.Name }}
 </pre>
 
+      <pre class="terminal">
+# ...or download it directly using curl
+$ curl -L -J -O https://bosh.io/d/stemcells/{{ .Filter.Name }}
+
+# or with wget...
+$ wget --content-disposition https://bosh.io/d/stemcells/{{ .Filter.Name }}
+</pre>
+
       <h3 class="page-header">All versions</h3>
     {{ end }}
 
@@ -25,7 +33,7 @@ $ bosh upload stemcell https://bosh.io/d/stemcells/{{ .Filter.Name }}
           <h4 class="section">{{ .Distro.Name }}</h4>
 
           {{ range .ByName }}
-            {{ template "stemcells/_distro_group" . }}  
+            {{ template "stemcells/_distro_group" . }}
           {{ end }}
 
         </li>
