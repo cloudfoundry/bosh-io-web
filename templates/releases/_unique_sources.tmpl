@@ -7,8 +7,10 @@
         <li class="list-group-item">
           <a href="{{ .URL }}">{{ .Short }}</a>
 
-          {{ if .FromGithub }}
-            <a href="{{ .GithubURL }}" title="Source on GitHub" class="github-link pull-right">gh</a>
+          {{ if and .FromGithub .AvatarURL }}
+            <a href="{{ .GithubURL }}" title="Source on GitHub" class="github-link">
+              <img src="{{ .AvatarURL }}" class="small">
+            </a>
           {{ end }}
         </li>
       {{ end }}

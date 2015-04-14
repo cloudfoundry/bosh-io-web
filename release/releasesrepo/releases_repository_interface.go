@@ -4,8 +4,6 @@ import (
 	bprel "github.com/cppforlife/bosh-provisioner/release"
 )
 
-type Source string
-
 type ReleasesRepository interface {
 	// todo return sources with ReleaseVersionRec
 	ListCurated() ([]ReleaseVersionRec, error)
@@ -22,4 +20,8 @@ type ReleasesRepository interface {
 type ReleaseVersionsRepository interface {
 	Find(ReleaseVersionRec) (bprel.Release, bool, error)
 	Save(ReleaseVersionRec, bprel.Release) error
+}
+
+type avatarsResolver interface {
+	Resolve(string) string
 }

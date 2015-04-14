@@ -133,7 +133,7 @@ func (c ReleasesController) showMultipleReleases(r martrend.Render, relSource st
 		return
 	}
 
-	viewRels := bhrelui.NewSameSourceReleases(relSource, relVerRecs)
+	viewRels := bhrelui.NewSameSourceReleases(bhrelsrepo.Source{Full: relSource}, relVerRecs)
 
 	r.HTML(200, c.showVersionsTmpl, viewRels)
 }
@@ -196,7 +196,7 @@ func (c ReleasesController) APIV1Index(req *http.Request, r martrend.Render, par
 	}
 
 	// Show list of latest versions for the specific stemcell name
-	viewRels := bhrelui.NewSameSourceReleases(relSource, relVerRecs)
+	viewRels := bhrelui.NewSameSourceReleases(bhrelsrepo.Source{Full: relSource}, relVerRecs)
 
 	r.JSON(200, viewRels.ForAPI())
 }

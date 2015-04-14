@@ -2,41 +2,36 @@ package release
 
 import (
 	"fmt"
-	"strings"
-)
 
-const (
-	sourcePrefixGh = "github.com/"
+	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
 )
 
 type Source struct {
-	Full  string
-	Short string
+	src bhrelsrepo.Source
 }
 
 type SourceSorting []Source
 
-func NewSource(full string) Source {
-	return Source{
-		Full:  full,
-		Short: strings.TrimPrefix(full, sourcePrefixGh),
-	}
+func NewSource(src bhrelsrepo.Source) Source {
+	return Source{src: src}
 }
 
-func (s Source) String() string { return s.Full }
+func (s Source) Full() string { return s.src.Full }
+
+func (s Source) Short() string { return s.src.Short() }
+
+func (s Source) AvatarURL() string { return s.src.AvatarURL() }
+
+func (s Source) FromGithub() bool { return s.src.FromGithub() }
+
+func (s Source) GithubURL() string { return s.src.GithubURL() }
+
+func (s Source) String() string { return s.src.Full }
 
 func (s Source) URL() string {
-	return fmt.Sprintf("/releases/%s", s.Full)
-}
-
-func (s Source) FromGithub() bool {
-	return strings.Index(s.Full, sourcePrefixGh) == 0
-}
-
-func (s Source) GithubURL() string {
-	return fmt.Sprintf("https://%s", s.Full)
+	return fmt.Sprintf("/releases/%s", s.src.Full)
 }
 
 func (s SourceSorting) Len() int           { return len(s) }
-func (s SourceSorting) Less(i, j int) bool { return s[i].Full < s[j].Full }
+func (s SourceSorting) Less(i, j int) bool { return s[i].Full() < s[j].Full() }
 func (s SourceSorting) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }

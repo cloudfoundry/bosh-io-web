@@ -13,8 +13,9 @@ import (
 
 type CRRepository struct {
 	predefinedSources []string
-	index             bpindex.Index
+	avatarsResolver   avatarsResolver
 
+	index     bpindex.Index
 	notesRepo bhnotesrepo.NotesRepository
 
 	logTag string
@@ -25,16 +26,26 @@ type sourceToRelVerRecKey struct {
 	Source string
 }
 
+type predefinedAvatarsResolver struct {
+	locationToURL map[string]string
+}
+
+func (r predefinedAvatarsResolver) Resolve(location string) string {
+	return r.locationToURL[location]
+}
+
 func NewConcreteReleasesRepository(
 	predefinedSources []string,
+	predefinedAvatars map[string]string,
 	index bpindex.Index,
 	notesRepo bhnotesrepo.NotesRepository,
 	logger boshlog.Logger,
 ) CRRepository {
 	return CRRepository{
 		predefinedSources: predefinedSources,
-		index:             index,
+		avatarsResolver:   predefinedAvatarsResolver{predefinedAvatars},
 
+		index:     index,
 		notesRepo: notesRepo,
 
 		logTag: "CRRepository",
@@ -54,6 +65,10 @@ func (r CRRepository) ListCurated() ([]ReleaseVersionRec, error) {
 		relVerRecs = append(relVerRecs, recs...)
 	}
 
+	for i, _ := range relVerRecs {
+		relVerRecs[i].avatarsResolver = r.avatarsResolver
+	}
+
 	return relVerRecs, nil
 }
 
@@ -67,7 +82,11 @@ func (r CRRepository) ListAll() ([]Source, error) {
 	}
 
 	for _, sourceKey := range sourceKeys {
-		sources = append(sources, Source(sourceKey.Source))
+		sources = append(sources, Source{Full: sourceKey.Source})
+	}
+
+	for i, _ := range sources {
+		sources[i].avatarsResolver = r.avatarsResolver
 	}
 
 	return sources, nil

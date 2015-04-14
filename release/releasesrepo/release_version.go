@@ -2,7 +2,6 @@ package releasesrepo
 
 import (
 	"fmt"
-	"strings"
 
 	bosherr "github.com/cloudfoundry/bosh-agent/errors"
 	semiver "github.com/cppforlife/go-semi-semantic/version"
@@ -11,10 +10,13 @@ import (
 )
 
 type ReleaseVersionRec struct {
-	notesRepo bhnotesrepo.NotesRepository
+	notesRepo       bhnotesrepo.NotesRepository
+	avatarsResolver avatarsResolver
 
 	Source     string
 	VersionRaw string
+
+	avatarURL string
 }
 
 type ReleaseVersionRecSorting []ReleaseVersionRec
@@ -23,10 +25,13 @@ func (r ReleaseVersionRec) String() string {
 	return fmt.Sprintf("%s %s", r.Source, r.VersionRaw)
 }
 
-func (r ReleaseVersionRec) SourceShortName() string {
-	parts := strings.Split(r.Source, "/")
-
-	return parts[len(parts)-1]
+// AsSource returns Source object based on the Source string
+// todo refactor to remove Source string
+func (r ReleaseVersionRec) AsSource() Source {
+	return Source{
+		Full:            r.Source,
+		avatarsResolver: r.avatarsResolver,
+	}
 }
 
 // Version returns parsed version
@@ -39,6 +44,10 @@ func (r ReleaseVersionRec) Version() semiver.Version {
 	}
 
 	return ver
+}
+
+func (r ReleaseVersionRec) AvatarURL() string {
+	return r.AsSource().AvatarURL()
 }
 
 func (r ReleaseVersionRec) Notes() (bhnotesrepo.NoteRec, bool, error) {

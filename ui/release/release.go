@@ -53,7 +53,7 @@ func NewRelease(relVerRec bhrelsrepo.ReleaseVersionRec, r bprel.Release) Release
 	rel := Release{
 		relVerRec: relVerRec,
 
-		Source: NewSource(relVerRec.Source),
+		Source: NewSource(relVerRec.AsSource()),
 
 		Name:    r.Name,
 		Version: relVerRec.Version(),
@@ -73,7 +73,7 @@ func NewIncompleteRelease(relVerRec bhrelsrepo.ReleaseVersionRec) Release {
 	return Release{
 		relVerRec: relVerRec,
 
-		Source:  NewSource(relVerRec.Source),
+		Source:  NewSource(relVerRec.AsSource()),
 		Version: relVerRec.Version(),
 	}
 }
@@ -83,6 +83,8 @@ func (r Release) AllURL() string { return "/releases" }
 func (r Release) AllVersionsURL() string {
 	return fmt.Sprintf("/releases/%s", r.Source)
 }
+
+func (r Release) AvatarURL() string { return r.relVerRec.AvatarURL() }
 
 func (r Release) URL() string {
 	return fmt.Sprintf("/releases/%s?version=%s", r.Source, r.Version)
@@ -152,7 +154,7 @@ func (r *Release) NotesInMarkdown() (template.HTML, error) {
 
 func (r Release) MarshalJSON() ([]byte, error) {
 	record := releaseAPIRecord{
-		Name:    r.Source.Full,
+		Name:    r.Source.Full(),
 		Version: r.Version.AsString(),
 
 		// todo MD5 is expensive to get

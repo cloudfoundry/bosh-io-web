@@ -18,7 +18,7 @@ type ReleaseTarballRec struct {
 func (r ReleaseTarballRec) ActualDownloadURL() (string, error) {
 	path := "/" + r.BlobID
 
-	fileName := fmt.Sprintf("%s-%s.tgz", r.relVerRec.SourceShortName(), r.relVerRec.VersionRaw)
+	fileName := fmt.Sprintf("%s-%s.tgz", r.relVerRec.AsSource().ShortName(), r.relVerRec.VersionRaw)
 
 	return r.urlFactory.New(path, fileName).String()
 }

@@ -12,7 +12,7 @@ type githubSource struct {
 }
 
 func newGithubSource(source bhrelsrepo.Source) (githubSource, bool) {
-	parts := strings.Split(string(source), "/")
+	parts := strings.Split(source.Full, "/")
 	if len(parts) == 3 && parts[0] == "github.com" {
 		return githubSource{Owner: parts[1], Repo: parts[2]}, true
 	}

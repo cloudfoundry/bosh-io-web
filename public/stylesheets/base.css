@@ -44,6 +44,20 @@ ul { padding-left: 17px; }
   border-color: #eee;
 }
 
+.list-group-item img {
+  float: right;
+  margin-top: 5px;
+  margin-left: 9px;
+  box-shadow: 0px 0px 2px #aaa;
+}
+
+.list-group-item img.small {
+  margin-top: 3px;
+  width: 20px;
+}
+
+.list-group-item img[src*="7809479"] { border-radius: 20%; }
+
 .list-group-item:first-child {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
@@ -109,8 +123,8 @@ h2 {
   color: #000;
 }
 
-header h2 > a, 
-header h2 > a:hover, 
+header h2 > a,
+header h2 > a:hover,
 header h2 > a:visited { color: #000; }
 
 header h2 span {
@@ -133,7 +147,7 @@ header .menu {
   border-left: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-header .menu li { 
+header .menu li {
   float: left;
   display: inline;
   border-right: 1px solid rgba(0, 0, 0, 0.1);

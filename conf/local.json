@@ -22,7 +22,7 @@
   },
 
   "Importer": {
-    "Enabled": true,
+    "Enabled": false,
     "Period": 60000000000,
 
     "BlobstoreType": "s3",
@@ -41,7 +41,7 @@
   },
 
   "StemcellImporter": {
-    "Enabled": false,
+    "Enabled": true,
     "Period": 30000000000,
 
     "Buckets": [{ "URL": "https://s3.amazonaws.com/bosh-jenkins-artifacts" }]

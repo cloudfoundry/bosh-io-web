@@ -76,7 +76,7 @@ func (i PeriodicGithubNoteImporter) importNotes() error {
 		}
 
 		// todo convert Source to string; argh
-		relVerRecs, _, err := i.releasesRepo.FindAll(string(source))
+		relVerRecs, _, err := i.releasesRepo.FindAll(source.Full)
 		if err != nil {
 			return bosherr.WrapError(err, "Listing all versions for release source '%s'", source)
 		}

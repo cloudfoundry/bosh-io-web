@@ -12,7 +12,7 @@ type SameSourceReleases struct {
 	Releases []Release
 }
 
-func NewSameSourceReleases(source string, relVerRecs []bhrelsrepo.ReleaseVersionRec) SameSourceReleases {
+func NewSameSourceReleases(source bhrelsrepo.Source, relVerRecs []bhrelsrepo.ReleaseVersionRec) SameSourceReleases {
 	rels := SameSourceReleases{
 		Source: NewSource(source),
 	}
@@ -41,6 +41,14 @@ func (r SameSourceReleases) FirstXReleases(x int) []Release {
 
 func (r SameSourceReleases) HasMoreThanXReleases(x int) bool {
 	return len(r.Releases) > x
+}
+
+func (r SameSourceReleases) AvatarURL() string {
+	if len(r.Releases) > 0 {
+		return r.Releases[0].AvatarURL()
+	}
+
+	return ""
 }
 
 func (s SameSourceReleases) ForAPI() []Release { return s.Releases }

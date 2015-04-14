@@ -21,7 +21,7 @@ func NewUniqueSourceReleases(relVerRecs []bhrelsrepo.ReleaseVersionRec) UniqueSo
 			sameRels.Releases = append(sameRels.Releases, rel)
 		} else {
 			sameRels := &SameSourceReleases{
-				Source:   NewSource(relVerRec.Source),
+				Source:   NewSource(relVerRec.AsSource()),
 				Releases: []Release{rel},
 			}
 			bySource[relVerRec.Source] = sameRels

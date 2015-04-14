@@ -27,6 +27,7 @@ type ReposOptions struct {
 	ConnURL string
 
 	PredefinedReleaseSources []string
+	PredefinedAvatars        map[string]string
 
 	ReleaseTarballLinker ReleaseTarballLinkerOptions
 }
@@ -70,7 +71,10 @@ func NewRepos(options ReposOptions, fs boshsys.FileSystem, logger boshlog.Logger
 		return Repos{}, err
 	}
 
-	relSourcesOpt := options.PredefinedReleaseSources
+	predefinedAvatars := options.PredefinedAvatars
+	if predefinedAvatars == nil {
+		predefinedAvatars = map[string]string{}
+	}
 
 	linkerOpts := options.ReleaseTarballLinker
 
@@ -90,8 +94,16 @@ func NewRepos(options ReposOptions, fs boshsys.FileSystem, logger boshlog.Logger
 
 	releaseNotesRepo := bhnotesrepo.NewConcreteNotesRepository(i.releaseNotesIndex, logger)
 
+	releasesRepo := bhrelsrepo.NewConcreteReleasesRepository(
+		options.PredefinedReleaseSources,
+		predefinedAvatars,
+		i.releasesIndex,
+		releaseNotesRepo,
+		logger,
+	)
+
 	repos := Repos{
-		releasesRepo: bhrelsrepo.NewConcreteReleasesRepository(relSourcesOpt, i.releasesIndex, releaseNotesRepo, logger),
+		releasesRepo: releasesRepo,
 
 		releaseTarsRepo:     bhreltarsrepo.NewConcreteReleaseTarballsRepository(i.releaseTarsIndex, linkerFactory, logger),
 		releaseVersionsRepo: bhrelsrepo.NewConcreteReleaseVersionsRepository(i.releaseVersionsIndex, logger),
