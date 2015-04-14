@@ -13,13 +13,25 @@ var (
 		},
 
 		Distro{
+			Name: "CentOS 7.x",
+
+			OSMatches: []StemcellOSMatch{
+				{OSName: "centos", OSVersion: "7"},
+			},
+
+			Sort: 2,
+		},
+
+		Distro{
 			Name: "CentOS 6.x",
 
 			OSMatches: []StemcellOSMatch{
 				{OSName: "centos", OSVersion: ""},
 			},
 
-			Sort: 2,
+			Deprecated: true,
+
+			Sort: 3,
 		},
 	}
 )

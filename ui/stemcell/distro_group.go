@@ -36,17 +36,23 @@ func NewDistroGroups(ss []bhstemsrepo.Stemcell, filter StemcellFilter) DistroGro
 	var supportedGroups []DistroGroup
 
 	for _, g := range groups {
-		uniqueStems := NewUniqueNameStemcells(g.ss, filter)
+		if g.IsVisible(filter.IncludeDeprecatedDistros) {
+			uniqueStems := NewUniqueNameStemcells(g.ss, filter)
 
-		if uniqueStems.HasAnyStemcells() {
-			g.ByName = uniqueStems
-			supportedGroups = append(supportedGroups, g)
+			if uniqueStems.HasAnyStemcells() {
+				g.ByName = uniqueStems
+				supportedGroups = append(supportedGroups, g)
+			}
 		}
 	}
 
 	sort.Sort(DistroGroupSorting(supportedGroups))
 
 	return supportedGroups
+}
+
+func (g DistroGroup) IsVisible(includeDeprecated bool) bool {
+	return g.Distro.IsVisible(includeDeprecated)
 }
 
 func (g DistroGroup) HasAnyStemcells() bool {

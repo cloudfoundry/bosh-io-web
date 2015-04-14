@@ -183,6 +183,21 @@ var _ = Describe("NewS3Stemcell", func() {
 
 			AgentType: "go",
 		},
+
+		// Numeric OS version
+		"bosh-stemcell/vsphere/bosh-stemcell-2922-vsphere-esxi-centos-7-go_agent.tgz": ExtractedPieces{
+			Name:    "bosh-vsphere-esxi-centos-7-go_agent",
+			Version: "2922",
+
+			InfName:    "vsphere",
+			HvName:     "esxi",
+			DiskFormat: "",
+
+			OSName:    "centos",
+			OSVersion: "7",
+
+			AgentType: "go",
+		},
 	}
 
 	for p, e := range examples {

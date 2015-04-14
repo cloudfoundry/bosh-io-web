@@ -8,12 +8,18 @@ type Distro struct {
 	Name string // e.g. 'Ubuntu Trusty'
 	Sort uint8  // smaller == more important
 
+	Deprecated bool
+
 	OSMatches []StemcellOSMatch
 }
 
 type StemcellOSMatch struct {
 	OSName    string // e.g. ubuntu
 	OSVersion string // e.g. trusty, ''
+}
+
+func (d Distro) IsVisible(includeDeprecated bool) bool {
+	return !d.Deprecated || (d.Deprecated && includeDeprecated)
 }
 
 func (d Distro) Matches(s bhstemsrepo.Stemcell) bool {

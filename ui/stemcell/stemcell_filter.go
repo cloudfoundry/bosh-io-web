@@ -2,6 +2,8 @@ package stemcell
 
 type StemcellFilter struct {
 	Name string
+
+	IncludeDeprecatedDistros bool
 }
 
 func (f StemcellFilter) ShowingAllVersions() bool {
