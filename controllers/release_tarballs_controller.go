@@ -38,7 +38,7 @@ func (c ReleaseTarballsController) Download(req *http.Request, r martrend.Render
 
 	if len(relSource) == 0 {
 		err := bosherr.New("Param 'source' must be non-empty")
-		r.HTML(500, c.errorTmpl, err)
+		r.HTML(400, c.errorTmpl, err)
 		return
 	}
 
