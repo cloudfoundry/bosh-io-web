@@ -61,6 +61,22 @@ func (g DistroGroup) HasAnyStemcells() bool {
 
 func (g DistroGroups) AllURL() string { return "/stemcells" }
 
+func (g DistroGroups) FirstStemcell() *Stemcell {
+	if len(g) == 0 {
+		return nil
+	}
+	if len(g[0].ByName) == 0 {
+		return nil
+	}
+	if len(g[0].ByName[0].ByVersion) == 0 {
+		return nil
+	}
+	if len(g[0].ByName[0].ByVersion[0].Stemcells) == 0 {
+		return nil
+	}
+	return &g[0].ByName[0].ByVersion[0].Stemcells[0]
+}
+
 func (s DistroGroupSorting) Len() int           { return len(s) }
 func (s DistroGroupSorting) Less(i, j int) bool { return s[i].Distro.Sort < s[j].Distro.Sort }
 func (s DistroGroupSorting) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }

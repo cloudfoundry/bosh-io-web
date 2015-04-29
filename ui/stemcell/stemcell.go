@@ -107,6 +107,16 @@ func (s *Stemcell) AddAsSource(s_ bhstemsrepo.Stemcell) {
 	}
 }
 
+func (s Stemcell) UserVisibleDownloadURL() string {
+	// todo make domain configurable
+	return fmt.Sprintf("https://bosh.io/d/stemcells/%s?v=%s", s.ManifestName, s.Version)
+}
+
+func (s Stemcell) UserVisibleLatestDownloadURL() string {
+	// todo make domain configurable
+	return fmt.Sprintf("https://bosh.io/d/stemcells/%s", s.ManifestName)
+}
+
 func (s Stemcell) ActualDownloadURL() string {
 	// Prefer light stemcells
 	if s.LightSource != nil {

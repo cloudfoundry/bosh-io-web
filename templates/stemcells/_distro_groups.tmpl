@@ -8,29 +8,29 @@
   </h3>
 
   {{ if .DistroGroups }}
-    {{ if .Filter.ShowingAllVersions }}
+    {{ if and .Filter.ShowingAllVersions ($s := .DistroGroups.FirstStemcell) }}
       <p>Upload latest version to your BOSH Director:</p>
 
       <pre class="terminal">
-$ bosh upload stemcell https://bosh.io/d/stemcells/{{ .Filter.Name }}
+# Upload latest version, currently {{ $s.Version }}
+$ bosh upload stemcell {{ $s.UserVisibleLatestDownloadURL }}
+
+# Upload specific version
+$ bosh upload stemcell {{ $s.UserVisibleDownloadURL }}
 </pre>
 
       {{ template "shared/_upload_version_warning" }}
 
       <hr/>
 
-      <p>
-        Alternatively,
-        <a href="https://bosh.io/d/stemcells/{{ .Filter.Name }}">download</a>
-        stemcell tarball locally:
-      </p>
+      <p>Alternatively, <a href="{{ $s.UserVisibleDownloadURL }}">download</a> stemcell tarball locally:</p>
 
       <pre class="terminal">
 # ...or download it directly using curl
-$ curl -L -J -O https://bosh.io/d/stemcells/{{ .Filter.Name }}
+$ curl -L -J -O {{ $s.UserVisibleDownloadURL }}
 
 # or with wget...
-$ wget --content-disposition https://bosh.io/d/stemcells/{{ .Filter.Name }}
+$ wget --content-disposition {{ $s.UserVisibleDownloadURL }}
 </pre>
 
       <h3 class="page-header">All versions</h3>
