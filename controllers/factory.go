@@ -4,6 +4,7 @@ import (
 	boshlog "github.com/cloudfoundry/bosh-agent/logger"
 	boshsys "github.com/cloudfoundry/bosh-agent/system"
 
+	bhbibrepo "github.com/cppforlife/bosh-hub/bosh-init-bin/repo"
 	bhimperrsrepo "github.com/cppforlife/bosh-hub/release/importerrsrepo"
 	bhimpsrepo "github.com/cppforlife/bosh-hub/release/importsrepo"
 	bhjobsrepo "github.com/cppforlife/bosh-hub/release/jobsrepo"
@@ -19,6 +20,8 @@ type FactoryRepos interface {
 
 	S3StemcellsRepo() bhstemsrepo.S3StemcellsRepository
 	StemcellsRepo() bhstemsrepo.StemcellsRepository
+
+	BoshInitBinsRepo() bhbibrepo.Repository
 
 	ImportsRepo() bhimpsrepo.ImportsRepository
 	ImportErrsRepo() bhimperrsrepo.ImportErrsRepository
@@ -45,7 +48,7 @@ type Factory struct {
 func NewFactory(apiKey string, r FactoryRepos, runner boshsys.CmdRunner, logger boshlog.Logger) (Factory, error) {
 	factory := Factory{
 		HomeController: NewHomeController(r.ReleasesRepo(), r.StemcellsRepo(), logger),
-		DocsController: NewDocsController(logger),
+		DocsController: NewDocsController(r.BoshInitBinsRepo(), logger),
 
 		ReleasesController: NewReleasesController(
 			r.ReleasesRepo(),

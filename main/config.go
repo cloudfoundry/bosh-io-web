@@ -6,6 +6,7 @@ import (
 	bosherr "github.com/cloudfoundry/bosh-agent/errors"
 	boshsys "github.com/cloudfoundry/bosh-agent/system"
 
+	bhbibimp "github.com/cppforlife/bosh-hub/bosh-init-bin/importer"
 	bhimporter "github.com/cppforlife/bosh-hub/release/importer"
 	bhnoteimporter "github.com/cppforlife/bosh-hub/release/noteimporter"
 	bhwatcher "github.com/cppforlife/bosh-hub/release/watcher"
@@ -26,7 +27,8 @@ type Config struct {
 	Importer     bhimporter.FactoryOptions
 	NoteImporter bhnoteimporter.FactoryOptions
 
-	StemcellImporter bhstemsimp.FactoryOptions
+	StemcellImporter    bhstemsimp.FactoryOptions
+	BoshInitBinImporter bhbibimp.FactoryOptions
 }
 
 type AnalyticsConfig struct {

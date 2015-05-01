@@ -8,6 +8,7 @@ import (
 	boshsys "github.com/cloudfoundry/bosh-agent/system"
 	bpindex "github.com/cppforlife/bosh-provisioner/index"
 
+	bhbibrepo "github.com/cppforlife/bosh-hub/bosh-init-bin/repo"
 	bhindex "github.com/cppforlife/bosh-hub/index"
 	bhimperrsrepo "github.com/cppforlife/bosh-hub/release/importerrsrepo"
 	bhimpsrepo "github.com/cppforlife/bosh-hub/release/importsrepo"
@@ -46,7 +47,8 @@ type Repos struct {
 	releaseVersionsRepo bhrelsrepo.ReleaseVersionsRepository
 	jobsRepo            bhjobsrepo.JobsRepository
 
-	s3StemcellsRepo bhstemsrepo.S3StemcellsRepository
+	s3StemcellsRepo    bhstemsrepo.S3StemcellsRepository
+	s3BoshInitBinsRepo bhbibrepo.S3Repository
 
 	importsRepo    bhimpsrepo.ImportsRepository
 	importErrsRepo bhimperrsrepo.ImportErrsRepository
@@ -109,7 +111,8 @@ func NewRepos(options ReposOptions, fs boshsys.FileSystem, logger boshlog.Logger
 		releaseVersionsRepo: bhrelsrepo.NewConcreteReleaseVersionsRepository(i.releaseVersionsIndex, logger),
 		jobsRepo:            bhjobsrepo.NewConcreteJobsRepository(i.jobsIndex, logger),
 
-		s3StemcellsRepo: bhstemsrepo.NewS3StemcellsRepository(i.s3StemcellsIndex, logger),
+		s3StemcellsRepo:    bhstemsrepo.NewS3StemcellsRepository(i.s3StemcellsIndex, logger),
+		s3BoshInitBinsRepo: bhbibrepo.NewS3Repository(i.s3BoshInitBinsIndex, logger),
 
 		importsRepo:    bhimpsrepo.NewConcreteImportsRepository(i.importsIndex, logger),
 		importErrsRepo: bhimperrsrepo.NewConcreteImportErrsRepository(i.importErrsIndex, logger),
@@ -128,8 +131,10 @@ func (r Repos) ReleaseVersionsRepo() bhrelsrepo.ReleaseVersionsRepository {
 func (r Repos) JobsRepo() bhjobsrepo.JobsRepository { return r.jobsRepo }
 
 func (r Repos) S3StemcellsRepo() bhstemsrepo.S3StemcellsRepository { return r.s3StemcellsRepo }
+func (r Repos) StemcellsRepo() bhstemsrepo.StemcellsRepository     { return r.s3StemcellsRepo }
 
-func (r Repos) StemcellsRepo() bhstemsrepo.StemcellsRepository { return r.s3StemcellsRepo }
+func (r Repos) S3BoshInitBinsRepo() bhbibrepo.S3Repository { return r.s3BoshInitBinsRepo }
+func (r Repos) BoshInitBinsRepo() bhbibrepo.Repository     { return r.s3BoshInitBinsRepo }
 
 func (r Repos) ImportsRepo() bhimpsrepo.ImportsRepository { return r.importsRepo }
 
@@ -144,7 +149,8 @@ type repoIndicies struct {
 	releaseVersionsIndex bpindex.Index
 	jobsIndex            bpindex.Index
 
-	s3StemcellsIndex bpindex.Index
+	s3StemcellsIndex    bpindex.Index
+	s3BoshInitBinsIndex bpindex.Index
 
 	importsIndex    bpindex.Index
 	importErrsIndex bpindex.Index
@@ -159,7 +165,8 @@ func newFileRepoIndicies(dir string, fs boshsys.FileSystem) repoIndicies {
 		releaseVersionsIndex: bpindex.NewFileIndex(filepath.Join(dir, "release_versions.json"), fs),
 		jobsIndex:            bpindex.NewFileIndex(filepath.Join(dir, "jobs.json"), fs),
 
-		s3StemcellsIndex: bpindex.NewFileIndex(filepath.Join(dir, "s3_stemcells.json"), fs),
+		s3StemcellsIndex:    bpindex.NewFileIndex(filepath.Join(dir, "s3_stemcells.json"), fs),
+		s3BoshInitBinsIndex: bpindex.NewFileIndex(filepath.Join(dir, "s3_bosh_init_bins.json"), fs),
 
 		importsIndex:    bpindex.NewFileIndex(filepath.Join(dir, "imports.json"), fs),
 		importErrsIndex: bpindex.NewFileIndex(filepath.Join(dir, "import_errs.json"), fs),
@@ -203,6 +210,11 @@ func newDBRepoIndicies(url string, logger boshlog.Logger) (repoIndicies, error) 
 		return repoIndicies{}, err
 	}
 
+	s3BoshInitBinsAdapter, err := adapterPool.NewAdapter("s3_bosh_init_bins")
+	if err != nil {
+		return repoIndicies{}, err
+	}
+
 	importsAdapter, err := adapterPool.NewAdapter("imports")
 	if err != nil {
 		return repoIndicies{}, err
@@ -225,7 +237,8 @@ func newDBRepoIndicies(url string, logger boshlog.Logger) (repoIndicies, error) 
 		releaseVersionsIndex: bhindex.NewDBIndex(releaseVersionsAdapter, logger),
 		jobsIndex:            bhindex.NewDBIndex(jobsAdapter, logger),
 
-		s3StemcellsIndex: bhindex.NewDBIndex(s3StemcellsAdapter, logger),
+		s3StemcellsIndex:    bhindex.NewDBIndex(s3StemcellsAdapter, logger),
+		s3BoshInitBinsIndex: bhindex.NewDBIndex(s3BoshInitBinsAdapter, logger),
 
 		importsIndex:    bhindex.NewDBIndex(importsAdapter, logger),
 		importErrsIndex: bhindex.NewDBIndex(importErrsAdapter, logger),

@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	// "net/http"
 	// "net/http/pprof"
 	"html/template"
@@ -16,6 +17,7 @@ import (
 	mart "github.com/go-martini/martini"
 	martrend "github.com/martini-contrib/render"
 
+	bhbibimp "github.com/cppforlife/bosh-hub/bosh-init-bin/importer"
 	bhctrls "github.com/cppforlife/bosh-hub/controllers"
 	bhfetcher "github.com/cppforlife/bosh-hub/release/fetcher"
 	bhimporter "github.com/cppforlife/bosh-hub/release/importer"
@@ -77,6 +79,13 @@ func main() {
 		ensureNoErr(logger, "Failed building stemcell importer factory", err)
 
 		go stemcellImporterFactory.Importer.Import()
+	}
+
+	{
+		boshInitBinImporterFactory := bhbibimp.NewFactory(config.BoshInitBinImporter, repos, logger)
+		ensureNoErr(logger, "Failed building bosh-init bin importer factory", err)
+
+		go boshInitBinImporterFactory.Importer.Import()
 	}
 
 	if config.ActAsWorker {
@@ -194,6 +203,12 @@ func configureAssets(m *mart.ClassicMartini, analyticsConfig AnalyticsConfig, lo
 		},
 	}
 
+	htmlFuncs := template.FuncMap{
+		"href": func(s string) template.HTMLAttr {
+			return template.HTMLAttr(fmt.Sprintf(" href='%s' ", s))
+		},
+	}
+
 	// Use prefix to cache bust images, stylesheets, and js
 	m.Use(mart.Static(
 		"./public",
@@ -215,7 +230,7 @@ func configureAssets(m *mart.ClassicMartini, analyticsConfig AnalyticsConfig, lo
 			Layout:     "layout",
 			Directory:  "./templates",
 			Extensions: []string{".tmpl", ".html"},
-			Funcs:      []template.FuncMap{assetsFuncs, analyticsConfigFuncs},
+			Funcs:      []template.FuncMap{assetsFuncs, analyticsConfigFuncs, htmlFuncs},
 		},
 	))
 }

@@ -15,7 +15,7 @@
                     <li class="list-group-item">
                       <span class="stemcell-name">{{ $s.FriendlyName }}</span>
                       <a href="{{ .URL }}">{{ $a.Version }}</a>
-                      / <a href="{{ $s.AllVersionsURL }}" class="note">&hellip;</a>
+                      <a href="{{ $s.AllVersionsURL }}">&hellip;</a>
                     </li>
                   {{ end }}
 
@@ -23,7 +23,7 @@
                     <li class="list-group-item">
                       <span class="stemcell-name">{{ $s.FriendlyName }} Light</span>
                       <a href="{{ .URL }}">{{ $a.Version }}</a>
-                      / <a href="{{ $s.AllVersionsURL }}" class="note">&hellip;</a>
+                      <a href="{{ $s.AllVersionsURL }}">&hellip;</a>
                     </li>
                   {{ end }}
                 {{ end }}

@@ -8,6 +8,8 @@ import (
 	boshlog "github.com/cloudfoundry/bosh-agent/logger"
 	mart "github.com/go-martini/martini"
 	martrend "github.com/martini-contrib/render"
+
+	bhbibrepo "github.com/cppforlife/bosh-hub/bosh-init-bin/repo"
 )
 
 var (
@@ -16,6 +18,8 @@ var (
 )
 
 type DocsController struct {
+	boshInitBinsRepo bhbibrepo.Repository
+
 	defaultTmpl string
 	errorTmpl   string
 
@@ -23,14 +27,20 @@ type DocsController struct {
 	logger boshlog.Logger
 }
 
-func NewDocsController(logger boshlog.Logger) DocsController {
+func NewDocsController(boshInitBinsRepo bhbibrepo.Repository, logger boshlog.Logger) DocsController {
 	return DocsController{
+		boshInitBinsRepo: boshInitBinsRepo,
+
 		defaultTmpl: "index",
 		errorTmpl:   "error",
 
 		logTag: "DocsController",
 		logger: logger,
 	}
+}
+
+type installBoshInitPage struct {
+	LatestBoshInitBinGroups []bhbibrepo.BinaryGroup
 }
 
 func (c DocsController) Page(r martrend.Render, params mart.Params) {
@@ -46,5 +56,26 @@ func (c DocsController) Page(r martrend.Render, params mart.Params) {
 		return
 	}
 
-	r.HTML(200, "docs/"+tmpl, nil)
+	page, err := c.findPage(tmpl)
+	if err != nil {
+		r.HTML(500, c.errorTmpl, err)
+		return
+	}
+
+	r.HTML(200, "docs/"+tmpl, page)
+}
+
+func (c DocsController) findPage(tmpl string) (interface{}, error) {
+	var page interface{}
+
+	if tmpl == "install-bosh-init" {
+		binGroups, err := c.boshInitBinsRepo.FindLatest()
+		if err != nil {
+			return nil, err
+		}
+
+		page = installBoshInitPage{LatestBoshInitBinGroups: binGroups}
+	}
+
+	return page, nil
 }
