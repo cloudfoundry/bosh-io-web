@@ -68,6 +68,10 @@ func (r ReleaseVersionRec) SetNotes(noteRec bhnotesrepo.NoteRec) error {
 	return r.notesRepo.Save(r.Source, r.VersionRaw, noteRec)
 }
 
+func (r ReleaseVersionRec) Equals(other ReleaseVersionRec) bool {
+	return r.Source == other.Source && r.VersionRaw == other.VersionRaw
+}
+
 func (r ReleaseVersionRec) Validate() error {
 	if len(r.Source) == 0 {
 		return bosherr.New("Expected source to be non-empty")

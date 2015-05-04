@@ -13,6 +13,11 @@ type CRVRepository struct {
 	logger boshlog.Logger
 }
 
+type relVerRecKey struct {
+	Source     string
+	VersionRaw string
+}
+
 func NewConcreteReleaseVersionsRepository(
 	index bpindex.Index,
 	logger boshlog.Logger,
@@ -26,7 +31,9 @@ func NewConcreteReleaseVersionsRepository(
 func (r CRVRepository) Find(relVerRec ReleaseVersionRec) (bprel.Release, bool, error) {
 	var rel bprel.Release
 
-	err := r.index.Find(relVerRec, &rel)
+	key := relVerRecKey{Source: relVerRec.Source, VersionRaw: relVerRec.VersionRaw}
+
+	err := r.index.Find(key, &rel)
 	if err != nil {
 		if err == bpindex.ErrNotFound {
 			return rel, false, nil
@@ -39,7 +46,9 @@ func (r CRVRepository) Find(relVerRec ReleaseVersionRec) (bprel.Release, bool, e
 }
 
 func (r CRVRepository) Save(relVerRec ReleaseVersionRec, rel bprel.Release) error {
-	err := r.index.Save(relVerRec, rel)
+	key := relVerRecKey{Source: relVerRec.Source, VersionRaw: relVerRec.VersionRaw}
+
+	err := r.index.Save(key, rel)
 	if err != nil {
 		return bosherr.WrapError(err, "Saving release")
 	}

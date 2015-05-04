@@ -14,6 +14,11 @@ type CJRepository struct {
 	logger boshlog.Logger
 }
 
+type relVerRecKey struct {
+	Source     string
+	VersionRaw string
+}
+
 func NewConcreteJobsRepository(
 	index bpindex.Index,
 	logger boshlog.Logger,
@@ -27,7 +32,9 @@ func NewConcreteJobsRepository(
 func (r CJRepository) FindAll(relVerRec bhrelsrepo.ReleaseVersionRec) ([]bpreljob.Job, bool, error) {
 	var relJobs []bpreljob.Job
 
-	err := r.index.Find(relVerRec, &relJobs)
+	key := relVerRecKey{Source: relVerRec.Source, VersionRaw: relVerRec.VersionRaw}
+
+	err := r.index.Find(key, &relJobs)
 	if err != nil {
 		if err == bpindex.ErrNotFound {
 			return relJobs, false, nil
@@ -40,7 +47,9 @@ func (r CJRepository) FindAll(relVerRec bhrelsrepo.ReleaseVersionRec) ([]bpreljo
 }
 
 func (r CJRepository) SaveAll(relVerRec bhrelsrepo.ReleaseVersionRec, relJobs []bpreljob.Job) error {
-	err := r.index.Save(relVerRec, relJobs)
+	key := relVerRecKey{Source: relVerRec.Source, VersionRaw: relVerRec.VersionRaw}
+
+	err := r.index.Save(key, relJobs)
 	if err != nil {
 		return bosherr.WrapError(err, "Saving release jobs")
 	}

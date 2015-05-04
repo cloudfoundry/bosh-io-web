@@ -206,7 +206,7 @@ func (r CRRepository) Contains(relVerRec ReleaseVersionRec) (bool, error) {
 
 	// Make sure version is not already in the list
 	for _, existingRelVerRec := range relVerRecs {
-		if existingRelVerRec == relVerRec {
+		if existingRelVerRec.Equals(relVerRec) {
 			return true, nil
 		}
 	}
@@ -234,7 +234,7 @@ func (r CRRepository) tryToAddRelVerRec(relVerRec ReleaseVersionRec) (bool, erro
 
 	// Make sure version is not already in the list
 	for _, existingRelVerRec := range relVerRecs {
-		if existingRelVerRec == relVerRec {
+		if existingRelVerRec.Equals(relVerRec) {
 			return false, nil
 		}
 	}
