@@ -255,3 +255,49 @@ func (r CRRepository) tryToAddRelVerRec(relVerRec ReleaseVersionRec) (bool, erro
 	// Successfully added release version for the release
 	return false, nil
 }
+
+func (r CRRepository) RemoveDups(source string) error {
+	var existingRelVerRecs []ReleaseVersionRec
+	var dedupedRelVerRecs []ReleaseVersionRec
+
+	// Find release for that source and disallow any modifications until it gets saved
+	lockedRec, err := r.index.FindLocked(sourceToRelVerRecKey{source}, &existingRelVerRecs)
+
+	// Release locked record no matter what
+	// todo weird error handling
+	defer lockedRec.Release()
+
+	if err != nil {
+		if err != bpindex.ErrNotFound {
+			return bosherr.WrapError(err, "Finding release version records")
+		}
+	}
+
+	for _, existingRelVerRec := range existingRelVerRecs {
+		var found bool
+
+		// Make sure version is not already in the list
+		for _, dedupedRelVerRec := range dedupedRelVerRecs {
+			if existingRelVerRec.Equals(dedupedRelVerRec) {
+				found = true
+			}
+		}
+
+		if !found {
+			dedupedRelVerRecs = append(dedupedRelVerRecs, existingRelVerRec)
+		}
+	}
+
+	err = lockedRec.Save(dedupedRelVerRecs)
+	if err != nil {
+		if err == bpindex.ErrChanged {
+			// Try adding release version for the release
+			return nil
+		}
+
+		return bosherr.WrapError(err, "Adding release version records")
+	}
+
+	// Successfully added release version for the release
+	return nil
+}

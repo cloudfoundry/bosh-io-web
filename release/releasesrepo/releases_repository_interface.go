@@ -15,6 +15,7 @@ type ReleasesRepository interface {
 
 	Add(ReleaseVersionRec) error
 	Contains(ReleaseVersionRec) (bool, error)
+	RemoveDups(source string) error
 }
 
 type ReleaseVersionsRepository interface {

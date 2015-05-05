@@ -53,6 +53,8 @@ type Repos struct {
 	importsRepo    bhimpsrepo.ImportsRepository
 	importErrsRepo bhimperrsrepo.ImportErrsRepository
 	watchersRepo   bhwatchersrepo.WatchersRepository
+
+	releaseTarsRepo bhreltarsrepo.ReleaseTarballsRepository
 }
 
 func NewRepos(options ReposOptions, fs boshsys.FileSystem, logger boshlog.Logger) (Repos, error) {
@@ -117,6 +119,8 @@ func NewRepos(options ReposOptions, fs boshsys.FileSystem, logger boshlog.Logger
 		importsRepo:    bhimpsrepo.NewConcreteImportsRepository(i.importsIndex, logger),
 		importErrsRepo: bhimperrsrepo.NewConcreteImportErrsRepository(i.importErrsIndex, logger),
 		watchersRepo:   bhwatchersrepo.NewConcreteWatchersRepository(i.watchersIndex, logger),
+
+		releaseTarsRepo: releaseTarsRepo,
 	}
 
 	return repos, nil
@@ -141,6 +145,8 @@ func (r Repos) ImportsRepo() bhimpsrepo.ImportsRepository { return r.importsRepo
 func (r Repos) ImportErrsRepo() bhimperrsrepo.ImportErrsRepository { return r.importErrsRepo }
 
 func (r Repos) WatchersRepo() bhwatchersrepo.WatchersRepository { return r.watchersRepo }
+
+func (r Repos) ReleaseTarsRepo() bhreltarsrepo.ReleaseTarballsRepository { return r.releaseTarsRepo }
 
 type repoIndicies struct {
 	releasesIndex        bpindex.Index

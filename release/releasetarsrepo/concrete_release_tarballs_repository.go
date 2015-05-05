@@ -62,3 +62,14 @@ func (r CRTRepository) Save(source, version string, relTarRec ReleaseTarballRec)
 
 	return nil
 }
+
+func (r CRTRepository) GetAll() ([]releaseVersionRecKey, error) {
+	var keys []releaseVersionRecKey
+
+	err := r.index.ListKeys(&keys)
+	if err != nil {
+		return keys, bosherr.WrapError(err, "Saving release tarball")
+	}
+
+	return keys, nil
+}
