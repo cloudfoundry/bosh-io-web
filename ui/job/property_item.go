@@ -10,7 +10,8 @@ import (
 type PropertyItem struct {
 	Indent int
 
-	Key string
+	Key    string
+	Anchor string
 
 	// HasDefaults shows if either this item or sub-items have defaults
 	MissingValues bool
@@ -44,6 +45,7 @@ func NewPropertyItems(props []Property) []PropertyItem {
 			if j == lastJ {
 				item.Property = &props[i]
 				item.MissingValues = !props[i].HasDefault()
+				item.Anchor = prop.Name
 
 				// Propagate missing value mark to the top level item
 				if item.MissingValues {
@@ -51,7 +53,11 @@ func NewPropertyItems(props []Property) []PropertyItem {
 						item.MissingValues = true
 					}
 				}
+			} else {
+				item.Anchor = strings.Join(parts[0:j+1], ".")
 			}
+
+			item.Anchor = "p=" + item.Anchor
 
 			items = append(items, &item)
 			itemsByIndent = append(itemsByIndent, &item)
@@ -91,6 +97,10 @@ func matchingPropsDepth(prevProp *Property, currProp Property) (int, []string) {
 func (i PropertyItem) IndentedKey() string {
 	// YAML encoder defaults indent to 2 spaces
 	return fmt.Sprintf("    %s%s", strings.Repeat("  ", i.Indent), i.Key)
+}
+
+func (i PropertyItem) PoundAnchor() string {
+	return "#" + i.Anchor
 }
 
 func (i PropertyItem) IndentedDefaultAsYAML() (string, error) {

@@ -49,7 +49,11 @@
 
 .property-items .key { overflow: hidden; }
 
-.property-items .key > span { white-space: pre; }
+.property-items .key > a,
+.property-items .key > span {
+  white-space: pre;
+  text-decoration: none;
+}
 
 .property-items .key .placeholder {
   padding: 0 3px 0 4px;
@@ -64,7 +68,7 @@
 /* Hacky .with-example */
 .property-items .description.with-example p { margin-bottom: 10px; }
 
-.property-items .description .example { 
-  padding: 0; 
+.property-items .description .example {
+  padding: 0;
   border-width: 0;
 }

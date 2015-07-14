@@ -35,12 +35,12 @@ jobs:
       <div class="key">
         {{ if .Property }}
           {{ if .Property.HasDefault }}
-            <span>{{ .IndentedKey }}: {{ .IndentedDefaultAsYAML }}</span>
+            <a id="{{ .Anchor }}" {{ href .PoundAnchor }}>{{ .IndentedKey }}: {{ .IndentedDefaultAsYAML }}</a>
           {{ else }}
-            <span>{{ .IndentedKey }}: <span class="placeholder">???</span></span>
+            <a id="{{ .Anchor }}" {{ href .PoundAnchor }}>{{ .IndentedKey }}: <span class="placeholder">???</span></a>
           {{ end }}
         {{ else }}
-          <span>{{ .IndentedKey }}:</span>
+          <a id="{{ .Anchor }}" {{ href .PoundAnchor }}>{{ .IndentedKey }}:</a>
         {{ end }}
         <br/>
       </div>
