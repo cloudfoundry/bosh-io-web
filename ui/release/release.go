@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
-	"strings"
 
 	bprel "github.com/cppforlife/bosh-provisioner/release"
 	semiver "github.com/cppforlife/go-semi-semantic/version"
@@ -69,11 +68,13 @@ func NewRelease(relVerRec bhrelsrepo.ReleaseVersionRec, r bprel.Release) Release
 	return rel
 }
 
-func NewIncompleteRelease(relVerRec bhrelsrepo.ReleaseVersionRec) Release {
+func NewIncompleteRelease(relVerRec bhrelsrepo.ReleaseVersionRec, name string) Release {
 	return Release{
 		relVerRec: relVerRec,
 
-		Source:  NewSource(relVerRec.AsSource()),
+		Source: NewSource(relVerRec.AsSource()),
+
+		Name:    name,
 		Version: relVerRec.Version(),
 	}
 }
@@ -130,8 +131,21 @@ func (r Release) GithubURLForPath(path, ref string) string {
 	return fmt.Sprintf("%s/tree/%s/%s", r.Source.GithubURL(), ref, path)
 }
 
-func (r Release) IsCPI() bool {
-	return strings.HasSuffix(r.Name, "-cpi")
+func (r Release) IsCPI() bool { return r.Source.IsCPI() }
+
+func (r Release) CPIDocsLink() template.HTML {
+	links := map[string][]string{
+		"bosh-aws-cpi-release":       []string{"AWS", "/docs/init-aws.html"},
+		"bosh-openstack-cpi-release": []string{"OpenStack", "/docs/init-openstack.html"},
+		"bosh-vsphere-cpi-release":   []string{"vSphere", "/docs/init-vsphere.html"},
+		"bosh-vcloud-cpi-release":    []string{"vCloud", "/docs/init-vcloud.html"},
+	}
+
+	if link, found := links[r.Source.ShortName()]; found {
+		return template.HTML(fmt.Sprintf("<a href='%s'>Initializing a BOSH environment on %s</a>", link[1], link[0]))
+	}
+
+	return template.HTML("")
 }
 
 func (r Release) TarballSHA1() (string, error) {

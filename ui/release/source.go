@@ -20,6 +20,8 @@ func (s Source) Full() string { return s.src.Full }
 
 func (s Source) Short() string { return s.src.Short() }
 
+func (s Source) ShortName() string { return s.src.ShortName() }
+
 func (s Source) AvatarURL() string { return s.src.AvatarURL() }
 
 func (s Source) FromGithub() bool { return s.src.FromGithub() }
@@ -27,6 +29,8 @@ func (s Source) FromGithub() bool { return s.src.FromGithub() }
 func (s Source) GithubURL() string { return s.src.GithubURL() }
 
 func (s Source) String() string { return s.src.Full }
+
+func (s Source) IsCPI() bool { return s.src.IsCPI() }
 
 func (s Source) URL() string {
 	return fmt.Sprintf("/releases/%s", s.src.Full)

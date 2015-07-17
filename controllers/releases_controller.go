@@ -133,7 +133,26 @@ func (c ReleasesController) showMultipleReleases(r martrend.Render, relSource st
 		return
 	}
 
-	viewRels := bhrelui.NewSameSourceReleases(bhrelsrepo.Source{Full: relSource}, relVerRecs)
+	var relName string
+
+	// Fetch full release details for one of the versions to get real release name
+	if len(relVerRecs) > 0 {
+		rel, found, err := c.releaseVersionsRepo.Find(relVerRecs[0])
+		if err != nil {
+			r.HTML(500, c.errorTmpl, err)
+			return
+		}
+
+		if !found {
+			err := bosherr.New("Release '%s' is not found", relSource)
+			r.HTML(404, c.errorTmpl, err)
+			return
+		}
+
+		relName = rel.Name
+	}
+
+	viewRels := bhrelui.NewSameSourceReleases(bhrelsrepo.Source{Full: relSource}, relVerRecs, relName)
 
 	r.HTML(200, c.showVersionsTmpl, viewRels)
 }
@@ -196,7 +215,7 @@ func (c ReleasesController) APIV1Index(req *http.Request, r martrend.Render, par
 	}
 
 	// Show list of latest versions for the specific stemcell name
-	viewRels := bhrelui.NewSameSourceReleases(bhrelsrepo.Source{Full: relSource}, relVerRecs)
+	viewRels := bhrelui.NewSameSourceReleases(bhrelsrepo.Source{Full: relSource}, relVerRecs, "")
 
 	r.JSON(200, viewRels.ForAPI())
 }

@@ -12,13 +12,13 @@ type SameSourceReleases struct {
 	Releases []Release
 }
 
-func NewSameSourceReleases(source bhrelsrepo.Source, relVerRecs []bhrelsrepo.ReleaseVersionRec) SameSourceReleases {
+func NewSameSourceReleases(source bhrelsrepo.Source, relVerRecs []bhrelsrepo.ReleaseVersionRec, relName string) SameSourceReleases {
 	rels := SameSourceReleases{
 		Source: NewSource(source),
 	}
 
 	for _, relVerRec := range relVerRecs {
-		rel := NewIncompleteRelease(relVerRec)
+		rel := NewIncompleteRelease(relVerRec, relName)
 		rels.Releases = append(rels.Releases, rel)
 	}
 

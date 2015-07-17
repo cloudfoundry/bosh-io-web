@@ -32,7 +32,15 @@
                   <span class="sha1">sha1: {{ .TarballSHA1 }}</span>
                 </p>
 
-                <pre class="prettyprint terminal">{{ if .IsLatest }}
+                {{ if .IsCPI }}
+                  <pre>
+releases:
+- name: {{ .Name }}
+  url: {{ .UserVisibleDownloadURL }}
+  sha1: {{ .TarballSHA1 }}
+</pre>
+                {{ else }}
+                  <pre class="prettyprint terminal">{{ if .IsLatest }}
 # Upload latest version, currently {{ .Version }}
 $ bosh upload release {{ .UserVisibleLatestDownloadURL }}
 
@@ -40,8 +48,9 @@ $ bosh upload release {{ .UserVisibleLatestDownloadURL }}
 $ bosh upload release {{ .UserVisibleDownloadURL }}
 </pre>
 
-                {{ if .IsLatest }}
-                  {{ template "shared/_upload_version_warning" }}
+                  {{ if .IsLatest }}
+                    {{ template "shared/_upload_version_warning" }}
+                  {{ end }}
                 {{ end }}
               </li>
             {{ end }}

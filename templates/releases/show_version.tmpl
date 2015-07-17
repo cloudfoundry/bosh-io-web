@@ -19,7 +19,7 @@
         <h3 class="page-header">Release <span>'{{ .Name }}' v{{ .Version }}</span></h3>
 
         {{ if .IsCPI }}
-          <p>This is a CPI release.</p>
+          <p>This is a CPI release. It's meant to be collocated with the Director job.</p>
         {{ end }}
 
         {{ if .HasGithubURL }}
@@ -34,17 +34,43 @@
 
         <h3 class="page-header">Usage</h3>
 
-        <p>Upload this release version to your BOSH Director:</p>
+        {{ if .IsCPI }}
+          <p>Reference CPI release in the deployment manifest used with <code>bosh-init</code>:</p>
 
-        <pre class="prettyprint terminal">
+          <pre>
+releases:
+- name: {{ .Name }}
+  url: {{ .UserVisibleDownloadURL }}
+  sha1: {{ .TarballSHA1 }}
+</pre>
+
+          <p>Finally add needed deployment jobs and specify values for required properties.</p>
+
+          {{ $v := .CPIDocsLink }}
+
+          {{ if $v }}<p>See {{ $v }} for a step by step tutorial.</p>{{ end }}
+        {{ else }}
+          <p>Upload this release version to your BOSH Director:</p>
+
+          <pre class="prettyprint terminal">
 $ bosh upload release {{ .UserVisibleDownloadURL }}</pre>
 
-        {{ template "shared/_upload_version_warning" }}
+          {{ template "shared/_upload_version_warning" }}
 
-        <hr/>
+          <p>Modify deployment manifest to use this release in addition to any other used releases:</p>
+
+          <pre class="prettyprint">
+releases:
+- {name: {{ .Name }}, version: "{{ .Version }}"}
+</pre>
+
+          <p>Finally add needed deployment jobs and specify values for required properties.</p>
+        {{ end }}
+
+        <h3 class="page-header">Download</h3>
 
         <p>
-          Alternatively, <a href="{{ .DownloadURL }}">download</a>
+          Optionally <a href="{{ .DownloadURL }}">download</a>
           <span class="sha1">sha1: {{ .TarballSHA1 }}</span>
           release tarball locally:
         </p>
@@ -56,16 +82,6 @@ $ curl -L -J -O {{ .UserVisibleDownloadURL }}
 # or with wget...
 $ wget --content-disposition {{ .UserVisibleDownloadURL }}
 </pre>
-
-        <hr/>
-
-        <p>Modify deployment manifest to use this release in addition to any other used releases:</p>
-        <pre class="prettyprint">
-releases:
-- {name: {{ .Name }}, version: "{{ .Version }}"}
-</pre>
-
-        <p>Finally add needed deployment jobs and specify values for required properties.</p>
       </div>
     </div>
 
