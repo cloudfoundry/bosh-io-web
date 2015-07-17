@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"errors"
+	"fmt"
 	"regexp"
 	"strings"
 
@@ -15,6 +16,7 @@ import (
 var (
 	// Be very conservative about which characters are allowed from the start to the end
 	docsControllerPageRegexp = regexp.MustCompile(`\A[a-zA-Z0-9\-/]+\z`)
+	docsControllerGithubURL  = "https://github.com/cloudfoundry/docs-bosh/blob/master"
 )
 
 type DocsController struct {
@@ -39,7 +41,12 @@ func NewDocsController(boshInitBinsRepo bhbibrepo.Repository, logger boshlog.Log
 	}
 }
 
+type docPage struct {
+	ContributeChangesURL string
+}
+
 type installBoshInitPage struct {
+	docPage
 	LatestBoshInitBinGroups []bhbibrepo.BinaryGroup
 }
 
@@ -66,7 +73,9 @@ func (c DocsController) Page(r martrend.Render, params mart.Params) {
 }
 
 func (c DocsController) findPage(tmpl string) (interface{}, error) {
-	var page interface{}
+	page := docPage{
+		ContributeChangesURL: fmt.Sprintf("%s/%s.html.md.erb", docsControllerGithubURL, tmpl),
+	}
 
 	if tmpl == "install-bosh-init" {
 		binGroups, err := c.boshInitBinsRepo.FindLatest()
@@ -74,7 +83,7 @@ func (c DocsController) findPage(tmpl string) (interface{}, error) {
 			return nil, err
 		}
 
-		page = installBoshInitPage{LatestBoshInitBinGroups: binGroups}
+		return installBoshInitPage{docPage: page, LatestBoshInitBinGroups: binGroups}, nil
 	}
 
 	return page, nil
