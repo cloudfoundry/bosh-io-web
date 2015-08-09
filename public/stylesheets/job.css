@@ -1,7 +1,7 @@
 .job-manifest-snippet {
   margin-bottom: 0;
   padding-bottom: 0;
-  border-width: 0;
+  border-bottom-width: 0;
 }
 
 /* Hide all properties that have default */
@@ -25,26 +25,28 @@
 /* Property items */
 .property-items {
   overflow: hidden;
-  padding: 0 0 9.5px;
+  padding: 0 0 10px;
   margin: 0 0 10px;
   font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
   font-size: 13px;
   line-height: 1.42857143;
-  background: #f5f5f5;
+  background: #fff;
+  border: 1px solid #eee;
+  border-top-width: 0;
 }
 
 .property-items li {
   float: left;
   width: 100%;
   list-style-type: none;
-  border-top: 1px solid #e7e7e7;
+  border-top: 1px solid #f7f7f7;
 }
 
 .property-items .key,
 .property-items .description {
   float: left;
   width: 50%;
-  padding: 0 9.5px;
+  padding: 0 20px;
 }
 
 .property-items .key { overflow: hidden; }

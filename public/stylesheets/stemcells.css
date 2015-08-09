@@ -4,20 +4,14 @@
   border-bottom: 0;
 }
 
-.stemcell-distro-groups .list-group-item { 
+.stemcell-distro-groups .list-group-item {
   overflow: hidden;
   margin-top: -1px;
   margin-bottom: -1px;
 }
 
-.stemcell-distro-groups > .list-group-item { 
+.stemcell-distro-groups > .list-group-item {
   padding-bottom: 0;
-}
-
-.stemcell-distro-groups h4 {
-  margin-top: 0;
-  margin-bottom: 7px;
-  font-weight: normal;
 }
 
 .stemcell-distro-groups .stemcell-name { color: #555; }

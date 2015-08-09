@@ -1,18 +1,21 @@
-.docs .breadcrumb { 
-	margin-top: 40px;
-	padding-left: 0;
-	background: none;
+.docs .breadcrumb {
+  margin-top: 40px;
+  padding-left: 0;
+  background: none;
 }
 
-.docs h2 { 
-	color: #000; 
-	font-size: 24px;
+.docs h2 {
+  color: #000;
+  font-size: 24px;
 }
 
 .docs h3 {
-	color: #333;
-	font-size: 18px;
+  color: #333;
+  font-size: 20px;
 }
+
+.docs h4,
+.docs h5 { font-style: italic; }
 
 /* todo */
 .docs table {}
@@ -28,13 +31,13 @@
 
 /* Helps for extra wide output, e.g. director tasks */
 .docs .extra-wide {
-	width: 1100px;
-	font-size: 60%;
+  width: 1100px;
+  font-size: 60%;
 }
 
 .docs table {
-	width: 100%;
-	max-width: 100%;
-	margin-bottom: 20px;
-	border: 1px solid #ddd;
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
 }
