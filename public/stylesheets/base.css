@@ -147,6 +147,10 @@ header .menu a {
   color: rgba(0, 0, 0, 0.7);
 }
 
+header .tutorial { background-color: #FB8A53; }
+
+header .tutorial a { color: #fff; }
+
 /* Misc menu */
 menu {
   padding-left: 0;
