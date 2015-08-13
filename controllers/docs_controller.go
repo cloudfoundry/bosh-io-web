@@ -6,11 +6,14 @@ import (
 	"regexp"
 	"strings"
 
+	bosherr "github.com/cloudfoundry/bosh-agent/errors"
 	boshlog "github.com/cloudfoundry/bosh-agent/logger"
 	mart "github.com/go-martini/martini"
 	martrend "github.com/martini-contrib/render"
 
 	bhbibrepo "github.com/cppforlife/bosh-hub/bosh-init-bin/repo"
+	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
+	bhrelui "github.com/cppforlife/bosh-hub/ui/release"
 )
 
 var (
@@ -20,7 +23,9 @@ var (
 )
 
 type DocsController struct {
-	boshInitBinsRepo bhbibrepo.Repository
+	releasesRepo        bhrelsrepo.ReleasesRepository
+	releaseVersionsRepo bhrelsrepo.ReleaseVersionsRepository
+	boshInitBinsRepo    bhbibrepo.Repository
 
 	defaultTmpl string
 	errorTmpl   string
@@ -29,9 +34,16 @@ type DocsController struct {
 	logger boshlog.Logger
 }
 
-func NewDocsController(boshInitBinsRepo bhbibrepo.Repository, logger boshlog.Logger) DocsController {
+func NewDocsController(
+	releasesRepo bhrelsrepo.ReleasesRepository,
+	releaseVersionsRepo bhrelsrepo.ReleaseVersionsRepository,
+	boshInitBinsRepo bhbibrepo.Repository,
+	logger boshlog.Logger,
+) DocsController {
 	return DocsController{
-		boshInitBinsRepo: boshInitBinsRepo,
+		releasesRepo:        releasesRepo,
+		releaseVersionsRepo: releaseVersionsRepo,
+		boshInitBinsRepo:    boshInitBinsRepo,
 
 		defaultTmpl: "index",
 		errorTmpl:   "error",
@@ -48,6 +60,11 @@ type docPage struct {
 type installBoshInitPage struct {
 	docPage
 	LatestBoshInitBinGroups []bhbibrepo.BinaryGroup
+}
+
+type initManifestPage struct {
+	docPage
+	Releases []bhrelui.Release
 }
 
 func (c DocsController) Page(r martrend.Render, params mart.Params) {
@@ -84,6 +101,43 @@ func (c DocsController) findPage(tmpl string) (interface{}, error) {
 		}
 
 		return installBoshInitPage{docPage: page, LatestBoshInitBinGroups: binGroups}, nil
+	}
+
+	// init-<cpi> pages have an example manifest which lists latest releases
+	cpi, found := bhrelui.KnownCPIs.FindByDocPage(tmpl)
+	if found {
+		return newInitManifestPage(page, cpi, c.releasesRepo, c.releaseVersionsRepo)
+	}
+
+	return page, nil
+}
+
+func newInitManifestPage(
+	docPage docPage,
+	cpiRef bhrelui.ReleaseRef,
+	releasesRepo bhrelsrepo.ReleasesRepository,
+	releaseVersionsRepo bhrelsrepo.ReleaseVersionsRepository,
+) (initManifestPage, error) {
+	page := initManifestPage{docPage: docPage}
+
+	sources := []bhrelui.Source{bhrelui.BOSH.Source, cpiRef.Source}
+
+	for _, source := range sources {
+		relVerRec, found, err := releasesRepo.FindLatest(source.Full())
+		if err != nil {
+			return page, err
+		} else if !found {
+			return page, bosherr.New("Latest release '%s' is not found", source.Full())
+		}
+
+		rel, found, err := releaseVersionsRepo.Find(relVerRec)
+		if err != nil {
+			return page, err
+		} else if !found {
+			return page, bosherr.New("Release '%s' is not found", source.Full())
+		}
+
+		page.Releases = append(page.Releases, bhrelui.NewRelease(relVerRec, rel))
 	}
 
 	return page, nil

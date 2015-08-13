@@ -48,7 +48,13 @@ type Factory struct {
 func NewFactory(apiKey string, r FactoryRepos, runner boshsys.CmdRunner, logger boshlog.Logger) (Factory, error) {
 	factory := Factory{
 		HomeController: NewHomeController(r.ReleasesRepo(), r.StemcellsRepo(), logger),
-		DocsController: NewDocsController(r.BoshInitBinsRepo(), logger),
+
+		DocsController: NewDocsController(
+			r.ReleasesRepo(),
+			r.ReleaseVersionsRepo(),
+			r.BoshInitBinsRepo(),
+			logger,
+		),
 
 		ReleasesController: NewReleasesController(
 			r.ReleasesRepo(),
