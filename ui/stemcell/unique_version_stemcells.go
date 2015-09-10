@@ -37,7 +37,7 @@ func NewUniqueVersionStemcells(ss []bhstemsrepo.Stemcell, filter StemcellFilter)
 
 	sort.Sort(sort.Reverse(UniqueVersionStemcellsSorting(result)))
 
-	if len(result) > filter.Limit() {
+	if filter.HasLimit() && len(result) > filter.Limit() {
 		result = result[0:filter.Limit()]
 	}
 

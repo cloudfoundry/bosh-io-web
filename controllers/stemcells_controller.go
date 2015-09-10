@@ -77,7 +77,7 @@ func (c StemcellsController) Download(req *http.Request, r martrend.Render, para
 		return
 	}
 
-	filter := bhstemui.StemcellFilter{Name: relSource}
+	filter := bhstemui.StemcellFilter{Name: relSource, IncludeAll: true}
 
 	// List of versions for the specific stemcell name
 	// todo really filtering below should be part of the repo instead of ui
