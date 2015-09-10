@@ -174,17 +174,21 @@ menu li {
 
 /* Misc */
 pre, .prettyprint {
-  border-radius: 3px;
+  border-radius: 5px;
   padding: 10px 20px;
   border: 1px solid #eee;
   background: #fff;
+  font-size: 12px;
+  -webkit-font-smoothing: auto;
 }
 
 pre.terminal {
-  background: #000;
-  color: #fff;
   margin-top: 5px;
   border-width: 0;
+  border-right: 2px solid #ccc;
+  border-bottom: 2px solid #ddd;
+  background: #000;
+  color: #fff;
 }
 
 .sha1 {
