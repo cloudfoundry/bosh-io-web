@@ -32,23 +32,27 @@ var _ = Describe("NewPropertyItems", func() {
 			PropertyItem{
 				Indent:        0,
 				Key:           "key1",
+				Anchor:        "p=key1",
 				MissingValues: false,
 				Property:      &props[0],
 			},
 			PropertyItem{
 				Indent:        0,
 				Key:           "key2",
+				Anchor:        "p=key2",
 				MissingValues: true,
 			},
 			PropertyItem{
 				Indent:        1,
 				Key:           "key1",
+				Anchor:        "p=key2.key1",
 				MissingValues: true,
 				Property:      &props[1],
 			},
 			PropertyItem{
 				Indent:        1,
 				Key:           "key2",
+				Anchor:        "p=key2.key2",
 				MissingValues: false,
 				Property:      &props[2],
 			},
