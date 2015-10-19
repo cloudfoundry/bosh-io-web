@@ -82,7 +82,7 @@ func NewIncompleteRelease(relVerRec bhrelsrepo.ReleaseVersionRec, name string) R
 func (r Release) AllURL() string { return "/releases" }
 
 func (r Release) AllVersionsURL() string {
-	return fmt.Sprintf("/releases/%s", r.Source)
+	return fmt.Sprintf("/releases/%s?all=1", r.Source)
 }
 
 func (r Release) AvatarURL() string { return r.relVerRec.AvatarURL() }
@@ -143,7 +143,7 @@ func (r Release) CPIDocsLink() template.HTML {
 }
 
 func (r Release) TarballSHA1() (string, error) {
-	relTarRec, _, err := r.relVerRec.Tarball()
+	relTarRec, err := r.relVerRec.Tarball()
 	if err != nil {
 		return "", err
 	}

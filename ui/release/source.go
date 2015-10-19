@@ -33,7 +33,7 @@ func (s Source) String() string { return s.src.Full }
 func (s Source) IsCPI() bool { return s.src.IsCPI() }
 
 func (s Source) URL() string {
-	return fmt.Sprintf("/releases/%s", s.src.Full)
+	return fmt.Sprintf("/releases/%s?all=1", s.src.Full)
 }
 
 func (s SourceSorting) Len() int           { return len(s) }

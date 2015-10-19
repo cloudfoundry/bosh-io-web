@@ -52,7 +52,7 @@ func (r ReleaseVersionRec) AvatarURL() string {
 	return r.AsSource().AvatarURL()
 }
 
-func (r ReleaseVersionRec) Tarball() (bhreltarsrepo.ReleaseTarballRec, bool, error) {
+func (r ReleaseVersionRec) Tarball() (bhreltarsrepo.ReleaseTarballRec, error) {
 	return r.releaseTarsRepo.Find(r.Source, r.VersionRaw)
 }
 

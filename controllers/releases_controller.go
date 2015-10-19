@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 
 	bosherr "github.com/cloudfoundry/bosh-agent/errors"
@@ -91,26 +90,20 @@ func (c ReleasesController) Index(r martrend.Render) {
 
 // Show uses '_1' param as release source and 'version' param as release version
 func (c ReleasesController) Show(req *http.Request, r martrend.Render, params mart.Params) {
-	relSource := params["_1"]
-
-	if len(relSource) == 0 {
-		err := bosherr.New("Param 'source' must be non-empty")
+	relSource, showAll, relVersion, showGraph, err := c.extractShowParams(req, params)
+	if err != nil {
 		r.HTML(500, c.errorTmpl, err)
 		return
 	}
 
 	c.logger.Debug(c.logTag, "Release source '%s'", relSource)
 
-	relVersion := req.URL.Query().Get("version")
-
-	graph := req.URL.Query().Get("graph")
-
-	if relVersion == "" {
+	if len(showAll) > 0 {
 		c.showMultipleReleases(r, relSource)
 	} else {
 		var tmpl string
 
-		if len(graph) > 0 {
+		if len(showGraph) > 0 {
 			tmpl = c.graphTmpl
 		} else {
 			tmpl = c.showVersionTmpl
@@ -120,16 +113,26 @@ func (c ReleasesController) Show(req *http.Request, r martrend.Render, params ma
 	}
 }
 
-func (c ReleasesController) showMultipleReleases(r martrend.Render, relSource string) {
-	relVerRecs, found, err := c.releasesRepo.FindAll(relSource)
-	if err != nil {
-		r.HTML(500, c.errorTmpl, err)
-		return
+func (c ReleasesController) extractShowParams(req *http.Request, params mart.Params) (string, string, string, string, error) {
+	relSource := params["_1"]
+
+	if len(relSource) == 0 {
+		return "", "", "", "", bosherr.New("Param 'source' must be non-empty")
 	}
 
-	if !found {
-		err := bosherr.New("Release '%s' is not found", relSource)
-		r.HTML(404, c.errorTmpl, err)
+	showAll := req.URL.Query().Get("all")
+
+	relVersion := req.URL.Query().Get("version")
+
+	showGraph := req.URL.Query().Get("graph")
+
+	return relSource, showAll, relVersion, showGraph, nil
+}
+
+func (c ReleasesController) showMultipleReleases(r martrend.Render, relSource string) {
+	relVerRecs, err := c.releasesRepo.FindAll(relSource)
+	if err != nil {
+		r.HTML(500, c.errorTmpl, err)
 		return
 	}
 
@@ -137,15 +140,9 @@ func (c ReleasesController) showMultipleReleases(r martrend.Render, relSource st
 
 	// Fetch full release details for one of the versions to get real release name
 	if len(relVerRecs) > 0 {
-		rel, found, err := c.releaseVersionsRepo.Find(relVerRecs[0])
+		rel, err := c.releaseVersionsRepo.Find(relVerRecs[0])
 		if err != nil {
 			r.HTML(500, c.errorTmpl, err)
-			return
-		}
-
-		if !found {
-			err := bosherr.New("Release '%s' is not found", relSource)
-			r.HTML(404, c.errorTmpl, err)
 			return
 		}
 
@@ -158,25 +155,31 @@ func (c ReleasesController) showMultipleReleases(r martrend.Render, relSource st
 }
 
 func (c ReleasesController) showSingleRelease(r martrend.Render, relSource, relVersion, tmpl string) {
-	relVerRec, err := c.releasesRepo.Find(relSource, relVersion)
+	var err error
+
+	var relVerRec bhrelsrepo.ReleaseVersionRec
+
+	if len(relVersion) > 0 {
+		relVerRec, err = c.releasesRepo.Find(relSource, relVersion)
+		if err != nil {
+			r.HTML(500, c.errorTmpl, err)
+			return
+		}
+	} else {
+		relVerRec, err = c.releasesRepo.FindLatest(relSource)
+		if err != nil {
+			r.HTML(500, c.errorTmpl, err)
+			return
+		}
+	}
+
+	rel, err := c.releaseVersionsRepo.Find(relVerRec)
 	if err != nil {
 		r.HTML(500, c.errorTmpl, err)
 		return
 	}
 
-	rel, found, err := c.releaseVersionsRepo.Find(relVerRec)
-	if err != nil {
-		r.HTML(500, c.errorTmpl, err)
-		return
-	}
-
-	if !found {
-		err := bosherr.New("Release '%s' is not found", relSource)
-		r.HTML(404, c.errorTmpl, err)
-		return
-	}
-
-	relJobs, found, err := c.jobsRepo.FindAll(relVerRec)
+	relJobs, err := c.jobsRepo.FindAll(relVerRec)
 	if err != nil {
 		r.HTML(500, c.errorTmpl, err)
 		return
@@ -203,14 +206,9 @@ func (c ReleasesController) APIV1Index(req *http.Request, r martrend.Render, par
 		return
 	}
 
-	relVerRecs, found, err := c.releasesRepo.FindAll(relSource)
+	relVerRecs, err := c.releasesRepo.FindAll(relSource)
 	if err != nil {
 		r.HTML(500, c.errorTmpl, err)
-		return
-	}
-
-	if !found {
-		r.JSON(404, map[string]string{"error": fmt.Sprintf("Release '%s' is not found", relSource)})
 		return
 	}
 

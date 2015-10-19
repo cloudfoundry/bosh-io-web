@@ -67,6 +67,7 @@ func (r S3StemcellsRepository) FindAll(name string) ([]Stemcell, error) {
 			rec.LastModified,
 			rec.URL,
 		)
+
 		if stemcell == nil || stemcell.IsDeprecated() {
 			continue
 		}

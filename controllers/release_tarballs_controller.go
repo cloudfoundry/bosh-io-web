@@ -48,17 +48,9 @@ func (c ReleaseTarballsController) Download(req *http.Request, r martrend.Render
 	var err error
 
 	if relVersion == "" {
-		var found bool
-
-		relVerRec, found, err = c.releasesRepo.FindLatest(relSource)
+		relVerRec, err = c.releasesRepo.FindLatest(relSource)
 		if err != nil {
 			r.HTML(500, c.errorTmpl, err)
-			return
-		}
-
-		if !found {
-			err := bosherr.New("Latest release is not found")
-			r.HTML(404, c.errorTmpl, err)
 			return
 		}
 	} else {
@@ -69,15 +61,9 @@ func (c ReleaseTarballsController) Download(req *http.Request, r martrend.Render
 		}
 	}
 
-	relTarRec, found, err := relVerRec.Tarball()
+	relTarRec, err := relVerRec.Tarball()
 	if err != nil {
 		r.HTML(500, c.errorTmpl, err)
-		return
-	}
-
-	if !found {
-		err := bosherr.New("Release tarball is not found")
-		r.HTML(404, c.errorTmpl, err)
 		return
 	}
 

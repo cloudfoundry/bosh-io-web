@@ -54,33 +54,31 @@ func (c JobsController) Show(req *http.Request, r martrend.Render, params mart.P
 
 	c.logger.Debug(c.logTag, "Release source '%s'", relSource)
 
-	relVerRec, err := c.releasesRepo.Find(relSource, relVersion)
+	var relVerRec bhrelsrepo.ReleaseVersionRec
+
+	if len(relVersion) > 0 {
+		relVerRec, err = c.releasesRepo.Find(relSource, relVersion)
+		if err != nil {
+			r.HTML(500, c.errorTmpl, err)
+			return
+		}
+	} else {
+		relVerRec, err = c.releasesRepo.FindLatest(relSource)
+		if err != nil {
+			r.HTML(500, c.errorTmpl, err)
+			return
+		}
+	}
+
+	rel, err := c.releaseVersionsRepo.Find(relVerRec)
 	if err != nil {
 		r.HTML(500, c.errorTmpl, err)
 		return
 	}
 
-	rel, found, err := c.releaseVersionsRepo.Find(relVerRec)
+	relJobs, err := c.jobsRepo.FindAll(relVerRec)
 	if err != nil {
 		r.HTML(500, c.errorTmpl, err)
-		return
-	}
-
-	if !found {
-		err := bosherr.New("Release '%s' is not found", relSource)
-		r.HTML(404, c.errorTmpl, err)
-		return
-	}
-
-	relJobs, found, err := c.jobsRepo.FindAll(relVerRec)
-	if err != nil {
-		r.HTML(500, c.errorTmpl, err)
-		return
-	}
-
-	if !found {
-		err := bosherr.New("Release jobs are not found")
-		r.HTML(404, c.errorTmpl, err)
 		return
 	}
 
@@ -105,10 +103,6 @@ func (c JobsController) extractShowParams(req *http.Request, params mart.Params)
 	}
 
 	relVersion := req.URL.Query().Get("version")
-
-	if len(relVersion) == 0 {
-		return "", "", "", bosherr.New("Param 'version' must be non-empty")
-	}
 
 	jobName := params["name"]
 

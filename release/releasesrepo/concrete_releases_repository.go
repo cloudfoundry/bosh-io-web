@@ -61,12 +61,10 @@ func (r CRRepository) ListCurated() ([]ReleaseVersionRec, error) {
 	var relVerRecs []ReleaseVersionRec
 
 	for _, source := range r.predefinedSources {
-		recs, _, err := r.FindAll(source)
-		if err != nil {
-			return relVerRecs, bosherr.WrapError(err, "Finding release version record for '%s'", source)
+		recs, err := r.FindAll(source)
+		if err == nil {
+			relVerRecs = append(relVerRecs, recs...)
 		}
-
-		relVerRecs = append(relVerRecs, recs...)
 	}
 
 	for i, _ := range relVerRecs {
@@ -96,20 +94,16 @@ func (r CRRepository) ListAll() ([]Source, error) {
 	return sources, nil
 }
 
-func (r CRRepository) FindAll(source string) ([]ReleaseVersionRec, bool, error) {
+func (r CRRepository) FindAll(source string) ([]ReleaseVersionRec, error) {
 	var relVerRecs []ReleaseVersionRec
 
 	if len(source) == 0 {
-		return relVerRecs, false, bosherr.New("Expected source to be non-empty")
+		return relVerRecs, bosherr.New("Expected source to be non-empty")
 	}
 
 	err := r.index.Find(sourceToRelVerRecKey{source}, &relVerRecs)
 	if err != nil {
-		if err == bpindex.ErrNotFound {
-			return relVerRecs, false, nil
-		}
-
-		return relVerRecs, false, bosherr.WrapError(err, "Finding release version records")
+		return relVerRecs, bosherr.WrapError(err, "Finding release version records")
 	}
 
 	for i, _ := range relVerRecs {
@@ -118,28 +112,30 @@ func (r CRRepository) FindAll(source string) ([]ReleaseVersionRec, bool, error) 
 		relVerRecs[i].releaseTarsRepo = r.releaseTarsRepo
 	}
 
-	return relVerRecs, true, nil
+	return relVerRecs, nil
 }
 
-func (r CRRepository) FindLatest(source string) (ReleaseVersionRec, bool, error) {
+func (r CRRepository) FindLatest(source string) (ReleaseVersionRec, error) {
 	var relVerRec ReleaseVersionRec
 
 	if len(source) == 0 {
-		return relVerRec, false, bosherr.New("Expected source to be non-empty")
+		return relVerRec, bosherr.New("Expected source to be non-empty")
 	}
 
-	relVerRecs, found, err := r.FindAll(source)
+	relVerRecs, err := r.FindAll(source)
 	if err != nil {
-		return relVerRec, false, bosherr.WrapError(err, "Finding release version records")
-	} else if !found || len(relVerRecs) == 0 {
-		return relVerRec, false, nil
+		return relVerRec, bosherr.WrapError(err, "Finding release version records")
+	}
+
+	if len(relVerRecs) == 0 {
+		return relVerRec, bosherr.New("Expected to find at least one release version record")
 	}
 
 	sort.Sort(ReleaseVersionRecSorting(relVerRecs))
 
 	relVerRec = relVerRecs[len(relVerRecs)-1]
 
-	return relVerRec, true, nil
+	return relVerRec, nil
 }
 
 func (r CRRepository) Find(source, version string) (ReleaseVersionRec, error) {

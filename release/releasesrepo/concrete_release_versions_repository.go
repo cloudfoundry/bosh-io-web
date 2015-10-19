@@ -28,21 +28,17 @@ func NewConcreteReleaseVersionsRepository(
 	}
 }
 
-func (r CRVRepository) Find(relVerRec ReleaseVersionRec) (bprel.Release, bool, error) {
+func (r CRVRepository) Find(relVerRec ReleaseVersionRec) (bprel.Release, error) {
 	var rel bprel.Release
 
 	key := relVerRecKey{Source: relVerRec.Source, VersionRaw: relVerRec.VersionRaw}
 
 	err := r.index.Find(key, &rel)
 	if err != nil {
-		if err == bpindex.ErrNotFound {
-			return rel, false, nil
-		}
-
-		return rel, false, bosherr.WrapError(err, "Finding release")
+		return rel, bosherr.WrapError(err, "Finding release")
 	}
 
-	return rel, true, nil
+	return rel, nil
 }
 
 func (r CRVRepository) Save(relVerRec ReleaseVersionRec, rel bprel.Release) error {

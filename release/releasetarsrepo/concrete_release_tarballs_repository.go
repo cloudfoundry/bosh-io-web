@@ -31,25 +31,21 @@ func NewConcreteReleaseTarballsRepository(
 	}
 }
 
-func (r CRTRepository) Find(source, version string) (ReleaseTarballRec, bool, error) {
+func (r CRTRepository) Find(source, version string) (ReleaseTarballRec, error) {
 	var relTarRec ReleaseTarballRec
 
 	key := releaseVersionRecKey{Source: source, VersionRaw: version}
 
 	err := r.index.Find(key, &relTarRec)
 	if err != nil {
-		if err == bpindex.ErrNotFound {
-			return relTarRec, false, nil
-		}
-
-		return relTarRec, false, bosherr.WrapError(err, "Finding release tarball")
+		return relTarRec, bosherr.WrapError(err, "Finding release tarball")
 	}
 
 	relTarRec.urlFactory = r.urlFactory
 	relTarRec.source = source
 	relTarRec.versionRaw = version
 
-	return relTarRec, true, nil
+	return relTarRec, nil
 }
 
 func (r CRTRepository) Save(source, version string, relTarRec ReleaseTarballRec) error {

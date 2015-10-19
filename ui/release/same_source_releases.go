@@ -56,5 +56,5 @@ func (s SameSourceReleases) ForAPI() []Release { return s.Releases }
 func (r SameSourceReleases) AllURL() string { return "/releases" }
 
 func (r SameSourceReleases) URL() string {
-	return fmt.Sprintf("/releases/%s", r.Source)
+	return fmt.Sprintf("/releases/%s?all=1", r.Source)
 }

@@ -29,21 +29,17 @@ func NewConcreteJobsRepository(
 	}
 }
 
-func (r CJRepository) FindAll(relVerRec bhrelsrepo.ReleaseVersionRec) ([]bpreljob.Job, bool, error) {
+func (r CJRepository) FindAll(relVerRec bhrelsrepo.ReleaseVersionRec) ([]bpreljob.Job, error) {
 	var relJobs []bpreljob.Job
 
 	key := relVerRecKey{Source: relVerRec.Source, VersionRaw: relVerRec.VersionRaw}
 
 	err := r.index.Find(key, &relJobs)
 	if err != nil {
-		if err == bpindex.ErrNotFound {
-			return relJobs, false, nil
-		}
-
-		return relJobs, false, bosherr.WrapError(err, "Finding release jobs")
+		return relJobs, bosherr.WrapError(err, "Finding release jobs")
 	}
 
-	return relJobs, true, nil
+	return relJobs, nil
 }
 
 func (r CJRepository) SaveAll(relVerRec bhrelsrepo.ReleaseVersionRec, relJobs []bpreljob.Job) error {

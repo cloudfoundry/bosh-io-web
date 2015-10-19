@@ -55,21 +55,25 @@ func (c PackagesController) Show(req *http.Request, r martrend.Render, params ma
 
 	c.logger.Debug(c.logTag, "Release source '%s'", relSource)
 
-	relVerRec, err := c.releasesRepo.Find(relSource, relVersion)
-	if err != nil {
-		r.HTML(500, c.errorTmpl, err)
-		return
+	var relVerRec bhrelsrepo.ReleaseVersionRec
+
+	if len(relVersion) > 0 {
+		relVerRec, err = c.releasesRepo.Find(relSource, relVersion)
+		if err != nil {
+			r.HTML(500, c.errorTmpl, err)
+			return
+		}
+	} else {
+		relVerRec, err = c.releasesRepo.FindLatest(relSource)
+		if err != nil {
+			r.HTML(500, c.errorTmpl, err)
+			return
+		}
 	}
 
-	rel, found, err := c.releaseVersionsRepo.Find(relVerRec)
+	rel, err := c.releaseVersionsRepo.Find(relVerRec)
 	if err != nil {
 		r.HTML(500, c.errorTmpl, err)
-		return
-	}
-
-	if !found {
-		err := bosherr.New("Release '%s' is not found", relSource)
-		r.HTML(404, c.errorTmpl, err)
 		return
 	}
 
@@ -94,10 +98,6 @@ func (c PackagesController) extractShowParams(req *http.Request, params mart.Par
 	}
 
 	relVersion := req.URL.Query().Get("version")
-
-	if len(relVersion) == 0 {
-		return "", "", "", bosherr.New("Param 'version' must be non-empty")
-	}
 
 	pkgName := params["name"]
 

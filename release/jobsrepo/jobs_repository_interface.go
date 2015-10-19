@@ -7,6 +7,6 @@ import (
 )
 
 type JobsRepository interface {
-	FindAll(bhrelsrepo.ReleaseVersionRec) ([]bpreljob.Job, bool, error)
+	FindAll(bhrelsrepo.ReleaseVersionRec) ([]bpreljob.Job, error)
 	SaveAll(bhrelsrepo.ReleaseVersionRec, []bpreljob.Job) error
 }

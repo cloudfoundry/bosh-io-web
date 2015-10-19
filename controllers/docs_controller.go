@@ -6,7 +6,6 @@ import (
 	"regexp"
 	"strings"
 
-	bosherr "github.com/cloudfoundry/bosh-agent/errors"
 	boshlog "github.com/cloudfoundry/bosh-agent/logger"
 	mart "github.com/go-martini/martini"
 	martrend "github.com/martini-contrib/render"
@@ -123,18 +122,14 @@ func newInitManifestPage(
 	sources := []bhrelui.Source{bhrelui.BOSH.Source, cpiRef.Source}
 
 	for _, source := range sources {
-		relVerRec, found, err := releasesRepo.FindLatest(source.Full())
+		relVerRec, err := releasesRepo.FindLatest(source.Full())
 		if err != nil {
 			return page, err
-		} else if !found {
-			return page, bosherr.New("Latest release '%s' is not found", source.Full())
 		}
 
-		rel, found, err := releaseVersionsRepo.Find(relVerRec)
+		rel, err := releaseVersionsRepo.Find(relVerRec)
 		if err != nil {
 			return page, err
-		} else if !found {
-			return page, bosherr.New("Release '%s' is not found", source.Full())
 		}
 
 		page.Releases = append(page.Releases, bhrelui.NewRelease(relVerRec, rel))

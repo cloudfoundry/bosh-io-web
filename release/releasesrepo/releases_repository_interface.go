@@ -9,8 +9,8 @@ type ReleasesRepository interface {
 	ListCurated() ([]ReleaseVersionRec, error)
 	ListAll() ([]Source, error)
 
-	FindAll(source string) ([]ReleaseVersionRec, bool, error)
-	FindLatest(source string) (ReleaseVersionRec, bool, error)
+	FindAll(source string) ([]ReleaseVersionRec, error)
+	FindLatest(source string) (ReleaseVersionRec, error)
 	Find(source, version string) (ReleaseVersionRec, error)
 
 	Add(ReleaseVersionRec) error
@@ -18,7 +18,7 @@ type ReleasesRepository interface {
 }
 
 type ReleaseVersionsRepository interface {
-	Find(ReleaseVersionRec) (bprel.Release, bool, error)
+	Find(ReleaseVersionRec) (bprel.Release, error)
 	Save(ReleaseVersionRec, bprel.Release) error
 }
 
