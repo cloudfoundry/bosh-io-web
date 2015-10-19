@@ -3,7 +3,7 @@ body {
   -webkit-font-smoothing: antialiased;
   font: 20px "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
   line-height: 1.5;
-  background: #fffffe;
+  background: #fffcfd;
 }
 
 strong { font-weight: 500; }
@@ -51,7 +51,7 @@ ul { padding-left: 17px; }
 
 .list-group-item img {
   float: right;
-  margin-top: 5px;
+  margin-top: 10px;
   margin-left: 9px;
   box-shadow: 0px 0px 2px #aaa;
 }
@@ -231,6 +231,14 @@ pre.terminal {
 .empty, .note {
   font-style: italic;
   color: #777;
+}
+
+.note {
+  border-radius: 5px;
+  padding: 10px 20px;
+  border: 1px solid #eee;
+  background: #FFFFEF;
+  font-size: 16px;
 }
 
 .remove-form { margin: 0; }

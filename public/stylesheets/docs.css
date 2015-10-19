@@ -7,20 +7,22 @@
 .docs h2 {
   color: #000;
   font-size: 24px;
+  font-weight: 400;
 }
 
 .docs h3 {
   color: #333;
   font-size: 22px;
+  font-weight: 400;
 }
 
 .docs hr { border-width: 2px; }
 
-.docs h4,
-.docs h5 {
+.docs h4, .docs h5 {
   color: #555;
   font-style: italic;
   font-size: 20px;
+  font-weight: 400;
 }
 
 /* todo */
