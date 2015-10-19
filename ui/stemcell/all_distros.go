@@ -21,17 +21,5 @@ var (
 
 			Sort: 2,
 		},
-
-		Distro{
-			Name: "CentOS 6.x",
-
-			OSMatches: []StemcellOSMatch{
-				{OSName: "centos", OSVersion: ""},
-			},
-
-			Deprecated: true,
-
-			Sort: 3,
-		},
 	}
 )
