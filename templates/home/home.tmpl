@@ -9,11 +9,11 @@
 <main>
   <div class="container page-sep">
     <div class="row">
-      {{ template "home/_curated_releases" . }}
-
-      {{ template "home/_latest_stemcells" . }}
-
       {{ template "home/_intro" }}
+    </div>
+    <div class="row">
+      {{ template "home/_curated_releases" . }}
+      {{ template "home/_latest_stemcells" . }}
     </div>
   </div>
 </main>

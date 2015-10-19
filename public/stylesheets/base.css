@@ -1,7 +1,7 @@
 /* Generic */
 body {
   -webkit-font-smoothing: antialiased;
-  font: 16px "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font: 20px "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
   line-height: 1.5;
   background: #fffffe;
 }
@@ -16,6 +16,12 @@ h1, h2, h3, h4, h5 {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;;
   -webkit-font-smoothing: subpixel-antialiased;
 }
+
+h2 { font-size: 30px; }
+
+h3 { font-size: 24px; }
+
+h4, h5, h6 { font-size: 20px; }
 
 /* Page links */
 a {
@@ -38,9 +44,9 @@ ul { padding-left: 17px; }
 
 .list-group-item {
   color: #777;
-  border-style: dotted;
-  border-color: #eee;
+  border-color: #f7f7f7;
   background-color: inherit;
+  border-width: 1px;
 }
 
 .list-group-item img {
@@ -51,7 +57,7 @@ ul { padding-left: 17px; }
 }
 
 .list-group-item img.small {
-  margin-top: 3px;
+  margin-top: 5px;
   width: 20px;
 }
 
@@ -100,7 +106,22 @@ header h2 {
   color: #000;
 }
 
-header h2 a.logo { font-size: 33px; }
+header h2 a.logo {
+  font-size: 33px;
+  text-decoration: none;
+}
+
+header h2 .logo .cursor {
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  animation: 1s blink step-end infinite;
+}
+
+@keyframes blink {
+  from, to { color: transparent; }
+  50%      { color: #000; }
+}
 
 header h2 > a,
 header h2 > a:active,
@@ -126,7 +147,7 @@ header .menu {
   float: right;
   margin: 30px 0 15px;
   padding: 0;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 2px solid rgba(0, 0, 0, 0.1);
   box-shadow: 0px 3px 8px #f7f7f7;
   background: #fff;
 }
@@ -134,7 +155,7 @@ header .menu {
 header .menu li {
   float: left;
   display: inline;
-  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  border-right: 2px solid rgba(0, 0, 0, 0.05);
 }
 
 header .menu li:last-child { border-right-width: 0; }
@@ -170,6 +191,13 @@ menu li {
   padding-left: 10px;
   padding-right: 10px;
   margin-right: -1px;
+}
+
+/* Intro */
+.intro {
+  xborder: 1px solid #ccc;
+  text-align: center;
+  padding: 45px 150px 30px;
 }
 
 /* Misc */

@@ -11,11 +11,17 @@
 
 .docs h3 {
   color: #333;
-  font-size: 20px;
+  font-size: 22px;
 }
 
+.docs hr { border-width: 2px; }
+
 .docs h4,
-.docs h5 { font-style: italic; }
+.docs h5 {
+  color: #555;
+  font-style: italic;
+  font-size: 20px;
+}
 
 /* todo */
 .docs sup { line-height: normal; }
