@@ -13,17 +13,25 @@
                 {{ range $i, $s := .Stemcells }}
                   {{ with .RegularSource }}
                     <li class="list-group-item">
-                      <span class="stemcell-name">{{ $s.FriendlyName }}</span>
-                      <a href="{{ .URL }}">{{ $a.Version }}</a>
-                      <a href="{{ $s.AllVersionsURL }}">&hellip;</a>
+                      <div class="col-md-8">
+                        <span class="stemcell-name">{{ $s.FriendlyName }}</span>
+                      </div>
+                      <div class="col-md-4">
+                        <a href="{{ .URL }}">{{ $a.Version }}</a> /
+                        <a href="{{ $s.AllVersionsURL }}">prev&hellip;</a>
+                      </div>
                     </li>
                   {{ end }}
 
                   {{ with .LightSource }}
                     <li class="list-group-item">
-                      <span class="stemcell-name">{{ $s.FriendlyName }} Light</span>
-                      <a href="{{ .URL }}">{{ $a.Version }}</a>
-                      <a href="{{ $s.AllVersionsURL }}">&hellip;</a>
+                      <div class="col-md-8">
+                        <span class="stemcell-name">{{ $s.FriendlyName }} Light</span>
+                      </div>
+                      <div class="col-md-4">
+                        <a href="{{ .URL }}">{{ $a.Version }}</a> /
+                        <a href="{{ $s.AllVersionsURL }}">prev&hellip;</a>
+                      </div>
                     </li>
                   {{ end }}
                 {{ end }}

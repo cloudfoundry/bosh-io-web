@@ -11,7 +11,7 @@
           <div class="col-md-3">
             <a href="{{ .URL }}" title="{{ $s.ManifestName }}">{{ $a.Version }}</a>
             {{ if not $a.ShowingAllVersions }}
-              / <a href="{{ $s.AllVersionsURL }}" class="note">prev&hellip;</a>
+              / <a href="{{ $s.AllVersionsURL }}">prev&hellip;</a>
             {{ end }}
           </div>
 
@@ -37,7 +37,7 @@
           <div class="col-md-3">
             <a href="{{ .URL }}" title="{{ $s.ManifestName }}">{{ $a.Version }}</a>
             {{ if not $a.ShowingAllVersions }}
-              / <a href="{{ $s.AllVersionsURL }}" class="note">prev&hellip;</a>
+              / <a href="{{ $s.AllVersionsURL }}">prev&hellip;</a>
             {{ end }}
           </div>
 
