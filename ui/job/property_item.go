@@ -94,16 +94,11 @@ func matchingPropsDepth(prevProp *Property, currProp Property) (int, []string) {
 	return len(currParts), currParts
 }
 
-func (i PropertyItem) IndentedKey() string {
-	// YAML encoder defaults indent to 2 spaces
-	return fmt.Sprintf("    %s%s", strings.Repeat("  ", i.Indent), i.Key)
-}
-
 func (i PropertyItem) PoundAnchor() string {
 	return "#" + i.Anchor
 }
 
-func (i PropertyItem) IndentedDefaultAsYAML() (string, error) {
+func (i PropertyItem) DefaultAsYAML() (string, error) {
 	result, err := i.Property.DefaultAsYAML()
 	if err != nil {
 		return "", bosherr.WrapError(err, "Indenting property '%s' default", i.Property.Name)
@@ -119,9 +114,8 @@ func (i PropertyItem) IndentedDefaultAsYAML() (string, error) {
 	}
 
 	for j, v := range parts {
-		// Indent as much as the current level plus 1
-		// (it does mean arrays and hashes will be indented)
-		parts[j] = fmt.Sprintf("    %s%s", strings.Repeat("  ", i.Indent+1), v)
+		// it does mean arrays and hashes will be indented
+		parts[j] = fmt.Sprintf("  %s", v)
 	}
 
 	return "\n" + strings.Join(parts, "\n"), nil

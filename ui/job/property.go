@@ -14,8 +14,13 @@ type Property struct {
 	Name        string
 	Description string
 
-	Default interface{}
-	Example interface{}
+	Default  interface{}
+	Examples []PropertyExample
+}
+
+type PropertyExample struct {
+	Description string
+	Value       interface{}
 }
 
 type PropertySorting []Property
@@ -33,13 +38,27 @@ func NewProperties(ps []bpreljob.Property) []Property {
 }
 
 func NewProperty(p bpreljob.Property) Property {
-	return Property{
+	prop := Property{
 		Name:        p.Name,
 		Description: p.Description,
 
 		Default: p.Default,
-		Example: p.Example,
 	}
+
+	if p.Example != nil {
+		prop.Examples = []PropertyExample{
+			{Value: p.Example},
+		}
+	}
+
+	for _, ex := range p.Examples {
+		prop.Examples = append(prop.Examples, PropertyExample{
+			Description: ex.Description,
+			Value:       ex.Value,
+		})
+	}
+
+	return prop
 }
 
 func (p Property) GroupName() string {
@@ -71,16 +90,12 @@ func (p Property) DefaultAsYAML() (string, error) {
 	return b.String(), nil
 }
 
-func (p Property) HasExample() bool {
-	return p.Example != nil
-}
-
-func (p Property) ExampleAsYAML() (string, error) {
+func (e PropertyExample) ValueAsYAML() (string, error) {
 	var b bytes.Buffer
 
-	err := candiedyaml.NewEncoder(&b).Encode(p.Example)
+	err := candiedyaml.NewEncoder(&b).Encode(e.Value)
 	if err != nil {
-		return "", bosherr.WrapError(err, "Generating yaml for property '%s' example", p.Name)
+		return "", bosherr.WrapError(err, "Generating yaml for property example")
 	}
 
 	return b.String(), nil

@@ -15,46 +15,35 @@
   </a>
 </p>
 
-<!-- pre must be at the end of the line -->
-<pre class="prettyprint job-manifest-snippet">
-jobs:
-- name: {{ .Name }}
-  instances: 1
-{{ if .IsErrand }}  lifecycle: errand
-{{ end }}  resource_pool: default
-  networks:
-  - name: default
-  templates:
-  - {name: {{ .Name }}, release: {{ .Release.Name }}}
-{{ if .PropertyItems }}  properties:{{ end }}</pre>
-
-<!-- Show ul regardless if there are properties -->
 <ul class="property-items">
   {{ range .PropertyItems }}
-    <li class="{{ if not .MissingValues }}all-values-present{{ end }}">
+    <li class="{{ if not .MissingValues }}all-values-present{{ end }} indent-{{ .Indent }}">
       <div class="key">
         {{ if .Property }}
           {{ if .Property.HasDefault }}
-            <a id="{{ .Anchor }}" {{ href .PoundAnchor }}>{{ .IndentedKey }}: {{ .IndentedDefaultAsYAML }}</a>
+            <a id="{{ .Anchor }}" {{ href .PoundAnchor }}>{{ .Key }}: {{ .DefaultAsYAML }}</a>
           {{ else }}
-            <a id="{{ .Anchor }}" {{ href .PoundAnchor }}>{{ .IndentedKey }}: <span class="placeholder">???</span></a>
+            <a id="{{ .Anchor }}" {{ href .PoundAnchor }}>{{ .Key }}: <span class="placeholder">???</span></a>
           {{ end }}
         {{ else }}
-          <a id="{{ .Anchor }}" {{ href .PoundAnchor }}>{{ .IndentedKey }}:</a>
+          <a id="{{ .Anchor }}" {{ href .PoundAnchor }}>{{ .Key }}:</a>
         {{ end }}
         <br/>
       </div>
 
-      <div class="description {{ if .Property }}{{ if .Property.HasExample }}with-example{{ end }}{{ end }}">
-        {{ if .Property }}
-          <p># {{ .Property.Description }}</p>
+      {{ if .Property }}
+        <div class="description {{ if .Property }}{{ if .Property.Examples }}with-example{{ end }}{{ end }}">
+          {{ if .Property.Description }}<p>{{ .Property.Description }}</p>{{ end }}
 
-          {{ if .Property.HasExample }}
-            <p>Example:</p>
-            <pre class="example prettyprint">{{ .Property.ExampleAsYAML }}</pre>
+          {{ if .Property.Examples }}
+            <h4>Example{{ if gt (len .Property.Examples) 1 }}s{{ end }}</h4>
+            {{ range .Property.Examples }}
+              {{ if .Description }}<p class="example-description">{{ .Description }}</p>{{ end }}
+              <pre class="example prettyprint">{{ .ValueAsYAML }}</pre>
+            {{ end }}
           {{ end }}
-        {{ end }}
-      </div>
+        </div>
+      {{ end }}
     </li>
   {{ end }}
 </ul>
