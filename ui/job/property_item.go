@@ -98,6 +98,23 @@ func (i PropertyItem) PoundAnchor() string {
 	return "#" + i.Anchor
 }
 
+func (i PropertyItem) HasLongKey() bool {
+	d, err := i.DefaultAsYAML()
+	if err != nil {
+		d = ""
+	}
+
+	parts := strings.Split(i.Key+": "+d, "\n")
+
+	for _, v := range parts {
+		if len(v) > 40 {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (i PropertyItem) DefaultAsYAML() (string, error) {
 	result, err := i.Property.DefaultAsYAML()
 	if err != nil {

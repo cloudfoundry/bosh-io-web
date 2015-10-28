@@ -2,12 +2,15 @@ package job
 
 import (
 	"bytes"
+	"html/template"
 	"sort"
 	"strings"
 
 	"github.com/cloudfoundry-incubator/candiedyaml"
 	bosherr "github.com/cloudfoundry/bosh-agent/errors"
 	bpreljob "github.com/cppforlife/bosh-provisioner/release/job"
+	"github.com/microcosm-cc/bluemonday"
+	"github.com/russross/blackfriday"
 )
 
 type Property struct {
@@ -75,6 +78,14 @@ func (p Property) GroupName() string {
 	return "."
 }
 
+func (p Property) DescriptionInMarkdown() (template.HTML, error) {
+	unsafeMarkdown := blackfriday.MarkdownCommon([]byte(p.Description))
+	safeMarkdown := bluemonday.UGCPolicy().SanitizeBytes(unsafeMarkdown)
+
+	// todo sanitized markdown
+	return template.HTML(safeMarkdown), nil
+}
+
 func (p Property) HasDefault() bool {
 	return p.Default != nil
 }
@@ -88,6 +99,14 @@ func (p Property) DefaultAsYAML() (string, error) {
 	}
 
 	return b.String(), nil
+}
+
+func (e PropertyExample) DescriptionInMarkdown() (template.HTML, error) {
+	unsafeMarkdown := blackfriday.MarkdownCommon([]byte(e.Description))
+	safeMarkdown := bluemonday.UGCPolicy().SanitizeBytes(unsafeMarkdown)
+
+	// todo sanitized markdown
+	return template.HTML(safeMarkdown), nil
 }
 
 func (e PropertyExample) ValueAsYAML() (string, error) {

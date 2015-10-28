@@ -17,7 +17,12 @@
 
 <ul class="property-items">
   {{ range .PropertyItems }}
-    <li class="{{ if not .MissingValues }}all-values-present{{ end }} indent-{{ .Indent }}">
+    <li class="{{ if not .MissingValues }}all-values-present{{ end }} indent-{{ .Indent }}
+        {{ if .Property }}
+          {{ if .Property.Examples }}with-example{{ end }}
+          {{ if .HasLongKey }}with-long-key{{ end }}
+        {{ end }}">
+
       <div class="key">
         {{ if .Property }}
           {{ if .Property.HasDefault }}
@@ -32,13 +37,13 @@
       </div>
 
       {{ if .Property }}
-        <div class="description {{ if .Property }}{{ if .Property.Examples }}with-example{{ end }}{{ end }}">
-          {{ if .Property.Description }}<p>{{ .Property.Description }}</p>{{ end }}
+        <div class="description">
+          {{ if .Property.Description }}{{ .Property.DescriptionInMarkdown }}{{ end }}
 
           {{ if .Property.Examples }}
             <h4>Example{{ if gt (len .Property.Examples) 1 }}s{{ end }}</h4>
             {{ range .Property.Examples }}
-              {{ if .Description }}<p class="example-description">{{ .Description }}</p>{{ end }}
+              {{ if .Description }}{{ .DescriptionInMarkdown }}{{ end }}
               <pre class="example prettyprint">{{ .ValueAsYAML }}</pre>
             {{ end }}
           {{ end }}
