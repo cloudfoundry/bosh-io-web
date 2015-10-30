@@ -31,7 +31,16 @@
 /* Helps deeply nested listed to be more spacious */
 .docs ul, .docs ol { padding-left: 25px; }
 
-.docs img { box-shadow: 0px 0px 9px #888; }
+.docs img {
+  width: 750px;
+  margin: 30px 0;
+  box-shadow: 0px 0px 9px #888;
+}
+
+.docs .gray img {
+  filter: grayscale(100%);
+  -webkit-filter: grayscale(100%);
+}
 
 .docs .wide { width: 1100px; }
 
