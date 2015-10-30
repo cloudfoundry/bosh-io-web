@@ -77,7 +77,7 @@ func (w PeriodicWatcher) lookAtReleases() error {
 	for _, watcherRec := range watcherRecs {
 		err := w.lookAtRelease(watcherRec)
 		if err != nil {
-			return bosherr.WrapError(err, "Looking up release source '%s'", watcherRec.RelSource)
+			w.logger.Error(w.logTag, "Failed to look at release source '%s': %s", watcherRec.RelSource, err)
 		}
 	}
 
