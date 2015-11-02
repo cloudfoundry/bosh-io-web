@@ -1,28 +1,32 @@
-<div class="col-md-6">
-  <h3 class="page-header">Curated releases</h3>
+{{ template "releases/_about" }}
+
+<div class="col-md-9">
+  <h3 class="page-header">Community releases</h3>
 
   {{ if .UniqueSourceReleases }}
     <ul class="list-group list-group-condensed curated-releases">
       {{ range .UniqueSourceReleases }}
         <li class="list-group-item">
-          <a href="{{ .URL }}">{{ .Source.Short }}</a>
+          <div class="col-md-8">
+            <a href="{{ .URL }}" class="release-name">{{ .Source.Short }}</a>
 
-          {{ if and .Source.FromGithub .Source.AvatarURL }}
-            <a href="{{ .Source.GithubURL }}" title="Source on GitHub" class="github-link">
-              <img src="{{ .Source.AvatarURL }}">
-            </a>
-          {{ end }}
+            {{ if and .Source.FromGithub .Source.AvatarURL }}
+              <a href="{{ .Source.GithubURL }}" title="Source on GitHub" class="github-link">
+                <img src="{{ .Source.AvatarURL }}" class="small">
+              </a>
+            {{ end }}
+          </div>
 
           {{ if .Releases }}
-            <br/>
+            <div class="col-md-4">
+              {{ range .FirstXReleases 1 }}
+                <a href="{{ .URL }}" class="curated-release-version">{{ .Version }}</a>
+              {{ end }}
 
-            {{ range .FirstXReleases 3 }}
-              <a href="{{ .URL }}" class="curated-release-version">{{ .Version }}</a>
-            {{ end }}
-
-            {{ if .HasMoreThanXReleases 3 }}
-              <a href="{{ .URL }}">...</a>
-            {{ end }}
+              {{ if .HasMoreThanXReleases 1 }}
+                / <a href="{{ .URL }}">prev...</a>
+              {{ end }}
+            </div>
           {{ end }}
         </li>
       {{ end }}

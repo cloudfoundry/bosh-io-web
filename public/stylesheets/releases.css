@@ -1,3 +1,5 @@
+.curated-releases .list-group-item { overflow: hidden; }
+
 .github-link { color: #777; }
 
 .release-notes {
