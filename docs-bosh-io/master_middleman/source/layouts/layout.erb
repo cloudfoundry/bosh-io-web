@@ -11,24 +11,28 @@
     <div class="row">
       <div class="col-md-8">
         <% if current_page.destination_path == "docs/index.html" %>
-          <ol class="breadcrumb">
-            <li class="active">Table of Contents</li>
-          </ol>
+
+          <div class="toc">
+            <ol class="breadcrumb">
+              <li class="active">Table of Contents</li>
+            </ol>
+            <hr/>
+            <%= yield %>
+          </div>
+
         <% else %>
+
           <ol class="breadcrumb">
             <li><a href="/docs">Table of Contents</a></li>
             <li class="active"><%= current_page.data.title %></li>
           </ol>
-
           <%= quick_links %>
+          <hr/>
+          <%= yield %>
+
         <% end %>
 
         <hr/>
-
-        <%= yield %>
-
-        <hr/>
-
         <p><a {{ href .ContributeChangesURL }}>Contribute changes to this page</a></p>
       </div>
     </div>
