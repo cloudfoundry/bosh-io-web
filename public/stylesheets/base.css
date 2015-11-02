@@ -195,7 +195,6 @@ menu li {
 
 /* Intro */
 .intro {
-  xborder: 1px solid #ccc;
   text-align: center;
   padding: 45px 150px 30px;
 }
@@ -217,6 +216,12 @@ pre.terminal {
   border-bottom: 2px solid #ddd;
   background: #000;
   color: #fff;
+}
+
+pre.bash {
+  margin-top: 5px;
+  border-width: 0;
+  background: #f2ecec;
 }
 
 .sha1 {
