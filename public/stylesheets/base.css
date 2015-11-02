@@ -200,6 +200,8 @@ menu li {
 }
 
 /* Misc */
+code { font-size: 80%; }
+
 pre, .prettyprint {
   border-radius: 5px;
   padding: 10px 20px;
