@@ -30,6 +30,8 @@ func (s Source) GithubURL() string { return s.src.GithubURL() }
 
 func (s Source) String() string { return s.src.Full }
 
+func (s Source) IsBOSH() bool { return s.src.IsBOSH() }
+
 func (s Source) IsCPI() bool { return s.src.IsCPI() }
 
 func (s Source) URL() string {

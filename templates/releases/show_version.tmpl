@@ -60,6 +60,17 @@ releases:
           {{ $v := .CPIDocsLink }}
 
           {{ if $v }}<p>See {{ $v }} for a step by step tutorial.</p>{{ end }}
+        {{ else if .IsBOSH }}
+          <p>Reference BOSH release in the deployment manifest used with <code>bosh-init</code>:</p>
+
+          <pre>
+releases:
+- name: {{ .Name }}
+  url: {{ .UserVisibleDownloadURL }}
+  sha1: {{ .TarballSHA1 }}
+</pre>
+
+          <p>Finally add needed deployment jobs and specify values for required properties.</p>
         {{ else }}
           <p>Upload this release version to your BOSH Director:</p>
 

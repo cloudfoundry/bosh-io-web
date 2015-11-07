@@ -43,6 +43,10 @@ func (s Source) GithubURL() string {
 	return fmt.Sprintf("https://%s", s.Full)
 }
 
+func (s Source) IsBOSH() bool {
+	return s.Full == "github.com/cloudfoundry/bosh"
+}
+
 func (s Source) IsCPI() bool {
 	return strings.HasSuffix(s.Full, "-cpi-release")
 }

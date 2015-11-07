@@ -131,6 +131,8 @@ func (r Release) GithubURLForPath(path, ref string) string {
 	return fmt.Sprintf("%s/tree/%s/%s", r.Source.GithubURL(), ref, path)
 }
 
+func (r Release) IsBOSH() bool { return r.Source.IsBOSH() }
+
 func (r Release) IsCPI() bool { return r.Source.IsCPI() }
 
 func (r Release) CPIDocsLink() template.HTML {
