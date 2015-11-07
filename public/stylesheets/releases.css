@@ -2,11 +2,7 @@
 
 .github-link { color: #777; }
 
-.release-notes {
-  padding-left: 15px;
-  border-left: 1px solid #ccc;
-  font-size: 13px;
-}
+.release-notes { font-size: 13px; }
 
 .release-notes ul { margin-bottom: 10px; }
 

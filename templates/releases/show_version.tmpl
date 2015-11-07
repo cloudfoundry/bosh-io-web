@@ -15,7 +15,7 @@
 <main>
   <div class="container page-sep">
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-6">
         <h3 class="page-header">Release <span>'{{ .Name }} {{ .Version }}'</span></h3>
 
         {{ if .IsCPI }}
@@ -31,7 +31,18 @@
         {{ end }}
 
         <p><a href="{{ .GraphURL }}">Explore dependencies diagram</a></p>
+      </div>
 
+      {{ if .NotesInMarkdown }}
+        <div class="col-md-6">
+          <h3 class="page-header">Notes</h3>
+          <div class="release-notes">{{ .NotesInMarkdown }}</div>
+        </div>
+      {{ end }}
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
         <h3 class="page-header">Usage</h3>
 
         {{ if .IsCPI }}
@@ -113,13 +124,6 @@ $ wget --content-disposition {{ .UserVisibleDownloadURL }}
           <p class="empty">No packages</p>
         {{ end }}
       </div>
-
-      {{ if .NotesInMarkdown }}
-        <div class="col-md-6">
-          <h3 class="page-header">Notes</h3>
-          <div class="release-notes">{{ .NotesInMarkdown }}</div>
-        </div>
-      {{ end }}
     </div>
   </div>
 </main>
