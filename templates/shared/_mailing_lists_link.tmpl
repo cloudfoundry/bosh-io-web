@@ -1,11 +1,1 @@
-{{ $isShort := . }}
-
-{{ $newURL := `https://lists.cloudfoundry.org/pipermail/cf-bosh` }}
-{{ $usersURL := `https://groups.google.com/a/cloudfoundry.org/forum/#!forum/bosh-users` }}
-{{ $devURL := `https://groups.google.com/a/cloudfoundry.org/forum/#!forum/bosh-dev` }}
-
-{{ if $isShort }}
-	<a href="{{ $newURL }}">cf-bosh mailing list</a>
-{{ else }}
-	<a href="{{ $newURL }}">cf-bosh mailing list</a> (Archived Google Groups: <a href="{{ $usersURL }}">bosh-users</a> &amp; <a href="{{ $devURL }}">bosh-dev</a>)
-{{ end }}
+<a href="https://lists.cloudfoundry.org/pipermail/cf-bosh">cf-bosh mailing list</a>
