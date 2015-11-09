@@ -44,7 +44,7 @@ releases:
   sha1: {{ .TarballSHA1 }}
 </pre>
                 {{ else }}
-                  <pre class="prettyprint terminal">{{ if .IsLatest }}
+                  <pre class="terminal">{{ if .IsLatest }}
 # Upload latest version, currently {{ .Version }}
 $ bosh upload release {{ .UserVisibleLatestDownloadURL }}
 

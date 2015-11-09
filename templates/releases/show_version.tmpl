@@ -74,7 +74,7 @@ releases:
         {{ else }}
           <p>Upload this release version to your BOSH Director:</p>
 
-          <pre class="prettyprint terminal">
+          <pre class="terminal">
 $ bosh upload release {{ .UserVisibleDownloadURL }}</pre>
 
           {{ template "shared/_upload_version_warning" }}
@@ -97,7 +97,7 @@ releases:
           release tarball locally:
         </p>
 
-        <pre class="prettyprint terminal">
+        <pre class="terminal">
 # ...or download it directly using curl
 $ curl -L -J -O {{ .UserVisibleDownloadURL }}
 
