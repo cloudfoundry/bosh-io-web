@@ -1,41 +1,15 @@
 {{ range $j, $a := .ByVersion }}
   <ul class="list-group list-group-condensed">
     {{ range $i, $s := .Stemcells }}
-      {{ with .RegularSource }}
+      {{ range .Sources }}
         <li class="list-group-item stemcell">
           <div class="col-md-4">
-            <span class="stemcell-name">{{ $s.FriendlyName }}</span>
+            <span class="stemcell-name">{{ .FriendlyName }}</span>
             <span class="file-size">{{ .FormattedSize }}</span>
           </div>
 
           <div class="col-md-3">
-            <a href="{{ .URL }}" title="{{ $s.ManifestName }}">{{ $a.Version }}</a>
-            {{ if not $a.ShowingAllVersions }}
-              / <a href="{{ $s.AllVersionsURL }}">prev&hellip;</a>
-            {{ end }}
-          </div>
-
-          <div class="col-md-5">
-            {{ if not $a.ShowingAllVersions }}
-              <span class="file-md5">{{ $s.ManifestName }}</span>
-            {{ end }}
-            <span class="file-updated-at">{{ .UpdatedAt }}</span>
-            {{ if $a.ShowingAllVersions }}
-              <span class="file-md5">{{ .MD5 }} [MD5]</span>
-            {{ end }}
-          </div>
-        </li>
-      {{ end }}
-
-      {{ with .LightSource }}
-        <li class="list-group-item stemcell">
-          <div class="col-md-4">
-            <span class="stemcell-name">{{ $s.FriendlyName }} Light</span>
-            <span class="file-size">{{ .FormattedSize }}</span>
-          </div>
-
-          <div class="col-md-3">
-            <a href="{{ .URL }}" title="{{ $s.ManifestName }}">{{ $a.Version }}</a>
+            <a href="{{ .UserVisibleDownloadURL }}" title="{{ $s.ManifestName }}">{{ $a.Version }}</a>
             {{ if not $a.ShowingAllVersions }}
               / <a href="{{ $s.AllVersionsURL }}">prev&hellip;</a>
             {{ end }}

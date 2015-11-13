@@ -13,22 +13,10 @@
             {{ range $j, $a := .ByVersion }}
               <ul class="list-group list-group-condensed">
                 {{ range $i, $s := .Stemcells }}
-                  {{ with .RegularSource }}
+                  {{ range .Sources }}
                     <li class="list-group-item">
                       <div class="col-md-8">
-                        <span class="stemcell-name">{{ $s.FriendlyName }}</span>
-                      </div>
-                      <div class="col-md-4">
-                        <a href="{{ .URL }}">{{ $a.Version }}</a> /
-                        <a href="{{ $s.AllVersionsURL }}">prev&hellip;</a>
-                      </div>
-                    </li>
-                  {{ end }}
-
-                  {{ with .LightSource }}
-                    <li class="list-group-item">
-                      <div class="col-md-8">
-                        <span class="stemcell-name">{{ $s.FriendlyName }} Light</span>
+                        <span class="stemcell-name">{{ .FriendlyName }}</span>
                       </div>
                       <div class="col-md-4">
                         <a href="{{ .URL }}">{{ $a.Version }}</a> /

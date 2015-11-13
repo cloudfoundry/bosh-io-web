@@ -87,6 +87,17 @@ func (c StemcellsController) Download(req *http.Request, r martrend.Render, para
 
 	relVersion := req.URL.Query().Get("v")
 
+	preferLight := true
+
+	lightParam := req.URL.Query().Get("light")
+	if lightParam != "" {
+		preferLight = c.isParamTrue(lightParam)
+	}
+
+	// todo remove china stemcell once consolidated into light stemcells
+	chinaParam := req.URL.Query().Get("china")
+	mustBeForChina := c.isParamTrue(chinaParam)
+
 	if relVersion == "" {
 		if len(sortedStemcells) == 0 {
 			err := bosherr.New("Latest stemcell is not found")
@@ -94,7 +105,13 @@ func (c StemcellsController) Download(req *http.Request, r martrend.Render, para
 			return
 		}
 
-		r.Redirect(sortedStemcells[0].ActualDownloadURL())
+		url, err := sortedStemcells[0].ActualDownloadURL(preferLight, mustBeForChina)
+		if err != nil {
+			r.HTML(404, c.errorTmpl, err)
+			return
+		}
+
+		r.Redirect(url)
 		return
 	}
 
@@ -107,13 +124,23 @@ func (c StemcellsController) Download(req *http.Request, r martrend.Render, para
 
 	for _, stemcell := range sortedStemcells {
 		if stemcell.Version.IsEq(ver) {
-			r.Redirect(stemcell.ActualDownloadURL())
+			url, err := stemcell.ActualDownloadURL(preferLight, mustBeForChina)
+			if err != nil {
+				r.HTML(404, c.errorTmpl, err)
+				return
+			}
+
+			r.Redirect(url)
 			return
 		}
 	}
 
 	err = bosherr.New("Stemcell version '%s' is not found", relVersion)
 	r.HTML(404, c.errorTmpl, err)
+}
+
+func (c StemcellsController) isParamTrue(s string) bool {
+	return s == "1" || s == "true" || s == "t"
 }
 
 func (c StemcellsController) APIV1Index(req *http.Request, r martrend.Render, params mart.Params) {

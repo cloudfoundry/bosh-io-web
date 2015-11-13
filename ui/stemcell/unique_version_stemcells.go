@@ -63,7 +63,7 @@ func NewSameVersionStemcells(version semiver.Version, ss []bhstemsrepo.Stemcell)
 		stemcells = append(stemcells, *stemcell)
 	}
 
-	sort.Sort(StemcellFriendlyNameSorting(stemcells))
+	sort.Sort(StemcellManifestNameSorting(stemcells))
 
 	return SameVersionStemcells{Version: version, Stemcells: stemcells}
 }

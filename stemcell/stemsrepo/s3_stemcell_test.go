@@ -198,6 +198,20 @@ var _ = Describe("NewS3Stemcell", func() {
 
 			AgentType: "go",
 		},
+
+		// Stemcell in China
+		"light-china-bosh-stemcell-3130-aws-xen-hvm-ubuntu-trusty-go_agent.tgz": ExtractedPieces{
+			Name:    "bosh-aws-xen-hvm-ubuntu-trusty-go_agent",
+			Version: "3130",
+
+			InfName: "aws",
+			HvName:  "xen-hvm",
+
+			OSName:    "ubuntu",
+			OSVersion: "trusty",
+
+			AgentType: "go",
+		},
 	}
 
 	for p, e := range examples {

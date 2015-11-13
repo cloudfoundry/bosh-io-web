@@ -2,6 +2,7 @@ package stemcell
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 
 	semiver "github.com/cppforlife/go-semi-semantic/version"
@@ -30,7 +31,6 @@ var (
 
 type Stemcell struct {
 	ManifestName string
-	FriendlyName string
 	Version      semiver.Version
 
 	OSName    string
@@ -38,9 +38,17 @@ type Stemcell struct {
 
 	RegularSource *StemcellSource
 	LightSource   *StemcellSource
+
+	// todo china stemcell will be consolidated into light stemcell at some point
+	LightChinaSource *StemcellSource
 }
 
 type StemcellSource struct {
+	friendlyName string
+
+	isLight    bool
+	isForChina bool
+
 	URL  string `json:"url"`
 	Size uint64 `json:"size"`
 	MD5  string `json:"md5"`
@@ -55,31 +63,18 @@ type stemcellAPIRecord struct {
 	// Use StemcellSource for now for convenience
 	Regular *StemcellSource `json:"regular,omitempty"`
 	Light   *StemcellSource `json:"light,omitempty"`
+
+	// todo china stemcell will be consolidated into light stemcell at some point
+	LightChina *StemcellSource `json:"light_china,omitempty"`
 }
 
-type StemcellFriendlyNameSorting []Stemcell
+type StemcellManifestNameSorting []Stemcell
 
 type StemcellVersionSorting []Stemcell
 
 func NewStemcell(s bhstemsrepo.Stemcell) Stemcell {
-	infName, ok := prettyInfNames[s.InfName()]
-	if !ok {
-		infName = s.InfName()
-	}
-
-	hvName, ok := prettyHvNames[s.HvName()]
-	if !ok {
-		hvName = s.HvName()
-	}
-
-	optionalDiskFormat := ""
-	if len(s.DiskFormat()) > 0 {
-		optionalDiskFormat = fmt.Sprintf(" (%s)", s.DiskFormat())
-	}
-
 	stemcell := &Stemcell{
 		ManifestName: s.Name(),
-		FriendlyName: fmt.Sprintf("%s %s%s", infName, hvName, optionalDiskFormat),
 		Version:      s.Version(),
 
 		OSName:    s.OSName(),
@@ -92,7 +87,33 @@ func NewStemcell(s bhstemsrepo.Stemcell) Stemcell {
 }
 
 func (s *Stemcell) AddAsSource(s_ bhstemsrepo.Stemcell) {
+	infName, ok := prettyInfNames[s_.InfName()]
+	if !ok {
+		infName = s_.InfName()
+	}
+
+	hvName, ok := prettyHvNames[s_.HvName()]
+	if !ok {
+		hvName = s_.HvName()
+	}
+
+	optionalDiskFormat := ""
+	if len(s_.DiskFormat()) > 0 {
+		optionalDiskFormat = fmt.Sprintf(" (%s)", s_.DiskFormat())
+	}
+
+	optionalLight := ""
+	if s_.IsLight() {
+		if s_.IsForChina() {
+			optionalLight = " Light China"
+		} else {
+			optionalLight = " Light"
+		}
+	}
+
 	source := &StemcellSource{
+		friendlyName: fmt.Sprintf("%s %s%s%s", infName, hvName, optionalDiskFormat, optionalLight),
+
 		URL:  s_.URL(),
 		Size: s_.Size(),
 		MD5:  s_.MD5(),
@@ -101,37 +122,70 @@ func (s *Stemcell) AddAsSource(s_ bhstemsrepo.Stemcell) {
 	}
 
 	if s_.IsLight() {
-		s.LightSource = source
+		source.isLight = true
+
+		if s_.IsForChina() {
+			source.isForChina = true
+			s.LightChinaSource = source
+		} else {
+			s.LightSource = source
+		}
 	} else {
 		s.RegularSource = source
 	}
 }
 
+func (s *Stemcell) Sources() []*StemcellSource {
+	sources := []*StemcellSource{}
+
+	if s.RegularSource != nil {
+		sources = append(sources, s.RegularSource)
+	}
+
+	if s.LightSource != nil {
+		sources = append(sources, s.LightSource)
+	}
+
+	if s.LightChinaSource != nil {
+		sources = append(sources, s.LightChinaSource)
+	}
+
+	return sources
+}
+
 func (s Stemcell) UserVisibleDownloadURL() string {
-	// todo make domain configurable
 	return fmt.Sprintf("https://bosh.io/d/stemcells/%s?v=%s", s.ManifestName, s.Version)
 }
 
 func (s Stemcell) UserVisibleLatestDownloadURL() string {
-	// todo make domain configurable
 	return fmt.Sprintf("https://bosh.io/d/stemcells/%s", s.ManifestName)
 }
 
-func (s Stemcell) ActualDownloadURL() string {
-	// Prefer light stemcells
-	if s.LightSource != nil {
-		return s.LightSource.URL
+func (s Stemcell) ActualDownloadURL(preferLight bool, mustBeForChina bool) (string, error) {
+	if mustBeForChina {
+		if s.LightChinaSource != nil {
+			return s.LightChinaSource.URL, nil
+		}
+
+		return "", errors.New("No light stemcell for China found")
 	}
 
-	return s.RegularSource.URL
+	if preferLight {
+		if s.LightSource != nil {
+			return s.LightSource.URL, nil
+		}
+	}
+
+	return s.RegularSource.URL, nil
 }
 
 func (s Stemcell) MarshalJSON() ([]byte, error) {
 	record := stemcellAPIRecord{
-		Name:    s.ManifestName,
-		Version: s.Version.AsString(),
-		Regular: s.RegularSource,
-		Light:   s.LightSource,
+		Name:       s.ManifestName,
+		Version:    s.Version.AsString(),
+		Regular:    s.RegularSource,
+		Light:      s.LightSource,
+		LightChina: s.LightChinaSource,
 	}
 
 	return json.Marshal(record)
@@ -139,11 +193,13 @@ func (s Stemcell) MarshalJSON() ([]byte, error) {
 
 func (s Stemcell) AllVersionsURL() string { return fmt.Sprintf("/stemcells/%s", s.ManifestName) }
 
-func (s StemcellSource) FormattedSize() string { return humanize.Bytes(s.Size) }
+func (s StemcellSource) UserVisibleDownloadURL() string { return s.URL }
+func (s StemcellSource) FriendlyName() string           { return s.friendlyName }
+func (s StemcellSource) FormattedSize() string          { return humanize.Bytes(s.Size) }
 
-func (s StemcellFriendlyNameSorting) Len() int           { return len(s) }
-func (s StemcellFriendlyNameSorting) Less(i, j int) bool { return s[i].ManifestName < s[j].ManifestName }
-func (s StemcellFriendlyNameSorting) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
+func (s StemcellManifestNameSorting) Len() int           { return len(s) }
+func (s StemcellManifestNameSorting) Less(i, j int) bool { return s[i].ManifestName < s[j].ManifestName }
+func (s StemcellManifestNameSorting) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
 
 func (s StemcellVersionSorting) Len() int           { return len(s) }
 func (s StemcellVersionSorting) Less(i, j int) bool { return s[i].Version.IsLt(s[j].Version) }

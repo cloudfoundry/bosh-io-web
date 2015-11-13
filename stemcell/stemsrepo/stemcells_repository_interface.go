@@ -21,6 +21,7 @@ type Stemcell interface {
 	OSVersion() string // e.g. Trusty
 
 	IsLight() bool
+	IsForChina() bool
 
 	URL() string
 }

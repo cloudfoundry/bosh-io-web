@@ -122,6 +122,10 @@ func (f S3Stemcell) IsLight() bool {
 	return strings.Index(f.flavor, "light-") == 0
 }
 
+func (f S3Stemcell) IsForChina() bool {
+	return strings.Index(f.flavor, "-china-") != -1
+}
+
 func (f S3Stemcell) IsDeprecated() bool {
 	return f.osVersion == "lucid" || f.agentType == "ruby"
 }
