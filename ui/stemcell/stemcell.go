@@ -17,6 +17,7 @@ var (
 		"openstack": "OpenStack",
 		"vsphere":   "vSphere",
 		"vcloud":    "vCloud",
+		"azure":     "Azure",
 		"warden":    "BOSH Lite", // todo warden and boshlite are flipped
 	}
 
@@ -25,6 +26,7 @@ var (
 		"xen-hvm":  "Xen-HVM",
 		"esxi":     "ESXi",
 		"kvm":      "KVM",
+		"hyperv":   "Hyper-V",
 		"boshlite": "Warden",
 	}
 )

@@ -21,6 +21,7 @@ var KnownCPIs = ReleaseRefs{
 	NewReleaseRef("github.com/cloudfoundry-incubator/bosh-openstack-cpi-release", "OpenStack", "init-openstack"),
 	NewReleaseRef("github.com/cloudfoundry-incubator/bosh-vsphere-cpi-release", "vSphere", "init-vsphere"),
 	NewReleaseRef("github.com/cloudfoundry-incubator/bosh-vcloud-cpi-release", "vCloud", "init-vcloud"),
+	NewReleaseRef("github.com/cloudfoundry-incubator/bosh-azure-cpi-release", "Azure", "init-azure"),
 }
 
 func NewReleaseRef(fullSource, prettyName, docPage string) ReleaseRef {
