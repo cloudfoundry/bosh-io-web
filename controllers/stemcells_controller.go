@@ -45,7 +45,8 @@ type stemcellsControllerIndexPage struct {
 
 func (c StemcellsController) Index(req *http.Request, r martrend.Render, params mart.Params) {
 	filter := bhstemui.StemcellFilter{
-		Name: params["_1"],
+		Name:                     params["_1"],
+		IncludeAll:               c.isParamTrue(req.URL.Query().Get("all")),
 		IncludeDeprecatedDistros: true,
 	}
 

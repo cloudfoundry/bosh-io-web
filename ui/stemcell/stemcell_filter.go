@@ -15,7 +15,7 @@ func (f StemcellFilter) HasLimit() bool { return !f.IncludeAll }
 
 func (f StemcellFilter) Limit() int {
 	if len(f.Name) > 0 {
-		return 30
+		return 40
 	}
 
 	return 1
