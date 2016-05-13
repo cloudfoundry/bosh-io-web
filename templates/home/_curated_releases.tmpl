@@ -20,7 +20,8 @@
           {{ if .Releases }}
             <div class="col-md-4">
               {{ range .FirstXReleases 1 }}
-                <a href="{{ .URL }}" class="curated-release-version">{{ .Version }}</a>
+                <a href="{{ .DownloadURL }}" class="curated-release-version">{{ .Version }}</a> &mdash;
+                <a href="{{ .URL }}">Details</a>
               {{ end }}
 
               {{ if .HasMoreThanXReleases 1 }}
