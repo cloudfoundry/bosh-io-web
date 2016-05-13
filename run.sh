@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This script is called by the buildpack 
+# This script is called by the buildpack
 # (https://github.com/shageman/buildpack-binary)
 
 config=$1
@@ -11,11 +11,6 @@ if [ -z "$config" ]; then
 fi
 
 export PATH=/usr/local/bin:/usr/bin:/bin:/app/bin:$PATH
-
-# path taken from graphviz buildpack
-export PATH=/app/.tools/graphviz/bin:$PATH
-export LD_LIBRARY_PATH=/app/.tools/graphviz/lib:$LD_LIBRARY_PATH
-export LD_LIBRARY_PATH=/app/.tools/graphviz/lib/graphviz:$LD_LIBRARY_PATH
 
 # Make bosh-blostore-s3 available
 export PATH=$PWD:$PATH

@@ -8,3 +8,6 @@ build.sh
 push-cf.sh
 push-aws.sh
 run-local.sh
+
+Gemfile
+Gemfile.lock
