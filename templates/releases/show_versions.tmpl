@@ -53,9 +53,6 @@ $ bosh upload release {{ .UserVisibleLatestDownloadURL }}
 $ bosh upload release {{ .UserVisibleDownloadURL }}
 </pre>
 
-                  {{ if .IsLatest }}
-                    {{ template "shared/_upload_version_warning" }}
-                  {{ end }}
                 {{ end }}
               </li>
             {{ end }}

@@ -19,8 +19,6 @@ $ bosh upload stemcell {{ $s.UserVisibleLatestDownloadURL }}
 $ bosh upload stemcell {{ $s.UserVisibleDownloadURL }}
 </pre>
 
-      {{ template "shared/_upload_version_warning" }}
-
       <hr/>
 
       <p>Alternatively, <a href="{{ $s.UserVisibleDownloadURL }}">download</a> stemcell tarball locally:</p>
