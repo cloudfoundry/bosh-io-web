@@ -12,8 +12,8 @@ import (
 )
 
 type ReleaseWatchersController struct {
-	apiKey       string
 	watchersRepo bhwatchersrepo.WatchersRepository
+	privateToken string
 
 	indexTmpl string
 	errorTmpl string
@@ -22,13 +22,13 @@ type ReleaseWatchersController struct {
 }
 
 func NewReleaseWatchersController(
-	apiKey string,
 	watchersRepo bhwatchersrepo.WatchersRepository,
+	privateToken string,
 	logger boshlog.Logger,
 ) ReleaseWatchersController {
 	return ReleaseWatchersController{
-		apiKey:       apiKey,
 		watchersRepo: watchersRepo,
+		privateToken: privateToken,
 
 		indexTmpl: "release_watchers/index",
 		errorTmpl: "error",
@@ -38,7 +38,8 @@ func NewReleaseWatchersController(
 }
 
 type releaseWatchersControllerIndexPage struct {
-	Watchers []bhwatchersrepo.WatcherRec
+	Watchers     []bhwatchersrepo.WatcherRec
+	PrivateToken string
 }
 
 func (c ReleaseWatchersController) Index(r martrend.Render) {
@@ -49,7 +50,8 @@ func (c ReleaseWatchersController) Index(r martrend.Render) {
 	}
 
 	page := releaseWatchersControllerIndexPage{
-		Watchers: watcherRecs,
+		Watchers:     watcherRecs,
+		PrivateToken: c.privateToken,
 	}
 
 	r.HTML(200, c.indexTmpl, page)
@@ -78,5 +80,5 @@ func (c ReleaseWatchersController) WatchOrUnwatch(req *http.Request, r martrend.
 		return
 	}
 
-	r.Redirect("/release_watchers")
+	r.Redirect(c.privateToken + "/release_watchers")
 }

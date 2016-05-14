@@ -13,6 +13,7 @@ import (
 
 type ReleaseImportErrsController struct {
 	importErrsRepo bhimperrsrepo.ImportErrsRepository
+	privateToken   string
 
 	indexTmpl string
 	errorTmpl string
@@ -22,10 +23,12 @@ type ReleaseImportErrsController struct {
 
 func NewReleaseImportErrsController(
 	importErrsRepo bhimperrsrepo.ImportErrsRepository,
+	privateToken string,
 	logger boshlog.Logger,
 ) ReleaseImportErrsController {
 	return ReleaseImportErrsController{
 		importErrsRepo: importErrsRepo,
+		privateToken:   privateToken,
 
 		indexTmpl: "release_import_errs/index",
 		errorTmpl: "error",
@@ -35,7 +38,8 @@ func NewReleaseImportErrsController(
 }
 
 type releaseImportErrsControllerIndexPage struct {
-	ImportErrs []bhimperrsrepo.ImportErrRec
+	ImportErrs   []bhimperrsrepo.ImportErrRec
+	PrivateToken string
 }
 
 func (c ReleaseImportErrsController) Index(r martrend.Render) {
@@ -46,7 +50,8 @@ func (c ReleaseImportErrsController) Index(r martrend.Render) {
 	}
 
 	page := releaseImportErrsControllerIndexPage{
-		ImportErrs: importErrRecs,
+		ImportErrs:   importErrRecs,
+		PrivateToken: c.privateToken,
 	}
 
 	r.HTML(200, c.indexTmpl, page)
@@ -64,5 +69,5 @@ func (c ReleaseImportErrsController) Delete(req *http.Request, r martrend.Render
 		return
 	}
 
-	r.Redirect("/release_import_errs")
+	r.Redirect(c.privateToken + "/release_import_errs")
 }

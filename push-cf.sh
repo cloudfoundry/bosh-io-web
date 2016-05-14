@@ -15,7 +15,10 @@ fi
 ./build.sh
 
 echo "Generating new assets ID"
-echo `date|md5` > ./public/assets-id
+echo `date|md5` > ./prod-conf/assets-id
+
+echo "Generate new private token outside of ./public"
+echo $(LC_CTYPE=C tr -dc A-Za-z0-9 < /dev/urandom | fold -w ${1:-32} | head -n 1) > ./prod-conf/private-token
 
 echo "Pushing to cf"
 if cf app $new; then echo "$new must not exist"; exit 1; fi
@@ -23,6 +26,7 @@ if cf app $old; then echo "$old must not exist"; exit 1; fi
 
 echo "Pushing new version"
 cf push $new -i 2 -k 2G -b https://github.com/ddollar/heroku-buildpack-multi.git
+rm -f ./prod-conf/assets-id ./prod-conf/private-token
 
 read -p "Map routes to new version (y/n)? " CONT
 if [ "$CONT" != "y" ]; then

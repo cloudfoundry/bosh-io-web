@@ -12,7 +12,7 @@
       <div class="col-md-12">
         <h3 class="page-header">Release imports</h3>
 
-        {{ template "shared/misc_menu" }}
+        {{ template "shared/misc_menu" . }}
 
         {{ if .Imports }}
           <ul class="list-group list-group-condensed">
@@ -20,7 +20,7 @@
               <li class="list-group-item">
                 {{ .RelSource }} v={{ .Version }}
 
-                <form action="/release_imports" method="post" class="remove-form pull-right">
+                <form action="{{ $.PrivateToken }}/release_imports" method="post" class="remove-form pull-right">
                   <input type="hidden" name="relSource" value="{{ .RelSource }}" />
                   <input type="hidden" name="version" value="{{ .Version }}" />
                   <button type="submit" class="btn btn-danger btn-xs">Remove</button>

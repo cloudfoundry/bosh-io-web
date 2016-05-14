@@ -23,6 +23,3 @@ docs-bosh-io/output
 docs-bosh-io/final_app
 docs-bosh-io/.bundle
 docs-bosh-io/cached_shas.yml
-
-# Ignore generated assets-id
-public/assets-id

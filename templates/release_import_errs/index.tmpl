@@ -12,7 +12,7 @@
       <div class="col-md-12">
         <h3 class="page-header">Release import errors</h3>
 
-        {{ template "shared/misc_menu" }}
+        {{ template "shared/misc_menu" . }}
 
         {{ if .ImportErrs }}
           <ul class="list-group list-group-condensed">
@@ -20,7 +20,7 @@
               <li class="list-group-item">
                 {{ .ImportRec.RelSource }} v={{ .ImportRec.Version }}
 
-                <form action="/release_import_errs" method="post" class="remove-form pull-right">
+                <form action="{{ $.PrivateToken }}/release_import_errs" method="post" class="remove-form pull-right">
                   <input type="hidden" name="relSource" value="{{ .ImportRec.RelSource }}" />
                   <input type="hidden" name="version" value="{{ .ImportRec.Version }}" />
                   <button type="submit" class="btn btn-danger btn-xs">Remove</button>

@@ -12,9 +12,9 @@
       <div class="col-md-12">
         <h3 class="page-header">Release watchers</h3>
 
-        {{ template "shared/misc_menu" }}
+        {{ template "shared/misc_menu" . }}
 
-        <form action="/release_watchers" method="post" class="form-inline" role="form">
+        <form action="{{ $.PrivateToken }}/release_watchers" method="post" class="form-inline" role="form">
           <div class="form-group">
             <input type="text" name="relSource" value="" size="60" class="form-control"
               placeholder="Release source e.g. github.com/cloudfoundry/diego-release" />
@@ -33,7 +33,7 @@
               <li class="list-group-item">
                 {{ .RelSource }} version &gt;= {{ .MinVersion }}
 
-                <form action="/release_watchers" method="post" class="remove-form pull-right">
+                <form action="{{ $.PrivateToken }}/release_watchers" method="post" class="remove-form pull-right">
                   <input type="hidden" name="relSource" value="{{ .RelSource }}" />
                   <input type="hidden" name="action" value="unwatch" />
                   <button type="submit" class="btn btn-danger btn-xs">Remove</button>

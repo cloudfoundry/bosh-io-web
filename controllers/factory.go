@@ -1,6 +1,9 @@
 package controllers
 
 import (
+	"errors"
+	"strings"
+
 	boshlog "github.com/cloudfoundry/bosh-agent/logger"
 	boshsys "github.com/cloudfoundry/bosh-agent/system"
 
@@ -43,9 +46,21 @@ type Factory struct {
 	ReleaseWatchersController   ReleaseWatchersController
 	ReleaseImportsController    ReleaseImportsController
 	ReleaseImportErrsController ReleaseImportErrsController
+
+	privateURLPrefix string
 }
 
-func NewFactory(apiKey string, r FactoryRepos, runner boshsys.CmdRunner, logger boshlog.Logger) (Factory, error) {
+func NewFactory(privateToken string, r FactoryRepos, runner boshsys.CmdRunner, logger boshlog.Logger) (Factory, error) {
+	privateToken = strings.TrimSpace(privateToken)
+
+	if len(privateToken) < 10 {
+		return Factory{}, errors.New("Expected private token to be at least 10 chars")
+	} else {
+		logger.Info("controllers.Factory", "Private token is '%s'", privateToken)
+	}
+
+	privateURLPrefix := "/" + privateToken
+
 	factory := Factory{
 		HomeController: NewHomeController(r.ReleasesRepo(), r.StemcellsRepo(), logger),
 
@@ -72,10 +87,16 @@ func NewFactory(apiKey string, r FactoryRepos, runner boshsys.CmdRunner, logger 
 		JobsController:     NewJobsController(r.ReleasesRepo(), r.ReleaseVersionsRepo(), r.JobsRepo(), logger),
 		PackagesController: NewPackagesController(r.ReleasesRepo(), r.ReleaseVersionsRepo(), runner, logger),
 
-		ReleaseWatchersController:   NewReleaseWatchersController(apiKey, r.WatchersRepo(), logger),
-		ReleaseImportsController:    NewReleaseImportsController(r.ImportsRepo(), logger),
-		ReleaseImportErrsController: NewReleaseImportErrsController(r.ImportErrsRepo(), logger),
+		ReleaseWatchersController:   NewReleaseWatchersController(r.WatchersRepo(), privateURLPrefix, logger),
+		ReleaseImportsController:    NewReleaseImportsController(r.ImportsRepo(), privateURLPrefix, logger),
+		ReleaseImportErrsController: NewReleaseImportErrsController(r.ImportErrsRepo(), privateURLPrefix, logger),
+
+		privateURLPrefix: privateURLPrefix,
 	}
 
 	return factory, nil
+}
+
+func (f Factory) PrivateURL(ending string) string {
+	return f.privateURLPrefix + ending
 }

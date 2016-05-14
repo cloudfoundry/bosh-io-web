@@ -6,7 +6,6 @@ import (
 	// "net/http"
 	// "net/http/pprof"
 	"html/template"
-	"io/ioutil"
 	"os"
 	"strings"
 
@@ -31,6 +30,9 @@ const mainLogTag = "main"
 var (
 	debugOpt      = flag.Bool("debug", false, "Output debug logs")
 	configPathOpt = flag.String("configPath", "", "Path to configuration file")
+
+	assetsIDOpt     = flag.String("assetsID", "", "Assets ID value")
+	privateTokenOpt = flag.String("privateToken", "", "Private token value")
 )
 
 func main() {
@@ -45,7 +47,7 @@ func main() {
 	repos, err := NewRepos(config.Repos, fs, logger)
 	ensureNoErr(logger, "Failed building repos", err)
 
-	controllerFactory, err := bhctrls.NewFactory(config.APIKey, repos, runner, logger)
+	controllerFactory, err := bhctrls.NewFactory(*privateTokenOpt, repos, runner, logger)
 	ensureNoErr(logger, "Failed building controller factory", err)
 
 	downloader := bpdload.NewDefaultMuxDownloader(fs, runner, nil, logger)
@@ -131,17 +133,17 @@ func runControllers(controllerFactory bhctrls.Factory, analyticsConfig Analytics
 
 	// Watching release
 	releaseWatchersController := controllerFactory.ReleaseWatchersController
-	m.Get("/release_watchers", releaseWatchersController.Index)
-	m.Post("/release_watchers", releaseWatchersController.WatchOrUnwatch) // actually Watch/Unwatch
+	m.Get(controllerFactory.PrivateURL("/release_watchers"), releaseWatchersController.Index)
+	m.Post(controllerFactory.PrivateURL("/release_watchers"), releaseWatchersController.WatchOrUnwatch) // actually Watch/Unwatch
 
 	// Importing release
 	releaseImportsController := controllerFactory.ReleaseImportsController
-	m.Get("/release_imports", releaseImportsController.Index)
-	m.Post("/release_imports", releaseImportsController.Delete) // actually Delete
+	m.Get(controllerFactory.PrivateURL("/release_imports"), releaseImportsController.Index)
+	m.Post(controllerFactory.PrivateURL("/release_imports"), releaseImportsController.Delete) // actually Delete
 
 	releaseImportErrsController := controllerFactory.ReleaseImportErrsController
-	m.Get("/release_import_errs", releaseImportErrsController.Index)
-	m.Post("/release_import_errs", releaseImportErrsController.Delete) // actually Delete
+	m.Get(controllerFactory.PrivateURL("/release_import_errs"), releaseImportErrsController.Index)
+	m.Post(controllerFactory.PrivateURL("/release_import_errs"), releaseImportErrsController.Delete) // actually Delete
 
 	// Release viewing
 	releasesController := controllerFactory.ReleasesController
@@ -180,10 +182,12 @@ func runControllers(controllerFactory bhctrls.Factory, analyticsConfig Analytics
 }
 
 func configureAssets(m *mart.ClassicMartini, analyticsConfig AnalyticsConfig, logger boshlog.Logger) {
-	assetsIDBytes, err := ioutil.ReadFile("./public/assets-id")
-	ensureNoErr(logger, "Failed to find assets ID", err)
+	assetsID := strings.TrimSpace(*assetsIDOpt)
 
-	assetsID := strings.TrimSpace(string(assetsIDBytes))
+	if len(assetsID) == 0 {
+		logger.Error(mainLogTag, "Expected non-empty assets ID")
+		os.Exit(1)
+	}
 
 	assetsFuncs := template.FuncMap{
 		"cssPath": func(fileName string) (string, error) {
