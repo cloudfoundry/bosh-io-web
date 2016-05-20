@@ -3,8 +3,8 @@ package controllers
 import (
 	"net/http"
 
-	bosherr "github.com/cloudfoundry/bosh-agent/errors"
-	boshlog "github.com/cloudfoundry/bosh-agent/logger"
+	bosherr "github.com/cloudfoundry/bosh-utils/errors"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 	semiver "github.com/cppforlife/go-semi-semantic/version"
 	mart "github.com/go-martini/martini"
 	martrend "github.com/martini-contrib/render"
@@ -67,7 +67,7 @@ func (c StemcellsController) Download(req *http.Request, r martrend.Render, para
 	relSource := params["_1"]
 
 	if len(relSource) == 0 {
-		err := bosherr.New("Param 'source' must be non-empty")
+		err := bosherr.Error("Param 'source' must be non-empty")
 		r.HTML(400, c.errorTmpl, err)
 		return
 	}
@@ -101,7 +101,7 @@ func (c StemcellsController) Download(req *http.Request, r martrend.Render, para
 
 	if relVersion == "" {
 		if len(sortedStemcells) == 0 {
-			err := bosherr.New("Latest stemcell is not found")
+			err := bosherr.Error("Latest stemcell is not found")
 			r.HTML(404, c.errorTmpl, err)
 			return
 		}
@@ -118,7 +118,7 @@ func (c StemcellsController) Download(req *http.Request, r martrend.Render, para
 
 	ver, err := semiver.NewVersionFromString(relVersion)
 	if err != nil {
-		err = bosherr.New("Version '%s' is not valid: %s", relVersion, err)
+		err = bosherr.Errorf("Version '%s' is not valid: %s", relVersion, err)
 		r.HTML(400, c.errorTmpl, err)
 		return
 	}
@@ -136,7 +136,7 @@ func (c StemcellsController) Download(req *http.Request, r martrend.Render, para
 		}
 	}
 
-	err = bosherr.New("Stemcell version '%s' is not found", relVersion)
+	err = bosherr.Errorf("Stemcell version '%s' is not found", relVersion)
 	r.HTML(404, c.errorTmpl, err)
 }
 

@@ -6,7 +6,7 @@ import (
 
 	"github.com/lib/pq"
 
-	boshlog "github.com/cloudfoundry/bosh-agent/logger"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 )
 
 type PostgresAdapterPool struct {

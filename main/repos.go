@@ -3,9 +3,9 @@ package main
 import (
 	"path/filepath"
 
-	bosherr "github.com/cloudfoundry/bosh-agent/errors"
-	boshlog "github.com/cloudfoundry/bosh-agent/logger"
-	boshsys "github.com/cloudfoundry/bosh-agent/system"
+	bosherr "github.com/cloudfoundry/bosh-utils/errors"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
+	boshsys "github.com/cloudfoundry/bosh-utils/system"
 	bpindex "github.com/cppforlife/bosh-provisioner/index"
 
 	bhbibrepo "github.com/cppforlife/bosh-hub/bosh-init-bin/repo"
@@ -66,7 +66,7 @@ func NewRepos(options ReposOptions, fs boshsys.FileSystem, logger boshlog.Logger
 	case options.Type == "db":
 		i, err = newDBRepoIndicies(options.ConnURL, logger)
 	default:
-		err = bosherr.New("Expected repos type '%s'", options.Type)
+		err = bosherr.Errorf("Expected repos type '%s'", options.Type)
 	}
 	if err != nil {
 		return Repos{}, err
@@ -87,7 +87,7 @@ func NewRepos(options ReposOptions, fs boshsys.FileSystem, logger boshlog.Logger
 	case linkerOpts.Type == "S3":
 		linkerFactory = bhs3.NewDirectURLFactory(linkerOpts.BaseURL)
 	default:
-		err = bosherr.New("Expected linker type '%s'", linkerOpts.Type)
+		err = bosherr.Errorf("Expected linker type '%s'", linkerOpts.Type)
 	}
 	if err != nil {
 		return Repos{}, err

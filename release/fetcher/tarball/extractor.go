@@ -1,8 +1,8 @@
 package tarball
 
 import (
-	bosherr "github.com/cloudfoundry/bosh-agent/errors"
-	boshlog "github.com/cloudfoundry/bosh-agent/logger"
+	bosherr "github.com/cloudfoundry/bosh-utils/errors"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 	bprel "github.com/cppforlife/bosh-provisioner/release"
 	bpreljob "github.com/cppforlife/bosh-provisioner/release/job"
 
@@ -90,7 +90,7 @@ func (e Extractor) extractReleaseAndJobs(tgzPath string) (bprel.Release, []bprel
 
 		relJob, err := relJobReader.Read()
 		if err != nil {
-			return rel, nil, bosherr.WrapError(err, "Reading release job '%s'", j.Name)
+			return rel, nil, bosherr.WrapErrorf(err, "Reading release job '%s'", j.Name)
 		}
 
 		defer relJobReader.Close()

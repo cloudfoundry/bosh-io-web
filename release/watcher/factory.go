@@ -3,7 +3,7 @@ package watcher
 import (
 	"time"
 
-	boshlog "github.com/cloudfoundry/bosh-agent/logger"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 
 	bhfetcher "github.com/cppforlife/bosh-hub/release/fetcher"
 	bhimpsrepo "github.com/cppforlife/bosh-hub/release/importsrepo"

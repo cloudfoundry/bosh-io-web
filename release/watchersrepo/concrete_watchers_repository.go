@@ -1,8 +1,8 @@
 package watchersrepo
 
 import (
-	bosherr "github.com/cloudfoundry/bosh-agent/errors"
-	boshlog "github.com/cloudfoundry/bosh-agent/logger"
+	bosherr "github.com/cloudfoundry/bosh-utils/errors"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 	bpindex "github.com/cppforlife/bosh-provisioner/index"
 )
 
@@ -57,7 +57,7 @@ func (r CWRepository) Add(relSource, minVersion string) error {
 
 func (r CWRepository) Remove(relSource string) error {
 	if len(relSource) == 0 {
-		return bosherr.New("Expected release source to be non-empty")
+		return bosherr.Error("Expected release source to be non-empty")
 	}
 
 	err := r.index.Remove(watcherRecKey{relSource})

@@ -3,7 +3,7 @@ package importer
 import (
 	"time"
 
-	boshlog "github.com/cloudfoundry/bosh-agent/logger"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 
 	bhs3 "github.com/cppforlife/bosh-hub/s3"
 	bhstemsrepo "github.com/cppforlife/bosh-hub/stemcell/stemsrepo"

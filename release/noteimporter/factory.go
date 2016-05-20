@@ -3,7 +3,7 @@ package noteimporter
 import (
 	"time"
 
-	boshlog "github.com/cloudfoundry/bosh-agent/logger"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 
 	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
 )

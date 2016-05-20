@@ -1,8 +1,8 @@
 package fetcher
 
 import (
-	bosherr "github.com/cloudfoundry/bosh-agent/errors"
-	boshlog "github.com/cloudfoundry/bosh-agent/logger"
+	bosherr "github.com/cloudfoundry/bosh-utils/errors"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 
 	bhtarball "github.com/cppforlife/bosh-hub/release/fetcher/tarball"
 	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
@@ -48,25 +48,25 @@ func (tr TarballRelease) Import(url string) error {
 
 	tgzPath, err := tr.builder.Build(tr.manifestPath)
 	if err != nil {
-		return bosherr.WrapError(err, "Building release tarball from manifest '%s'", tr.manifestPath)
+		return bosherr.WrapErrorf(err, "Building release tarball from manifest '%s'", tr.manifestPath)
 	}
 
 	defer tr.builder.CleanUp(tgzPath)
 
 	relVerRec, err := tr.extractor.Extract(url, tgzPath)
 	if err != nil {
-		return bosherr.WrapError(err, "Importing release version from tgz '%s'", tgzPath)
+		return bosherr.WrapErrorf(err, "Importing release version from tgz '%s'", tgzPath)
 	}
 
 	err = tr.uploader.Upload(relVerRec, tgzPath)
 	if err != nil {
-		return bosherr.WrapError(err, "Uploading release verison '%v'", relVerRec)
+		return bosherr.WrapErrorf(err, "Uploading release verison '%v'", relVerRec)
 	}
 
 	// Save release version only after everything else was successfully imported
 	err = tr.releasesRepo.Add(relVerRec)
 	if err != nil {
-		return bosherr.WrapError(err, "Saving release version into release versions repository")
+		return bosherr.WrapErrorf(err, "Saving release version into release versions repository")
 	}
 
 	return nil

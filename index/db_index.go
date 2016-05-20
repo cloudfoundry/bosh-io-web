@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"reflect"
 
-	bosherr "github.com/cloudfoundry/bosh-agent/errors"
-	boshlog "github.com/cloudfoundry/bosh-agent/logger"
+	bosherr "github.com/cloudfoundry/bosh-utils/errors"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 	bpindex "github.com/cppforlife/bosh-provisioner/index"
 )
 
@@ -125,7 +125,7 @@ func (ri DBIndex) Find(key interface{}, value interface{}) error {
 	}
 
 	if rows == nil {
-		return bosherr.New("Expected to find entries for key '%s'", rawKeyBytes)
+		return bosherr.Errorf("Expected to find entries for key '%s'", rawKeyBytes)
 	}
 
 	if !rows.Next() {
@@ -141,7 +141,7 @@ func (ri DBIndex) Find(key interface{}, value interface{}) error {
 
 	if rows.Next() {
 		// todo should rows.Err() be called before returning
-		return bosherr.New("Expected to not find more than 1 entry for key '%s'", rawKeyBytes)
+		return bosherr.Errorf("Expected to not find more than 1 entry for key '%s'", rawKeyBytes)
 	}
 
 	err = rows.Err()
@@ -184,7 +184,7 @@ func (ri DBIndex) Save(key interface{}, value interface{}) error {
 	}
 
 	if numRows != 1 {
-		return bosherr.New("Expected to update 1 entry for key '%s'; updated '%d'", rawKeyBytes, numRows)
+		return bosherr.Errorf("Expected to update 1 entry for key '%s'; updated '%d'", rawKeyBytes, numRows)
 	}
 
 	return nil
@@ -238,7 +238,7 @@ func (ri DBIndex) FindLocked(key interface{}, value interface{}) (bpindex.Locked
 	if rows == nil {
 		// todo check error
 		rec.Release()
-		return dbIndexLockedRecord{}, bosherr.New("Expected to find entries for key '%s'", rawKeyBytes)
+		return dbIndexLockedRecord{}, bosherr.Errorf("Expected to find entries for key '%s'", rawKeyBytes)
 	}
 
 	if !rows.Next() {
@@ -262,7 +262,7 @@ func (ri DBIndex) FindLocked(key interface{}, value interface{}) (bpindex.Locked
 		rec.Release()
 
 		// todo should rows.Err() be called before returning
-		return dbIndexLockedRecord{}, bosherr.New("Expected to not find more than 1 entry for key '%s'", rawKeyBytes)
+		return dbIndexLockedRecord{}, bosherr.Errorf("Expected to not find more than 1 entry for key '%s'", rawKeyBytes)
 	}
 
 	err = rows.Err()
@@ -326,7 +326,7 @@ func (r dbIndexLockedRecord) Save(value interface{}) error {
 	}
 
 	if numRows != 1 {
-		return bosherr.New("Expected to update 1 entry for key '%s'; updated '%d'", r.rawKeyBytes, numRows)
+		return bosherr.Errorf("Expected to update 1 entry for key '%s'; updated '%d'", r.rawKeyBytes, numRows)
 	}
 
 	return nil
@@ -343,7 +343,7 @@ func (ri DBIndex) structToMap(s interface{}) (map[string]interface{}, error) {
 	stv := reflect.ValueOf(s)
 
 	if stv.Kind() != reflect.Struct {
-		return res, bosherr.New(
+		return res, bosherr.Errorf(
 			"Must be reflect.Struct: %#v (%#v)", stv, ri.kindToStr(stv.Kind()))
 	}
 
@@ -368,7 +368,7 @@ func (ri DBIndex) mapToStructFromSlice(m map[string]interface{}, t interface{}) 
 	slice := reflect.ValueOf(t).Elem()
 
 	if slice.Kind() != reflect.Slice {
-		return reflect.Value{}, bosherr.New(
+		return reflect.Value{}, bosherr.Errorf(
 			"Must be reflect.Slice: %#v (%#v)",
 			slice, ri.kindToStr(slice.Kind()),
 		)
@@ -380,7 +380,7 @@ func (ri DBIndex) mapToStructFromSlice(m map[string]interface{}, t interface{}) 
 // mapToNewStruct returns new struct of type t with data from a map
 func (ri DBIndex) mapToNewStruct(m map[string]interface{}, t reflect.Type) (reflect.Value, error) {
 	if t.Kind() != reflect.Struct {
-		return reflect.Value{}, bosherr.New(
+		return reflect.Value{}, bosherr.Errorf(
 			"Must be reflect.Struct: %#v (%#v)",
 			t, ri.kindToStr(t.Kind()),
 		)

@@ -1,9 +1,9 @@
 package fetcher
 
 import (
-	boshblob "github.com/cloudfoundry/bosh-agent/blobstore"
-	boshlog "github.com/cloudfoundry/bosh-agent/logger"
-	boshsys "github.com/cloudfoundry/bosh-agent/system"
+	boshblob "github.com/cloudfoundry/bosh-utils/blobstore"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
+	boshsys "github.com/cloudfoundry/bosh-utils/system"
 	bprel "github.com/cppforlife/bosh-provisioner/release"
 	bpreljob "github.com/cppforlife/bosh-provisioner/release/job"
 

@@ -3,8 +3,8 @@ package controllers
 import (
 	"net/http"
 
-	bosherr "github.com/cloudfoundry/bosh-agent/errors"
-	boshlog "github.com/cloudfoundry/bosh-agent/logger"
+	bosherr "github.com/cloudfoundry/bosh-utils/errors"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 	mart "github.com/go-martini/martini"
 	martrend "github.com/martini-contrib/render"
 
@@ -76,7 +76,7 @@ func (c ReleaseWatchersController) WatchOrUnwatch(req *http.Request, r martrend.
 		}
 
 	default:
-		r.HTML(500, c.errorTmpl, bosherr.New("Unknown action '%s'", action))
+		r.HTML(500, c.errorTmpl, bosherr.Errorf("Unknown action '%s'", action))
 		return
 	}
 

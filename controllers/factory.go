@@ -4,9 +4,8 @@ import (
 	"errors"
 	"strings"
 
-	boshlog "github.com/cloudfoundry/bosh-agent/logger"
-	boshsys "github.com/cloudfoundry/bosh-agent/system"
-
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
+	boshsys "github.com/cloudfoundry/bosh-utils/system"
 	bhbibrepo "github.com/cppforlife/bosh-hub/bosh-init-bin/repo"
 	bhimperrsrepo "github.com/cppforlife/bosh-hub/release/importerrsrepo"
 	bhimpsrepo "github.com/cppforlife/bosh-hub/release/importsrepo"

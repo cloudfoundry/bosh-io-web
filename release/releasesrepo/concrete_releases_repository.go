@@ -3,8 +3,8 @@ package releasesrepo
 import (
 	"sort"
 
-	bosherr "github.com/cloudfoundry/bosh-agent/errors"
-	boshlog "github.com/cloudfoundry/bosh-agent/logger"
+	bosherr "github.com/cloudfoundry/bosh-utils/errors"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 
 	bpindex "github.com/cppforlife/bosh-provisioner/index"
 
@@ -98,7 +98,7 @@ func (r CRRepository) FindAll(source string) ([]ReleaseVersionRec, error) {
 	var relVerRecs []ReleaseVersionRec
 
 	if len(source) == 0 {
-		return relVerRecs, bosherr.New("Expected source to be non-empty")
+		return relVerRecs, bosherr.Error("Expected source to be non-empty")
 	}
 
 	err := r.index.Find(sourceToRelVerRecKey{source}, &relVerRecs)
@@ -119,7 +119,7 @@ func (r CRRepository) FindLatest(source string) (ReleaseVersionRec, error) {
 	var relVerRec ReleaseVersionRec
 
 	if len(source) == 0 {
-		return relVerRec, bosherr.New("Expected source to be non-empty")
+		return relVerRec, bosherr.Error("Expected source to be non-empty")
 	}
 
 	relVerRecs, err := r.FindAll(source)
@@ -128,7 +128,7 @@ func (r CRRepository) FindLatest(source string) (ReleaseVersionRec, error) {
 	}
 
 	if len(relVerRecs) == 0 {
-		return relVerRec, bosherr.New("Expected to find at least one release version record")
+		return relVerRec, bosherr.Error("Expected to find at least one release version record")
 	}
 
 	sort.Sort(ReleaseVersionRecSorting(relVerRecs))
@@ -175,7 +175,7 @@ func (r CRRepository) Add(relVerRec ReleaseVersionRec) error {
 		}
 	}
 
-	return bosherr.New("Failed to add release verison record several times")
+	return bosherr.Error("Failed to add release verison record several times")
 }
 
 func (r CRRepository) Contains(relVerRec ReleaseVersionRec) (bool, error) {

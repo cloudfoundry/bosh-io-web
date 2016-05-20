@@ -1,7 +1,7 @@
 package watcher
 
 import (
-	boshlog "github.com/cloudfoundry/bosh-agent/logger"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 )
 
 type NoopWatcher struct {

@@ -3,10 +3,10 @@ package importer
 import (
 	"time"
 
-	bosherr "github.com/cloudfoundry/bosh-agent/errors"
-	boshlog "github.com/cloudfoundry/bosh-agent/logger"
-	boshsys "github.com/cloudfoundry/bosh-agent/system"
-	boshuuid "github.com/cloudfoundry/bosh-agent/uuid"
+	bosherr "github.com/cloudfoundry/bosh-utils/errors"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
+	boshsys "github.com/cloudfoundry/bosh-utils/system"
+	boshuuid "github.com/cloudfoundry/bosh-utils/uuid"
 	bpdload "github.com/cppforlife/bosh-provisioner/downloader"
 	bprel "github.com/cppforlife/bosh-provisioner/release"
 	bpreljob "github.com/cppforlife/bosh-provisioner/release/job"
