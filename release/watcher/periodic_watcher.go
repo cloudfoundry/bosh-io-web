@@ -3,8 +3,8 @@ package watcher
 import (
 	"time"
 
-	bosherr "github.com/cloudfoundry/bosh-agent/errors"
-	boshlog "github.com/cloudfoundry/bosh-agent/logger"
+	bosherr "github.com/cloudfoundry/bosh-utils/errors"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 
 	bhfetcher "github.com/cppforlife/bosh-hub/release/fetcher"
 	bhimpsrepo "github.com/cppforlife/bosh-hub/release/importsrepo"

@@ -1,8 +1,8 @@
 package tarball
 
 import (
-	bosherr "github.com/cloudfoundry/bosh-agent/errors"
-	boshlog "github.com/cloudfoundry/bosh-agent/logger"
+	bosherr "github.com/cloudfoundry/bosh-utils/errors"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 	bprel "github.com/cppforlife/bosh-provisioner/release"
 	bpreljob "github.com/cppforlife/bosh-provisioner/release/job"
 

@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/cloudfoundry-incubator/candiedyaml"
-	bosherr "github.com/cloudfoundry/bosh-agent/errors"
+	bosherr "github.com/cloudfoundry/bosh-utils/errors"
 	bpreljob "github.com/cppforlife/bosh-provisioner/release/job"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/russross/blackfriday"

@@ -3,8 +3,8 @@ package releasesrepo
 import (
 	"sort"
 
-	bosherr "github.com/cloudfoundry/bosh-agent/errors"
-	boshlog "github.com/cloudfoundry/bosh-agent/logger"
+	bosherr "github.com/cloudfoundry/bosh-utils/errors"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 
 	bpindex "github.com/cppforlife/bosh-provisioner/index"
 

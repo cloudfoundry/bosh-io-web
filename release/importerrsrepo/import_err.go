@@ -1,7 +1,7 @@
 package importerrsrepo
 
 import (
-	bosherr "github.com/cloudfoundry/bosh-agent/errors"
+	bosherr "github.com/cloudfoundry/bosh-utils/errors"
 	bhimpsrepo "github.com/cppforlife/bosh-hub/release/importsrepo"
 )
 

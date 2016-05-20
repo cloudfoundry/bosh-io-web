@@ -6,7 +6,7 @@ import (
 	"regexp"
 	"strings"
 
-	boshlog "github.com/cloudfoundry/bosh-agent/logger"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 	mart "github.com/go-martini/martini"
 	martrend "github.com/martini-contrib/render"
 

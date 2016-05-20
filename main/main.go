@@ -9,9 +9,9 @@ import (
 	"os"
 	"strings"
 
-	boshlog "github.com/cloudfoundry/bosh-agent/logger"
-	boshsys "github.com/cloudfoundry/bosh-agent/system"
-	boshuuid "github.com/cloudfoundry/bosh-agent/uuid"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
+	boshsys "github.com/cloudfoundry/bosh-utils/system"
+	boshuuid "github.com/cloudfoundry/bosh-utils/uuid"
 	bpdload "github.com/cppforlife/bosh-provisioner/downloader"
 	mart "github.com/go-martini/martini"
 	martrend "github.com/martini-contrib/render"

@@ -3,7 +3,7 @@ package releasesrepo
 import (
 	"fmt"
 
-	bosherr "github.com/cloudfoundry/bosh-agent/errors"
+	bosherr "github.com/cloudfoundry/bosh-utils/errors"
 	semiver "github.com/cppforlife/go-semi-semantic/version"
 
 	bhnotesrepo "github.com/cppforlife/bosh-hub/release/notesrepo"
