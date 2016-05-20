@@ -104,7 +104,7 @@ func (w PeriodicWatcher) lookAtRelease(watcherRec bhwatchersrepo.WatcherRec) err
 	for _, manifest := range pathToManifests {
 		relVerRec, err := w.releasesRepo.Find(watcherRec.RelSource, manifest.Release.Version)
 		if err != nil {
-			return bosherr.WrapError(err, "Finding release version '%v'", relVerRec)
+			return bosherr.WrapErrorf(err, "Finding release version '%v'", relVerRec)
 		}
 
 		if relVerRec.Version().IsLt(watcherMinVersion) {
@@ -115,7 +115,7 @@ func (w PeriodicWatcher) lookAtRelease(watcherRec bhwatchersrepo.WatcherRec) err
 
 		found, err := w.releasesRepo.Contains(relVerRec)
 		if err != nil {
-			return bosherr.WrapError(err, "Finding release version '%v'", relVerRec)
+			return bosherr.WrapErrorf(err, "Finding release version '%v'", relVerRec)
 		} else if found {
 			w.logger.Debug(w.logTag,
 				"Skipping release version '%v' because it is was already imported", relVerRec)
@@ -124,7 +124,7 @@ func (w PeriodicWatcher) lookAtRelease(watcherRec bhwatchersrepo.WatcherRec) err
 
 		err = w.importsRepo.Push(watcherRec.RelSource, manifest.Release.Version)
 		if err != nil {
-			return bosherr.WrapError(err, "Adding release version '%v' to import queue", relVerRec)
+			return bosherr.WrapErrorf(err, "Adding release version '%v' to import queue", relVerRec)
 		}
 	}
 

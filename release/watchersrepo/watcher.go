@@ -26,11 +26,11 @@ func (r WatcherRec) MinVersion() semiver.Version {
 
 func (r WatcherRec) Validate() error {
 	if len(r.RelSource) == 0 {
-		return bosherr.New("Expected release source to be non-empty")
+		return bosherr.Error("Expected release source to be non-empty")
 	}
 
 	if len(r.MinVersionRaw) == 0 {
-		return bosherr.New("Expected min version to be non-empty")
+		return bosherr.Error("Expected min version to be non-empty")
 	}
 
 	_, err := semiver.NewVersionFromString(r.MinVersionRaw)

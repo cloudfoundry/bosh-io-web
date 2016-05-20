@@ -58,7 +58,7 @@ func (tr Builder) Build(manifestPath string) (string, error) {
 
 	pathMatches := builderReleasePathRegex.FindStringSubmatch(stdout)
 	if len(pathMatches) != 2 {
-		return "", bosherr.WrapError(err, "tgz path was not found in '%s'", stdout)
+		return "", bosherr.WrapErrorf(err, "tgz path was not found in '%s'", stdout)
 	}
 
 	return pathMatches[1], nil

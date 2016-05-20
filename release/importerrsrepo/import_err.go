@@ -18,7 +18,7 @@ func (r ImportErrRec) Validate() error {
 	}
 
 	if len(r.Err) == 0 {
-		return bosherr.New("Expected error to be non-empty")
+		return bosherr.Error("Expected error to be non-empty")
 	}
 
 	return nil

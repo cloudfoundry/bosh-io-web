@@ -76,7 +76,7 @@ func (c ReleaseWatchersController) WatchOrUnwatch(req *http.Request, r martrend.
 		}
 
 	default:
-		r.HTML(500, c.errorTmpl, bosherr.New("Unknown action '%s'", action))
+		r.HTML(500, c.errorTmpl, bosherr.Errorf("Unknown action '%s'", action))
 		return
 	}
 

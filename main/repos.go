@@ -66,7 +66,7 @@ func NewRepos(options ReposOptions, fs boshsys.FileSystem, logger boshlog.Logger
 	case options.Type == "db":
 		i, err = newDBRepoIndicies(options.ConnURL, logger)
 	default:
-		err = bosherr.New("Expected repos type '%s'", options.Type)
+		err = bosherr.Errorf("Expected repos type '%s'", options.Type)
 	}
 	if err != nil {
 		return Repos{}, err
@@ -87,7 +87,7 @@ func NewRepos(options ReposOptions, fs boshsys.FileSystem, logger boshlog.Logger
 	case linkerOpts.Type == "S3":
 		linkerFactory = bhs3.NewDirectURLFactory(linkerOpts.BaseURL)
 	default:
-		err = bosherr.New("Expected linker type '%s'", linkerOpts.Type)
+		err = bosherr.Errorf("Expected linker type '%s'", linkerOpts.Type)
 	}
 	if err != nil {
 		return Repos{}, err

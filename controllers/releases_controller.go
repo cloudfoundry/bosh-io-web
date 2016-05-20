@@ -117,7 +117,7 @@ func (c ReleasesController) extractShowParams(req *http.Request, params mart.Par
 	relSource := params["_1"]
 
 	if len(relSource) == 0 {
-		return "", "", "", "", bosherr.New("Param 'source' must be non-empty")
+		return "", "", "", "", bosherr.Error("Param 'source' must be non-empty")
 	}
 
 	showAll := req.URL.Query().Get("all")

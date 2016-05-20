@@ -74,11 +74,11 @@ func (r ReleaseVersionRec) Equals(other ReleaseVersionRec) bool {
 
 func (r ReleaseVersionRec) Validate() error {
 	if len(r.Source) == 0 {
-		return bosherr.New("Expected source to be non-empty")
+		return bosherr.Error("Expected source to be non-empty")
 	}
 
 	if len(r.VersionRaw) == 0 {
-		return bosherr.New("Expected version to be non-empty")
+		return bosherr.Error("Expected version to be non-empty")
 	}
 
 	_, err := semiver.NewVersionFromString(r.VersionRaw)

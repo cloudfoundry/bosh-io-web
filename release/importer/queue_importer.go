@@ -88,19 +88,19 @@ func (i QueueImporter) pickUpNext() (bool, error) {
 	// todo releasesRepo.Find vs Contains is weird
 	relVerRec, err := i.releasesRepo.Find(importRec.RelSource, importRec.Version)
 	if err != nil {
-		return false, bosherr.WrapError(err, "Finding release version '%v'", relVerRec)
+		return false, bosherr.WrapErrorf(err, "Finding release version '%v'", relVerRec)
 	}
 
 	found, err = i.releasesRepo.Contains(relVerRec)
 	if err != nil {
-		return false, bosherr.WrapError(err, "Contains check release version '%v'", relVerRec)
+		return false, bosherr.WrapErrorf(err, "Contains check release version '%v'", relVerRec)
 	} else if found {
 		return false, nil // Already imported by someone else; skipping
 	}
 
 	found, err = i.importErrsRepo.Contains(importRec)
 	if err != nil {
-		return false, bosherr.WrapError(err, "Finding import err '%v'", importRec)
+		return false, bosherr.WrapErrorf(err, "Finding import err '%v'", importRec)
 	} else if found {
 		return false, nil // Cannot import until resolved
 	}
@@ -113,7 +113,7 @@ func (i QueueImporter) importRelease(importRec bhimpsrepo.ImportRec) error {
 
 	releaseDir, err := i.fetcher.Fetch(importRec.RelSource)
 	if err != nil {
-		return bosherr.WrapError(err, "Fetching release source '%s'", importRec.RelSource)
+		return bosherr.WrapErrorf(err, "Fetching release source '%s'", importRec.RelSource)
 	}
 
 	defer releaseDir.Close()

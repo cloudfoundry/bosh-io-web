@@ -91,7 +91,7 @@ func (c JobsController) Show(req *http.Request, r martrend.Render, params mart.P
 		}
 	}
 
-	err = bosherr.New("Release job '%s' is not found", jobName)
+	err = bosherr.Errorf("Release job '%s' is not found", jobName)
 	r.HTML(404, c.errorTmpl, err)
 }
 
@@ -99,7 +99,7 @@ func (c JobsController) extractShowParams(req *http.Request, params mart.Params)
 	relSource := req.URL.Query().Get("source")
 
 	if len(relSource) == 0 {
-		return "", "", "", bosherr.New("Param 'source' must be non-empty")
+		return "", "", "", bosherr.Error("Param 'source' must be non-empty")
 	}
 
 	relVersion := req.URL.Query().Get("version")
@@ -107,7 +107,7 @@ func (c JobsController) extractShowParams(req *http.Request, params mart.Params)
 	jobName := params["name"]
 
 	if len(jobName) == 0 {
-		return "", "", "", bosherr.New("Param 'name' must be non-empty")
+		return "", "", "", bosherr.Error("Param 'name' must be non-empty")
 	}
 
 	return relSource, relVersion, jobName, nil

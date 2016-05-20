@@ -12,11 +12,11 @@ type ImportRec struct {
 
 func (r ImportRec) Validate() error {
 	if len(r.RelSource) == 0 {
-		return bosherr.New("Expected release source to be non-empty")
+		return bosherr.Error("Expected release source to be non-empty")
 	}
 
 	if len(r.Version) == 0 {
-		return bosherr.New("Expected version to be non-empty")
+		return bosherr.Error("Expected version to be non-empty")
 	}
 
 	_, err := semiver.NewVersionFromString(r.Version)

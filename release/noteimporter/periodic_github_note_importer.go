@@ -78,12 +78,12 @@ func (i PeriodicGithubNoteImporter) importNotes() error {
 		// todo convert Source to string; argh
 		relVerRecs, err := i.releasesRepo.FindAll(source.Full)
 		if err != nil {
-			return bosherr.WrapError(err, "Listing all versions for release source '%s'", source)
+			return bosherr.WrapErrorf(err, "Listing all versions for release source '%s'", source)
 		}
 
 		err = i.importNotesForRelease(ghSource, relVerRecs)
 		if err != nil {
-			return bosherr.WrapError(err, "Importing notes for release source '%s'", source)
+			return bosherr.WrapErrorf(err, "Importing notes for release source '%s'", source)
 		}
 	}
 
@@ -122,7 +122,7 @@ func (i PeriodicGithubNoteImporter) importNotesForRelease(ghSource githubSource,
 
 				err = relVerRec.SetNotes(noteRec)
 				if err != nil {
-					return bosherr.WrapError(err, "Saving notes for release version '%v'", relVerRec)
+					return bosherr.WrapErrorf(err, "Saving notes for release version '%v'", relVerRec)
 				}
 
 				break

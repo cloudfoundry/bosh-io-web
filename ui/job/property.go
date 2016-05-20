@@ -95,7 +95,7 @@ func (p Property) DefaultAsYAML() (string, error) {
 
 	err := candiedyaml.NewEncoder(&b).Encode(p.Default)
 	if err != nil {
-		return "", bosherr.WrapError(err, "Generating yaml for property '%s' default", p.Name)
+		return "", bosherr.WrapErrorf(err, "Generating yaml for property '%s' default", p.Name)
 	}
 
 	return b.String(), nil

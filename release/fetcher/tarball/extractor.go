@@ -90,7 +90,7 @@ func (e Extractor) extractReleaseAndJobs(tgzPath string) (bprel.Release, []bprel
 
 		relJob, err := relJobReader.Read()
 		if err != nil {
-			return rel, nil, bosherr.WrapError(err, "Reading release job '%s'", j.Name)
+			return rel, nil, bosherr.WrapErrorf(err, "Reading release job '%s'", j.Name)
 		}
 
 		defer relJobReader.Close()

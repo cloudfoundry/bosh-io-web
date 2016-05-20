@@ -57,7 +57,7 @@ func (r CWRepository) Add(relSource, minVersion string) error {
 
 func (r CWRepository) Remove(relSource string) error {
 	if len(relSource) == 0 {
-		return bosherr.New("Expected release source to be non-empty")
+		return bosherr.Error("Expected release source to be non-empty")
 	}
 
 	err := r.index.Remove(watcherRecKey{relSource})
