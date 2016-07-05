@@ -212,6 +212,20 @@ var _ = Describe("NewS3Stemcell", func() {
 
 			AgentType: "go",
 		},
+
+		// Softlayer stemcell
+		"light-bosh-stemcell-3232.4-softlayer-esxi-ubuntu-trusty-go_agent.tgz": ExtractedPieces{
+			Name:    "bosh-softlayer-esxi-ubuntu-trusty-go_agent",
+			Version: "3232.4",
+
+			InfName: "softlayer",
+			HvName:  "esxi",
+
+			OSName:    "ubuntu",
+			OSVersion: "trusty",
+
+			AgentType: "go",
+		},
 	}
 
 	for p, e := range examples {
