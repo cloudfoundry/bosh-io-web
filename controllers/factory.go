@@ -8,6 +8,7 @@ import (
 	boshsys "github.com/cloudfoundry/bosh-agent/system"
 
 	bhbibrepo "github.com/cppforlife/bosh-hub/bosh-init-bin/repo"
+	bhchecksrepo "github.com/cppforlife/bosh-hub/checksumsrepo"
 	bhimperrsrepo "github.com/cppforlife/bosh-hub/release/importerrsrepo"
 	bhimpsrepo "github.com/cppforlife/bosh-hub/release/importsrepo"
 	bhjobsrepo "github.com/cppforlife/bosh-hub/release/jobsrepo"
@@ -29,6 +30,8 @@ type FactoryRepos interface {
 	ImportsRepo() bhimpsrepo.ImportsRepository
 	ImportErrsRepo() bhimperrsrepo.ImportErrsRepository
 	WatchersRepo() bhwatchersrepo.WatchersRepository
+
+	ChecksumsRepo() bhchecksrepo.ChecksumsRepository
 }
 
 type Factory struct {
@@ -47,10 +50,12 @@ type Factory struct {
 	ReleaseImportsController    ReleaseImportsController
 	ReleaseImportErrsController ReleaseImportErrsController
 
+	ChecksumsController ChecksumsController
+
 	privateURLPrefix string
 }
 
-func NewFactory(privateToken string, r FactoryRepos, runner boshsys.CmdRunner, logger boshlog.Logger) (Factory, error) {
+func NewFactory(privateToken string, checksumPrivs []ChecksumReqMatch, r FactoryRepos, runner boshsys.CmdRunner, logger boshlog.Logger) (Factory, error) {
 	privateToken = strings.TrimSpace(privateToken)
 
 	if len(privateToken) < 10 {
@@ -90,6 +95,8 @@ func NewFactory(privateToken string, r FactoryRepos, runner boshsys.CmdRunner, l
 		ReleaseWatchersController:   NewReleaseWatchersController(r.WatchersRepo(), privateURLPrefix, logger),
 		ReleaseImportsController:    NewReleaseImportsController(r.ImportsRepo(), privateURLPrefix, logger),
 		ReleaseImportErrsController: NewReleaseImportErrsController(r.ImportErrsRepo(), privateURLPrefix, logger),
+
+		ChecksumsController: NewChecksumsController(checksumPrivs, r.ChecksumsRepo(), logger),
 
 		privateURLPrefix: privateURLPrefix,
 	}

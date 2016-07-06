@@ -7,6 +7,7 @@ import (
 	boshsys "github.com/cloudfoundry/bosh-agent/system"
 
 	bhbibimp "github.com/cppforlife/bosh-hub/bosh-init-bin/importer"
+	bhctrls "github.com/cppforlife/bosh-hub/controllers"
 	bhimporter "github.com/cppforlife/bosh-hub/release/importer"
 	bhnoteimporter "github.com/cppforlife/bosh-hub/release/noteimporter"
 	bhwatcher "github.com/cppforlife/bosh-hub/release/watcher"
@@ -22,6 +23,8 @@ type Config struct {
 
 	// Does not start web server; just does background work
 	ActAsWorker bool
+
+	ChecksumPrivs []bhctrls.ChecksumReqMatch
 
 	Watcher      bhwatcher.FactoryOptions
 	Importer     bhimporter.FactoryOptions
@@ -49,4 +52,15 @@ func NewConfigFromPath(path string, fs boshsys.FileSystem) (Config, error) {
 	}
 
 	return config, nil
+}
+
+func (c Config) Validate() error {
+	for i, match := range c.ChecksumPrivs {
+		err := match.Validate()
+		if err != nil {
+			return bosherr.WrapError(err, "Validating ChecksumPrivs[%d]", i)
+		}
+	}
+
+	return nil
 }

@@ -9,6 +9,7 @@ import (
 	bpindex "github.com/cppforlife/bosh-provisioner/index"
 
 	bhbibrepo "github.com/cppforlife/bosh-hub/bosh-init-bin/repo"
+	bhchecksumsrepo "github.com/cppforlife/bosh-hub/checksumsrepo"
 	bhindex "github.com/cppforlife/bosh-hub/index"
 	bhimperrsrepo "github.com/cppforlife/bosh-hub/release/importerrsrepo"
 	bhimpsrepo "github.com/cppforlife/bosh-hub/release/importsrepo"
@@ -53,6 +54,8 @@ type Repos struct {
 	importsRepo    bhimpsrepo.ImportsRepository
 	importErrsRepo bhimperrsrepo.ImportErrsRepository
 	watchersRepo   bhwatchersrepo.WatchersRepository
+
+	checksumsRepo bhchecksumsrepo.ChecksumsRepository
 }
 
 func NewRepos(options ReposOptions, fs boshsys.FileSystem, logger boshlog.Logger) (Repos, error) {
@@ -105,18 +108,22 @@ func NewRepos(options ReposOptions, fs boshsys.FileSystem, logger boshlog.Logger
 		logger,
 	)
 
+	checksumsRepo := bhchecksumsrepo.NewConcreteChecksumsRepository(i.checksumsIndex, logger)
+
 	repos := Repos{
 		releasesRepo: releasesRepo,
 
 		releaseVersionsRepo: bhrelsrepo.NewConcreteReleaseVersionsRepository(i.releaseVersionsIndex, logger),
 		jobsRepo:            bhjobsrepo.NewConcreteJobsRepository(i.jobsIndex, logger),
 
-		s3StemcellsRepo:    bhstemsrepo.NewS3StemcellsRepository(i.s3StemcellsIndex, logger),
+		s3StemcellsRepo:    bhstemsrepo.NewS3StemcellsRepository(i.s3StemcellsIndex, checksumsRepo, logger),
 		s3BoshInitBinsRepo: bhbibrepo.NewS3Repository(i.s3BoshInitBinsIndex, logger),
 
 		importsRepo:    bhimpsrepo.NewConcreteImportsRepository(i.importsIndex, logger),
 		importErrsRepo: bhimperrsrepo.NewConcreteImportErrsRepository(i.importErrsIndex, logger),
 		watchersRepo:   bhwatchersrepo.NewConcreteWatchersRepository(i.watchersIndex, logger),
+
+		checksumsRepo: checksumsRepo,
 	}
 
 	return repos, nil
@@ -136,11 +143,11 @@ func (r Repos) StemcellsRepo() bhstemsrepo.StemcellsRepository     { return r.s3
 func (r Repos) S3BoshInitBinsRepo() bhbibrepo.S3Repository { return r.s3BoshInitBinsRepo }
 func (r Repos) BoshInitBinsRepo() bhbibrepo.Repository     { return r.s3BoshInitBinsRepo }
 
-func (r Repos) ImportsRepo() bhimpsrepo.ImportsRepository { return r.importsRepo }
-
+func (r Repos) ImportsRepo() bhimpsrepo.ImportsRepository          { return r.importsRepo }
 func (r Repos) ImportErrsRepo() bhimperrsrepo.ImportErrsRepository { return r.importErrsRepo }
+func (r Repos) WatchersRepo() bhwatchersrepo.WatchersRepository    { return r.watchersRepo }
 
-func (r Repos) WatchersRepo() bhwatchersrepo.WatchersRepository { return r.watchersRepo }
+func (r Repos) ChecksumsRepo() bhchecksumsrepo.ChecksumsRepository { return r.checksumsRepo }
 
 type repoIndicies struct {
 	releasesIndex        bpindex.Index
@@ -155,6 +162,8 @@ type repoIndicies struct {
 	importsIndex    bpindex.Index
 	importErrsIndex bpindex.Index
 	watchersIndex   bpindex.Index
+
+	checksumsIndex bpindex.Index
 }
 
 func newFileRepoIndicies(dir string, fs boshsys.FileSystem) repoIndicies {
@@ -171,6 +180,8 @@ func newFileRepoIndicies(dir string, fs boshsys.FileSystem) repoIndicies {
 		importsIndex:    bpindex.NewFileIndex(filepath.Join(dir, "imports.json"), fs),
 		importErrsIndex: bpindex.NewFileIndex(filepath.Join(dir, "import_errs.json"), fs),
 		watchersIndex:   bpindex.NewFileIndex(filepath.Join(dir, "watchers.json"), fs),
+
+		checksumsIndex: bpindex.NewFileIndex(filepath.Join(dir, "checksums.json"), fs),
 	}
 }
 
@@ -230,6 +241,11 @@ func newDBRepoIndicies(url string, logger boshlog.Logger) (repoIndicies, error) 
 		return repoIndicies{}, err
 	}
 
+	checksumsAdapter, err := adapterPool.NewAdapter("checksums")
+	if err != nil {
+		return repoIndicies{}, err
+	}
+
 	indicies := repoIndicies{
 		releasesIndex:        bhindex.NewDBIndex(releasesAdapter, logger),
 		releaseNotesIndex:    bhindex.NewDBIndex(releaseNotesAdapter, logger),
@@ -243,6 +259,8 @@ func newDBRepoIndicies(url string, logger boshlog.Logger) (repoIndicies, error) 
 		importsIndex:    bhindex.NewDBIndex(importsAdapter, logger),
 		importErrsIndex: bhindex.NewDBIndex(importErrsAdapter, logger),
 		watchersIndex:   bhindex.NewDBIndex(watchersAdapter, logger),
+
+		checksumsIndex: bhindex.NewDBIndex(checksumsAdapter, logger),
 	}
 
 	return indicies, nil

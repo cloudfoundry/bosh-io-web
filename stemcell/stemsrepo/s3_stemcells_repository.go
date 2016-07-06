@@ -1,9 +1,13 @@
 package stemsrepo
 
 import (
+	"strings"
+
 	bosherr "github.com/cloudfoundry/bosh-agent/errors"
 	boshlog "github.com/cloudfoundry/bosh-agent/logger"
 	bpindex "github.com/cppforlife/bosh-provisioner/index"
+
+	bhchecks "github.com/cppforlife/bosh-hub/checksumsrepo"
 
 	bhs3 "github.com/cppforlife/bosh-hub/s3"
 )
@@ -15,8 +19,9 @@ var (
 )
 
 type S3StemcellsRepository struct {
-	index  bpindex.Index
-	logger boshlog.Logger
+	index         bpindex.Index
+	checksumsRepo bhchecks.ChecksumsRepository
+	logger        boshlog.Logger
 }
 
 type s3StemcellsKey struct {
@@ -26,6 +31,7 @@ type s3StemcellsKey struct {
 type s3StemcellRec struct {
 	Key  string
 	ETag string
+	SHA1 string
 
 	Size         uint64
 	LastModified string
@@ -35,11 +41,13 @@ type s3StemcellRec struct {
 
 func NewS3StemcellsRepository(
 	index bpindex.Index,
+	checksumsRepo bhchecks.ChecksumsRepository,
 	logger boshlog.Logger,
 ) S3StemcellsRepository {
 	return S3StemcellsRepository{
-		index:  index,
-		logger: logger,
+		index:         index,
+		checksumsRepo: checksumsRepo,
+		logger:        logger,
 	}
 }
 
@@ -63,6 +71,7 @@ func (r S3StemcellsRepository) FindAll(name string) ([]Stemcell, error) {
 		stemcell := NewS3Stemcell(
 			rec.Key,
 			rec.ETag,
+			rec.SHA1,
 			rec.Size,
 			rec.LastModified,
 			rec.URL,
@@ -99,6 +108,20 @@ func (r S3StemcellsRepository) SaveAll(s3Files []bhs3.File) error {
 			URL: url,
 		}
 
+		stemcell := NewS3Stemcell(rec.Key, "", "", 0, "", "")
+
+		// Skip S3 files that dont look like stemcells
+		if stemcell == nil {
+			continue
+		}
+
+		// Record SHA1 for each found stemcell
+		rec.SHA1, err = r.findStemcellSHA1(s3File)
+
+		if err != nil && stemcell.MustHaveSHA1() {
+			return err
+		}
+
 		s3StemcellRecs = append(s3StemcellRecs, rec)
 	}
 
@@ -108,4 +131,20 @@ func (r S3StemcellsRepository) SaveAll(s3Files []bhs3.File) error {
 	}
 
 	return nil
+}
+
+func (r S3StemcellsRepository) findStemcellSHA1(file bhs3.File) (string, error) {
+	checksumKeyParts := strings.Split(file.Key(), "/")
+	checksumKey := checksumKeyParts[len(checksumKeyParts)-1]
+
+	checksum, findErr := r.checksumsRepo.Find(checksumKey)
+	if findErr != nil {
+		return "", bosherr.WrapError(findErr, "Fetching SHA1 for stemcell '%s'", checksumKey)
+	}
+
+	if len(checksum.SHA1) == 0 {
+		return "", bosherr.New("Expected to find non-empty SHA1 for stemcell '%s'", checksumKey)
+	}
+
+	return checksum.SHA1, nil
 }

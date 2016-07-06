@@ -190,6 +190,39 @@ func (ri DBIndex) Save(key interface{}, value interface{}) error {
 	return nil
 }
 
+func (ri DBIndex) Insert(key interface{}, value interface{}) error {
+	rawKey, err := ri.structToMap(key)
+	if err != nil {
+		return err
+	}
+
+	rawKeyBytes, err := json.Marshal(rawKey)
+	if err != nil {
+		return err
+	}
+
+	valueBytes, err := json.Marshal(value)
+	if err != nil {
+		return err
+	}
+
+	res, err := ri.adapter.Insert(rawKeyBytes, valueBytes)
+	if err != nil {
+		return err
+	}
+
+	numRows, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if numRows != 1 {
+		return bosherr.New("Expected to insert 1 entry for key '%s'; updated '%d'", rawKeyBytes, numRows)
+	}
+
+	return nil
+}
+
 func (ri DBIndex) Remove(key interface{}) error {
 	rawKey, err := ri.structToMap(key)
 	if err != nil {

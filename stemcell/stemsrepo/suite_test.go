@@ -1,4 +1,4 @@
-package job_test
+package stemsrepo_test
 
 import (
 	. "github.com/onsi/ginkgo"
@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestIndex(t *testing.T) {
+func TestStemsrepo(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Job Suite")
+	RunSpecs(t, "stemcell/stemsrepo")
 }

@@ -15,6 +15,7 @@ type DBAdapter interface {
 
 	Find([]byte) (*sql.Rows, error)
 	Save([]byte, []byte) (sql.Result, error)
+	Insert([]byte, []byte) (sql.Result, error)
 	Remove([]byte) error
 
 	FindLocked([]byte) (*sql.Tx, *sql.Rows, error)

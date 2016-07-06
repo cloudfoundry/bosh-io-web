@@ -135,6 +135,25 @@ func (a PostgresAdapter) Save(keyBytes, valueBytes []byte) (sql.Result, error) {
 	return res, nil
 }
 
+func (a PostgresAdapter) Insert(keyBytes, valueBytes []byte) (sql.Result, error) {
+	q := fmt.Sprintf("INSERT INTO %s (Key, Value) VALUES($1, $2)", a.tableName)
+
+	a.logger.Debug(a.logTag, "Executing '%s' $1 = '%s' $2 = skip", q, string(keyBytes))
+
+	res, err := a.conn.Exec(q, keyBytes, valueBytes)
+	if err != nil {
+		if typedErr, ok := err.(*pq.Error); ok {
+			if typedErr.Code.Name() == "unique_violation" {
+				return nil, ErrExists
+			}
+		}
+
+		return nil, err
+	}
+
+	return res, nil
+}
+
 func (a PostgresAdapter) Remove(keyBytes []byte) error {
 	q := fmt.Sprintf("DELETE FROM %s WHERE Key = $1", a.tableName)
 

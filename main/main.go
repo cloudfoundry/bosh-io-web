@@ -44,10 +44,13 @@ func main() {
 	config, err := NewConfigFromPath(*configPathOpt, fs)
 	ensureNoErr(logger, "Loading config", err)
 
+	err = config.Validate()
+	ensureNoErr(logger, "Validating config", err)
+
 	repos, err := NewRepos(config.Repos, fs, logger)
 	ensureNoErr(logger, "Failed building repos", err)
 
-	controllerFactory, err := bhctrls.NewFactory(*privateTokenOpt, repos, runner, logger)
+	controllerFactory, err := bhctrls.NewFactory(*privateTokenOpt, config.ChecksumPrivs, repos, runner, logger)
 	ensureNoErr(logger, "Failed building controller factory", err)
 
 	downloader := bpdload.NewDefaultMuxDownloader(fs, runner, nil, logger)
@@ -130,6 +133,11 @@ func runControllers(controllerFactory bhctrls.Factory, analyticsConfig Analytics
 	docsController := controllerFactory.DocsController
 	m.Get("/docs", docsController.Page)
 	m.Get("/docs/**", docsController.Page)
+
+	// General checksum mgmt
+	checksumsController := controllerFactory.ChecksumsController
+	m.Get("/checksums/**", checksumsController.Find)
+	m.Post("/checksums/**", checksumsController.Save)
 
 	// Watching release
 	releaseWatchersController := controllerFactory.ReleaseWatchersController

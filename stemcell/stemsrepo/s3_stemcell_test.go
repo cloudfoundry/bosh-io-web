@@ -233,7 +233,7 @@ var _ = Describe("NewS3Stemcell", func() {
 		example := e
 
 		It(fmt.Sprintf("correctly interprets '%s'", path), func() {
-			s3Stemcell := NewS3Stemcell(path, "", 0, "", "")
+			s3Stemcell := NewS3Stemcell(path, "", "", 0, "", "")
 			Expect(s3Stemcell).ToNot(BeNil())
 
 			Expect(s3Stemcell.Name()).To(Equal(example.Name))

@@ -54,6 +54,7 @@ type StemcellSource struct {
 	URL  string `json:"url"`
 	Size uint64 `json:"size"`
 	MD5  string `json:"md5"`
+	SHA1 string `json:"sha1,omitempty"`
 
 	UpdatedAt string `json:"-"`
 }
@@ -119,6 +120,7 @@ func (s *Stemcell) AddAsSource(s_ bhstemsrepo.Stemcell) {
 		URL:  s_.URL(),
 		Size: s_.Size(),
 		MD5:  s_.MD5(),
+		SHA1: s_.SHA1(),
 
 		UpdatedAt: s_.UpdatedAt(),
 	}

@@ -10,6 +10,9 @@ import (
 var (
 	s3StemcellAgentRegexp = regexp.MustCompile(`ruby|go|agent`)
 	s3StemcellRegexp      = regexp.MustCompile(`\A([\w-]+/\w+/)?(?P<flavor>[\w-]+)-stemcell-(?P<version>[\.\d]+)-(?P<name>(?P<inf_name>\w+)-(?P<hv_name>\w+(-\w+)?)-(?P<os_name>centos|ubuntu)(?P<os_version>-trusty|-lucid|-\d+)?(?P<agent_type>-go_agent)?(?P<disk_fmt>-raw)?)\.tgz\z`)
+
+	// Previous verisons derived checksums from other locations instead of DB
+	minChecksumedVersion, _ = semiver.NewVersionFromString("3262.2")
 )
 
 type S3Stemcell struct {
@@ -21,6 +24,7 @@ type S3Stemcell struct {
 
 	size uint64
 	etag string
+	sha1 string
 
 	infName    string // e.g. aws
 	hvName     string // e.g. kvm
@@ -34,7 +38,7 @@ type S3Stemcell struct {
 	url string
 }
 
-func NewS3Stemcell(key, etag string, size uint64, lastModified, url string) *S3Stemcell {
+func NewS3Stemcell(key, etag, sha1 string, size uint64, lastModified, url string) *S3Stemcell {
 	m := matchS3FileKey(key)
 
 	if len(m) == 0 {
@@ -85,6 +89,7 @@ func NewS3Stemcell(key, etag string, size uint64, lastModified, url string) *S3S
 
 		size: size,
 		etag: strings.Trim(etag, "\""),
+		sha1: sha1,
 
 		infName:    m["inf_name"],
 		hvName:     m["hv_name"],
@@ -108,6 +113,7 @@ func (f S3Stemcell) UpdatedAt() string        { return f.updatedAt }
 
 func (f S3Stemcell) Size() uint64 { return f.size }
 func (f S3Stemcell) MD5() string  { return f.etag }
+func (f S3Stemcell) SHA1() string { return f.sha1 }
 
 func (f S3Stemcell) InfName() string    { return f.infName }
 func (f S3Stemcell) HvName() string     { return f.hvName }
@@ -131,6 +137,10 @@ func (f S3Stemcell) IsDeprecated() bool {
 }
 
 func (f S3Stemcell) URL() string { return f.url }
+
+func (f S3Stemcell) MustHaveSHA1() bool {
+	return f.version.IsGt(minChecksumedVersion)
+}
 
 func matchS3FileKey(key string) map[string]string {
 	match := s3StemcellRegexp.FindStringSubmatch(key)

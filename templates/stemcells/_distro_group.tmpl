@@ -21,7 +21,11 @@
             {{ end }}
             <span class="file-updated-at">{{ .UpdatedAt }}</span>
             {{ if $a.ShowingAllVersions }}
-              <span class="file-md5">{{ .MD5 }} [MD5]</span>
+              {{ if .SHA1 }}
+                <span class="file-md5">{{ .SHA1 }} [SHA1]</span>
+              {{ else }}
+                <span class="file-md5">{{ .MD5 }} [MD5]</span>
+              {{ end }}
             {{ end }}
           </div>
         </li>
