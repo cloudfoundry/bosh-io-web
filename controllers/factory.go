@@ -60,8 +60,6 @@ func NewFactory(privateToken string, checksumPrivs []ChecksumReqMatch, r Factory
 
 	if len(privateToken) < 10 {
 		return Factory{}, errors.New("Expected private token to be at least 10 chars")
-	} else {
-		logger.Info("controllers.Factory", "Private token is '%s'", privateToken)
 	}
 
 	privateURLPrefix := "/" + privateToken
@@ -72,6 +70,7 @@ func NewFactory(privateToken string, checksumPrivs []ChecksumReqMatch, r Factory
 		DocsController: NewDocsController(
 			r.ReleasesRepo(),
 			r.ReleaseVersionsRepo(),
+			r.StemcellsRepo(),
 			r.BoshInitBinsRepo(),
 			logger,
 		),

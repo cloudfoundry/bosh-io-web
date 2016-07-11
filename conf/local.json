@@ -20,7 +20,7 @@
   "ChecksumPrivs": [
     {
       "Token": "8228205572f152c14e16542e2752821b10e7e965d74527d275efe2026952140f8caf4de698b232bb",
-      "Includes": ["aws"]
+      "Includes": ["aws", "openstack"]
     }
   ],
 

@@ -168,6 +168,7 @@ func (s Stemcell) UserVisibleLatestDownloadURL() string {
 }
 
 func (s Stemcell) ActualDownloadURL(preferLight bool, mustBeForChina bool) (string, error) {
+	// todo remove china variation
 	if mustBeForChina {
 		if s.LightChinaSource != nil {
 			return s.LightChinaSource.URL, nil
@@ -183,6 +184,13 @@ func (s Stemcell) ActualDownloadURL(preferLight bool, mustBeForChina bool) (stri
 	}
 
 	return s.RegularSource.URL, nil
+}
+
+func (s Stemcell) SHA1() string {
+	if s.LightSource != nil {
+		return s.LightSource.SHA1
+	}
+	return s.RegularSource.SHA1
 }
 
 func (s Stemcell) MarshalJSON() ([]byte, error) {

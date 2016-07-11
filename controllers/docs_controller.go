@@ -12,7 +12,9 @@ import (
 
 	bhbibrepo "github.com/cppforlife/bosh-hub/bosh-init-bin/repo"
 	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
+	bhstemsrepo "github.com/cppforlife/bosh-hub/stemcell/stemsrepo"
 	bhrelui "github.com/cppforlife/bosh-hub/ui/release"
+	bhstemui "github.com/cppforlife/bosh-hub/ui/stemcell"
 )
 
 var (
@@ -24,6 +26,7 @@ var (
 type DocsController struct {
 	releasesRepo        bhrelsrepo.ReleasesRepository
 	releaseVersionsRepo bhrelsrepo.ReleaseVersionsRepository
+	stemcellsRepo       bhstemsrepo.StemcellsRepository
 	boshInitBinsRepo    bhbibrepo.Repository
 
 	defaultTmpl string
@@ -36,12 +39,14 @@ type DocsController struct {
 func NewDocsController(
 	releasesRepo bhrelsrepo.ReleasesRepository,
 	releaseVersionsRepo bhrelsrepo.ReleaseVersionsRepository,
+	stemcellsRepo bhstemsrepo.StemcellsRepository,
 	boshInitBinsRepo bhbibrepo.Repository,
 	logger boshlog.Logger,
 ) DocsController {
 	return DocsController{
 		releasesRepo:        releasesRepo,
 		releaseVersionsRepo: releaseVersionsRepo,
+		stemcellsRepo:       stemcellsRepo,
 		boshInitBinsRepo:    boshInitBinsRepo,
 
 		defaultTmpl: "index",
@@ -64,6 +69,7 @@ type installBoshInitPage struct {
 type initManifestPage struct {
 	docPage
 	Releases []bhrelui.Release
+	Stemcell bhstemui.Stemcell
 }
 
 func (c DocsController) Page(r martrend.Render, params mart.Params) {
@@ -103,37 +109,45 @@ func (c DocsController) findPage(tmpl string) (interface{}, error) {
 	}
 
 	// init-<cpi> pages have an example manifest which lists latest releases
-	cpi, found := bhrelui.KnownCPIs.FindByDocPage(tmpl)
+	cpiRef, found := bhrelui.KnownCPIs.FindByDocPage(tmpl)
 	if found {
-		return newInitManifestPage(page, cpi, c.releasesRepo, c.releaseVersionsRepo)
+		// populate example manifest with latest stemcell
+		stemcellRef, found := bhstemui.KnownStemcells.FindByDocPage(tmpl)
+		if found {
+			return c.newInitManifestPage(page, cpiRef, stemcellRef)
+		}
 	}
 
 	return page, nil
 }
 
-func newInitManifestPage(
-	docPage docPage,
-	cpiRef bhrelui.ReleaseRef,
-	releasesRepo bhrelsrepo.ReleasesRepository,
-	releaseVersionsRepo bhrelsrepo.ReleaseVersionsRepository,
-) (initManifestPage, error) {
+func (c DocsController) newInitManifestPage(docPage docPage, cpiRef bhrelui.ReleaseRef, stemcellRef bhstemui.StemcellRef) (initManifestPage, error) {
 	page := initManifestPage{docPage: docPage}
 
 	sources := []bhrelui.Source{bhrelui.BOSH.Source, cpiRef.Source}
 
 	for _, source := range sources {
-		relVerRec, err := releasesRepo.FindLatest(source.Full())
+		relVerRec, err := c.releasesRepo.FindLatest(source.Full())
 		if err != nil {
 			return page, err
 		}
 
-		rel, err := releaseVersionsRepo.Find(relVerRec)
+		rel, err := c.releaseVersionsRepo.Find(relVerRec)
 		if err != nil {
 			return page, err
 		}
 
 		page.Releases = append(page.Releases, bhrelui.NewRelease(relVerRec, rel))
 	}
+
+	stemcells, err := c.stemcellsRepo.FindAll(stemcellRef.ManifestName)
+	if err != nil {
+		return page, err
+	}
+
+	uniqVerStems := bhstemui.NewUniqueVersionStemcells(stemcells, bhstemui.StemcellFilter{})
+
+	page.Stemcell = uniqVerStems.ForAPI()[0]
 
 	return page, nil
 }
