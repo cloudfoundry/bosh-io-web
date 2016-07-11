@@ -18,6 +18,8 @@ var (
 		"vsphere":   "vSphere",
 		"vcloud":    "vCloud",
 		"azure":     "Azure",
+		"google":    "Google",
+		"softlayer": "SoftLayer",
 		"warden":    "BOSH Lite", // todo warden and boshlite are flipped
 	}
 
