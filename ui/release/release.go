@@ -43,7 +43,8 @@ type releaseAPIRecord struct {
 	Name    string `json:"name"`
 	Version string `json:"version"`
 
-	URL string `json:"url"`
+	URL  string `json:"url"`
+	SHA1 string `json:"sha1"`
 }
 
 type ReleaseSorting []Release
@@ -172,12 +173,17 @@ func (r *Release) NotesInMarkdown() (template.HTML, error) {
 }
 
 func (r Release) MarshalJSON() ([]byte, error) {
+	sha1, err := r.TarballSHA1()
+	if err != nil {
+		return nil, err
+	}
+
 	record := releaseAPIRecord{
 		Name:    r.Source.Full(),
 		Version: r.Version.AsString(),
 
-		// todo MD5 is expensive to get
-		URL: r.UserVisibleDownloadURL(),
+		URL:  r.UserVisibleDownloadURL(),
+		SHA1: sha1,
 	}
 
 	return json.Marshal(record)
