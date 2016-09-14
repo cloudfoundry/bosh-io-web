@@ -133,6 +133,11 @@ func (f S3Stemcell) IsForChina() bool {
 }
 
 func (f S3Stemcell) IsDeprecated() bool {
+	// softlayer actually uses xen stemcells
+	if f.name == "bosh-softlayer-esxi-ubuntu-trusty-go_agent" {
+		return true
+	}
+
 	return f.osVersion == "lucid" || f.agentType == "ruby"
 }
 
