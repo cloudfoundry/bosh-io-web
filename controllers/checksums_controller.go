@@ -112,13 +112,11 @@ func (c ChecksumsController) authorize(req *http.Request, params mart.Params) (s
 		}
 	}
 
-	if len(foundMatches) != 1 {
-		return "", errors.New("Expected to match exactly one rule")
+	for _, foundMatch := range foundMatches {
+		if foundMatch.Token == givenToken {
+			return accessedKey, nil
+		}
 	}
 
-	if foundMatches[0].Token != givenToken {
-		return "", errors.New("Token mismatch")
-	}
-
-	return accessedKey, nil
+	return "", errors.New("Token mismatch")
 }

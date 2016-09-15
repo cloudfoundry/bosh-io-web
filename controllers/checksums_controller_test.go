@@ -76,14 +76,29 @@ var _ = Describe("ChecksumsController", func() {
 				Includes: []string{"key"},
 			}
 
+			validSHA1 := "sha1-for-matches-key"
+
 			req := &http.Request{
 				Header: http.Header{},
+				Form:   url.Values{"sha1": []string{validSHA1}},
 			}
 			req.Header.Add("Authorization", "bearer allowed-token")
 
+			renderer = &FakeRender{}
 			controller.Save(req, renderer, mart.Params{"_1": "matches-key"})
-			Expect(renderer.JSONStatus).To(Equal(401))
-			Expect(renderer.JSONResponse).To(Equal(map[string]string{"error": "Unauthorized: Expected to match exactly one rule"}))
+			Expect(renderer.JSONStatus).To(Equal(200))
+			Expect(renderer.JSONResponse).To(Equal(map[string]string{"sha1": validSHA1}))
+
+			req = &http.Request{
+				Header: http.Header{},
+				Form:   url.Values{"sha1": []string{validSHA1}},
+			}
+			req.Header.Add("Authorization", "bearer other-allowed-token")
+
+			renderer = &FakeRender{}
+			controller.Save(req, renderer, mart.Params{"_1": "matches-key"})
+			Expect(renderer.JSONStatus).To(Equal(200))
+			Expect(renderer.JSONResponse).To(Equal(map[string]string{"sha1": validSHA1}))
 		})
 
 		It("returns 401 if Authorization header matches token without matching key", func() {
@@ -99,7 +114,7 @@ var _ = Describe("ChecksumsController", func() {
 
 			controller.Save(req, renderer, mart.Params{"_1": "does-not-match-KEY"}) // because it's uppercase
 			Expect(renderer.JSONStatus).To(Equal(401))
-			Expect(renderer.JSONResponse).To(Equal(map[string]string{"error": "Unauthorized: Expected to match exactly one rule"}))
+			Expect(renderer.JSONResponse).To(Equal(map[string]string{"error": "Unauthorized: Token mismatch"}))
 		})
 
 		It("returns 401 if key is empty", func() {
