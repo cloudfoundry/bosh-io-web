@@ -119,6 +119,10 @@ func (r S3StemcellsRepository) SaveAll(s3Files []bhs3.File) error {
 		rec.SHA1, err = r.findStemcellSHA1(s3File)
 
 		if err != nil && stemcell.MustHaveSHA1() {
+			if stemcell.InfName() == "softlayer" {
+				continue
+			}
+
 			return err
 		}
 
