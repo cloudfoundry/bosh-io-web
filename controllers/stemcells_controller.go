@@ -145,7 +145,10 @@ func (c StemcellsController) isParamTrue(s string) bool {
 }
 
 func (c StemcellsController) APIV1Index(req *http.Request, r martrend.Render, params mart.Params) {
-	filter := bhstemui.StemcellFilter{Name: params["_1"]}
+	filter := bhstemui.StemcellFilter{
+		Name:       params["_1"],
+		IncludeAll: c.isParamTrue(req.URL.Query().Get("all")),
+	}
 
 	if len(filter.Name) == 0 {
 		r.JSON(400, map[string]string{"error": "Param 'name' must be non-empty"})
