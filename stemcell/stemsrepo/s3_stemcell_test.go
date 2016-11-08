@@ -155,7 +155,21 @@ var _ = Describe("NewS3Stemcell", func() {
 			AgentType: "go",
 		},
 
-		// Notice no folder prefix
+		// Notice no top-level folder prefix
+		"aws/bosh-stemcell-3306-aws-xen-ubuntu-trusty-go_agent.tgz": ExtractedPieces{
+			Name:    "bosh-aws-xen-ubuntu-trusty-go_agent",
+			Version: "3306",
+
+			InfName: "aws",
+			HvName:  "xen",
+
+			OSName:    "ubuntu",
+			OSVersion: "trusty",
+
+			AgentType: "go",
+		},
+
+		// Notice no folder prefixes
 		"bosh-stemcell-2776-warden-boshlite-centos-go_agent.tgz": ExtractedPieces{
 			Name:    "bosh-warden-boshlite-centos-go_agent",
 			Version: "2776",

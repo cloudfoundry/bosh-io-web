@@ -9,7 +9,7 @@ import (
 
 var (
 	s3StemcellAgentRegexp = regexp.MustCompile(`ruby|go|agent`)
-	s3StemcellRegexp      = regexp.MustCompile(`\A([\w-]+/\w+/)?(?P<flavor>[\w-]+)-stemcell-(?P<version>[\.\d]+)-(?P<name>(?P<inf_name>\w+)-(?P<hv_name>\w+(-\w+)?)-(?P<os_name>centos|ubuntu)(?P<os_version>-trusty|-lucid|-\d+)?(?P<agent_type>-go_agent)?(?P<disk_fmt>-raw)?)\.tgz\z`)
+	s3StemcellRegexp      = regexp.MustCompile(`\A(([\w-]+/)?\w+/)?(?P<flavor>[\w-]+)-stemcell-(?P<version>[\.\d]+)-(?P<name>(?P<inf_name>\w+)-(?P<hv_name>\w+(-\w+)?)-(?P<os_name>centos|ubuntu)(?P<os_version>-trusty|-lucid|-\d+)?(?P<agent_type>-go_agent)?(?P<disk_fmt>-raw)?)\.tgz\z`)
 
 	// Previous verisons derived checksums from other locations instead of DB
 	minChecksumedVersion, _ = semiver.NewVersionFromString("3262.2")
