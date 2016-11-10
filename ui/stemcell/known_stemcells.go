@@ -13,6 +13,7 @@ var KnownStemcells = StemcellRefs{
 	NewStemcellRef("bosh-vsphere-esxi-ubuntu-trusty-go_agent", "init-vsphere"),
 	NewStemcellRef("bosh-vcloud-esxi-ubuntu-trusty-go_agent", "init-vcloud"),
 	NewStemcellRef("bosh-azure-hyperv-ubuntu-trusty-go_agent", "init-azure"),
+	NewStemcellRef("bosh-softlayer-xen-ubuntu-trusty-go_agent", "init-softlayer"),
 }
 
 func NewStemcellRef(manifestName, docPage string) StemcellRef {
