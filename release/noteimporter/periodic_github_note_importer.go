@@ -37,7 +37,7 @@ func NewPeriodicGithubNoteImporter(
 
 		releasesRepo: releasesRepo,
 
-		logTag: "PeriodicGithubNoteImporter",
+		logTag: "release.PeriodicGithubNoteImporter",
 		logger: logger,
 	}
 }

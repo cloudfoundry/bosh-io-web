@@ -5,6 +5,8 @@ import (
 	"strings"
 
 	semiver "github.com/cppforlife/go-semi-semantic/version"
+
+	bhnotesrepo "github.com/cppforlife/bosh-hub/stemcell/notesrepo"
 )
 
 var (
@@ -16,6 +18,8 @@ var (
 )
 
 type S3Stemcell struct {
+	notesRepo bhnotesrepo.NotesRepository
+
 	name   string
 	flavor string // e.g. bosh vs light-bosh
 
@@ -145,6 +149,10 @@ func (f S3Stemcell) URL() string { return f.url }
 
 func (f S3Stemcell) MustHaveSHA1() bool {
 	return f.version.IsGt(minChecksumedVersion)
+}
+
+func (f S3Stemcell) Notes() (bhnotesrepo.NoteRec, bool, error) {
+	return f.notesRepo.Find(f.Version().String())
 }
 
 func matchS3FileKey(key string) map[string]string {

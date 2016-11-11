@@ -8,8 +8,8 @@ import (
 	bpindex "github.com/cppforlife/bosh-provisioner/index"
 
 	bhchecks "github.com/cppforlife/bosh-hub/checksumsrepo"
-
 	bhs3 "github.com/cppforlife/bosh-hub/s3"
+	bhnotesrepo "github.com/cppforlife/bosh-hub/stemcell/notesrepo"
 )
 
 var (
@@ -21,6 +21,7 @@ var (
 type S3StemcellsRepository struct {
 	index         bpindex.Index
 	checksumsRepo bhchecks.ChecksumsRepository
+	notesRepo     bhnotesrepo.NotesRepository
 	logger        boshlog.Logger
 }
 
@@ -42,11 +43,13 @@ type s3StemcellRec struct {
 func NewS3StemcellsRepository(
 	index bpindex.Index,
 	checksumsRepo bhchecks.ChecksumsRepository,
+	notesRepo bhnotesrepo.NotesRepository,
 	logger boshlog.Logger,
 ) S3StemcellsRepository {
 	return S3StemcellsRepository{
 		index:         index,
 		checksumsRepo: checksumsRepo,
+		notesRepo:     notesRepo,
 		logger:        logger,
 	}
 }
@@ -80,6 +83,8 @@ func (r S3StemcellsRepository) FindAll(name string) ([]Stemcell, error) {
 		if stemcell == nil || stemcell.IsDeprecated() {
 			continue
 		}
+
+		stemcell.notesRepo = r.notesRepo
 
 		if !filterByName || filterByName && stemcell.Name() == name {
 			stems = append(stems, stemcell)

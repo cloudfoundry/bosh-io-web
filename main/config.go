@@ -12,6 +12,7 @@ import (
 	bhnoteimporter "github.com/cppforlife/bosh-hub/release/noteimporter"
 	bhwatcher "github.com/cppforlife/bosh-hub/release/watcher"
 	bhstemsimp "github.com/cppforlife/bosh-hub/stemcell/importer"
+	bhstemnoteimporter "github.com/cppforlife/bosh-hub/stemcell/noteimporter"
 )
 
 type Config struct {
@@ -26,9 +27,11 @@ type Config struct {
 
 	ChecksumPrivs []bhctrls.ChecksumReqMatch
 
-	Watcher      bhwatcher.FactoryOptions
-	Importer     bhimporter.FactoryOptions
-	NoteImporter bhnoteimporter.FactoryOptions
+	Watcher  bhwatcher.FactoryOptions
+	Importer bhimporter.FactoryOptions
+
+	ReleaseNoteImporter  bhnoteimporter.FactoryOptions
+	StemcellNoteImporter bhstemnoteimporter.FactoryOptions
 
 	StemcellImporter    bhstemsimp.FactoryOptions
 	BoshInitBinImporter bhbibimp.FactoryOptions

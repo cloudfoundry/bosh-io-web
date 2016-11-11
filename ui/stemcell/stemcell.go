@@ -4,9 +4,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"html/template"
 
 	semiver "github.com/cppforlife/go-semi-semantic/version"
 	humanize "github.com/dustin/go-humanize"
+	"github.com/microcosm-cc/bluemonday"
+	"github.com/russross/blackfriday"
 
 	bhstemsrepo "github.com/cppforlife/bosh-hub/stemcell/stemsrepo"
 )
@@ -34,6 +37,8 @@ var (
 )
 
 type Stemcell struct {
+	stemRec bhstemsrepo.Stemcell
+
 	ManifestName string
 	Version      semiver.Version
 
@@ -45,6 +50,9 @@ type Stemcell struct {
 
 	// todo china stemcell will be consolidated into light stemcell at some point
 	LightChinaSource *StemcellSource
+
+	// memoized notes
+	notesInMarkdown *[]byte
 }
 
 type StemcellSource struct {
@@ -79,6 +87,8 @@ type StemcellVersionSorting []Stemcell
 
 func NewStemcell(s bhstemsrepo.Stemcell) Stemcell {
 	stemcell := &Stemcell{
+		stemRec: s,
+
 		ManifestName: s.Name(),
 		Version:      s.Version(),
 
@@ -191,6 +201,24 @@ func (s Stemcell) SHA1() string {
 		return s.LightSource.SHA1
 	}
 	return s.RegularSource.SHA1
+}
+
+func (s *Stemcell) NotesInMarkdown() (template.HTML, error) {
+	if s.notesInMarkdown == nil {
+		// Do not care about found -> no UI indicator
+		noteRec, _, err := s.stemRec.Notes()
+		if err != nil {
+			return template.HTML(""), err
+		}
+
+		unsafeMarkdown := blackfriday.MarkdownCommon([]byte(noteRec.Content))
+		safeMarkdown := bluemonday.UGCPolicy().SanitizeBytes(unsafeMarkdown)
+
+		s.notesInMarkdown = &safeMarkdown
+	}
+
+	// todo sanitized markdown
+	return template.HTML(*s.notesInMarkdown), nil
 }
 
 func (s Stemcell) MarshalJSON() ([]byte, error) {

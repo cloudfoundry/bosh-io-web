@@ -1,7 +1,7 @@
 {{ range $j, $a := .ByVersion }}
   <ul class="list-group list-group-condensed">
     {{ range $i, $s := .Stemcells }}
-      {{ range .Sources }}
+      {{ range $x, $ss := .Sources }}
         <li class="list-group-item stemcell">
           <div class="col-md-4">
             <span class="stemcell-name">{{ .FriendlyName }}</span>
@@ -28,6 +28,12 @@
               {{ end }}
             {{ end }}
           </div>
+
+          {{ if (and $a.ShowingAllVersions $s.NotesInMarkdown (eq $x 0)) }}
+            <div class="col-md-12">
+              <div class="release-notes">{{ $s.NotesInMarkdown }}</div>
+            </div>
+          {{ end }}
         </li>
       {{ end }}
     {{ end }}

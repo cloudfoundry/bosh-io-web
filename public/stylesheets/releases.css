@@ -2,6 +2,8 @@
 
 .github-link { color: #777; }
 
+.list-group-item .release-notes { margin-top: 5px; }
+
 .release-notes { font-size: 13px; }
 
 .release-notes ul { margin-bottom: 10px; }

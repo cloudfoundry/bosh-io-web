@@ -23,6 +23,7 @@ import (
 	bhnoteimporter "github.com/cppforlife/bosh-hub/release/noteimporter"
 	bhwatcher "github.com/cppforlife/bosh-hub/release/watcher"
 	bhstemsimp "github.com/cppforlife/bosh-hub/stemcell/importer"
+	bhstemnoteimporter "github.com/cppforlife/bosh-hub/stemcell/noteimporter"
 )
 
 const mainLogTag = "main"
@@ -73,10 +74,10 @@ func main() {
 	}
 
 	{
-		noteImporterFactory, err := bhnoteimporter.NewFactory(config.NoteImporter, repos, logger)
-		ensureNoErr(logger, "Failed building note importer factory", err)
+		releaseNoteImporterFactory, err := bhnoteimporter.NewFactory(config.ReleaseNoteImporter, repos, logger)
+		ensureNoErr(logger, "Failed building release note importer factory", err)
 
-		go noteImporterFactory.Importer.Import()
+		go releaseNoteImporterFactory.Importer.Import()
 	}
 
 	{
@@ -84,6 +85,13 @@ func main() {
 		ensureNoErr(logger, "Failed building stemcell importer factory", err)
 
 		go stemcellImporterFactory.Importer.Import()
+	}
+
+	{
+		stemcellNoteImporterFactory, err := bhstemnoteimporter.NewFactory(config.StemcellNoteImporter, repos, logger)
+		ensureNoErr(logger, "Failed building stemcell note importer factory", err)
+
+		go stemcellNoteImporterFactory.Importer.Import()
 	}
 
 	{

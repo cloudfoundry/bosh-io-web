@@ -2,6 +2,8 @@ package stemsrepo
 
 import (
 	semiver "github.com/cppforlife/go-semi-semantic/version"
+
+	bhnotesrepo "github.com/cppforlife/bosh-hub/stemcell/notesrepo"
 )
 
 type Stemcell interface {
@@ -25,6 +27,8 @@ type Stemcell interface {
 	IsForChina() bool
 
 	URL() string
+
+	Notes() (bhnotesrepo.NoteRec, bool, error)
 }
 
 type StemcellsRepository interface {

@@ -44,7 +44,7 @@ ul { padding-left: 17px; }
 
 .list-group-item {
   color: #777;
-  border-color: #f7f7f7;
+  border-color: rgba(0, 0, 0, 0.05);
   background-color: inherit;
   border-width: 1px;
 }

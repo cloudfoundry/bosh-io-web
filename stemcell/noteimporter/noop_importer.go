@@ -11,7 +11,7 @@ type NoopNoteImporter struct {
 
 func NewNoopNoteImporter(logger boshlog.Logger) NoopNoteImporter {
 	return NoopNoteImporter{
-		logTag: "release.NoopNoteImporter",
+		logTag: "stemcell.NoopNoteImporter",
 		logger: logger,
 	}
 }

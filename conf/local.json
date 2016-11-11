@@ -25,7 +25,7 @@
   ],
 
   "Watcher": {
-    "Enabled": true,
+    "Enabled": false,
     "Period": 60000000000
   },
 
@@ -41,11 +41,18 @@
     }
   },
 
-  "NoteImporter": {
+  "ReleaseNoteImporter": {
     "Enabled": false,
     "Period": 60000000000,
 
     "GithubPersonalAccessToken": "858...."
+  },
+
+  "StemcellNoteImporter": {
+    "Enabled": false,
+    "Period": 60000000000,
+
+    "GithubPersonalAccessToken": "858..."
   },
 
   "StemcellImporter": {
