@@ -47,7 +47,7 @@ scp ${scp_files[*]} vcap@$ip:$src_path
 rm -rf ./prod-conf
 
 echo "Installing gems from Gemfile"
-ssh -t vcap@$ip "cd $src_path && bundle install"
+ssh -t vcap@$ip "cd $src_path && bundle config build.nokogiri --use-system-libraries && bundle install"
 
 echo "Running new version of bosh-hub with BOSH_HUB_KILL env var"
 nohup_cmd="nohup ./run.sh ./worker.json assets-id private-token-dont-matter >$log_path/stdout.log 2>$log_path/stderr.log"
