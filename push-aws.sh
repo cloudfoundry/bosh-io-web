@@ -4,6 +4,11 @@ set -e
 
 ip=$1
 
+echo "Pull down creds from lastpass to ./prod-conf"
+rm -rf ./prod-conf && mkdir ./prod-conf
+lpass show --notes "bosh-io-worker-json-conf" > ./prod-conf/worker.json
+lpass show --notes "bosh-io-rds-combined-ca-bundle-pem" > ./prod-conf/rds-combined-ca-bundle.pem
+
 config=prod-conf/worker.json
 
 if [ ! -f $config ]; then
@@ -36,8 +41,10 @@ ssh -t vcap@$ip "
 "
 
 echo "Copying all needed files"
-scp_files=(bosh-hub bosh-blobstore-s3 run.sh $config Gemfile Gemfile.lock)
+scp_files=(bosh-hub bosh-blobstore-s3 run.sh $config prod-conf/rds-combined-ca-bundle.pem Gemfile Gemfile.lock)
 scp ${scp_files[*]} vcap@$ip:$src_path
+
+rm -rf ./prod-conf
 
 echo "Installing gems from Gemfile"
 ssh -t vcap@$ip "cd $src_path && bundle install"

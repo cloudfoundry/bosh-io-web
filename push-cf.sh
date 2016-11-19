@@ -7,6 +7,11 @@ old=bosh-hub-old
 new=bosh-hub-new
 curr=bosh-hub
 
+echo "Pull down creds from lastpass to ./prod-conf"
+rm -rf ./prod-conf && mkdir ./prod-conf
+lpass show --notes "bosh-io-web-json-conf" > ./prod-conf/web.json
+lpass show --notes "bosh-io-rds-combined-ca-bundle-pem" > ./prod-conf/rds-combined-ca-bundle.pem
+
 if [ ! -f prod-conf/web.json ]; then
   echo 'Missing web.json config'
   exit 1
@@ -26,7 +31,7 @@ if cf app $old; then echo "$old must not exist"; exit 1; fi
 
 echo "Pushing new version"
 cf push $new -i 3 -k 2G -b https://github.com/ddollar/heroku-buildpack-multi.git
-rm -f ./prod-conf/assets-id ./prod-conf/private-token
+rm -rf ./prod-conf
 
 read -p "Map routes to new version (y/n)? " CONT
 if [ "$CONT" != "y" ]; then

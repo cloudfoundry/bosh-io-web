@@ -1,5 +1,4 @@
 # Important!
-prod-conf/aws/
 prod-conf/local.json
 prod-conf/worker.json
 conf/local.json
