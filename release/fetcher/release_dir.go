@@ -45,11 +45,6 @@ func (r ReleaseDir) findReleaseManifestPaths(releaseDir string) (map[string]bpre
 
 	baseDir := releaseDir
 
-	// todo Once bosh release is a separate repo this needs to go
-	if r.fs.FileExists(filepath.Join(releaseDir, "bosh-director")) {
-		baseDir = filepath.Join(releaseDir, "release")
-	}
-
 	releaseMatches, err := r.fs.Glob(filepath.Join(baseDir, "releases/**/*"))
 	if err != nil {
 		return nil, bosherr.WrapError(err, "Globbing releases/**/* directory")
