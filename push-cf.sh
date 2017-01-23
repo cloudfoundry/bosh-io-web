@@ -30,7 +30,7 @@ if cf app $new; then echo "$new must not exist"; exit 1; fi
 if cf app $old; then echo "$old must not exist"; exit 1; fi
 
 echo "Pushing new version"
-cf push $new -i 3 -k 2G -b https://github.com/ddollar/heroku-buildpack-multi.git
+cf push $new -i 3 -k 2G -b https://github.com/shageman/buildpack-binary
 rm -rf ./prod-conf
 
 read -p "Map routes to new version (y/n)? " CONT
