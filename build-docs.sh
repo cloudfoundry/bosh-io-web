@@ -12,7 +12,7 @@ echo "Regenerate doc assets"
   set -e
   cd ./docs-bosh-io
   ruby -v # best known to work with ruby 2.0.0p451
-  bundle exec bookbinder publish local
+  bundle exec bookbinder publish local --verbose
 )
 
 echo "Remove old copy of docs"
