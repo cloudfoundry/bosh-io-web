@@ -17,12 +17,12 @@ type ReleaseRefs []ReleaseRef
 var BOSH = NewReleaseRef("github.com/cloudfoundry/bosh", "BOSH", "")
 
 var KnownCPIs = ReleaseRefs{
-	NewReleaseRef("github.com/cloudfoundry-incubator/bosh-aws-cpi-release", "AWS", "init-aws"),
-	NewReleaseRef("github.com/cloudfoundry-incubator/bosh-openstack-cpi-release", "OpenStack", "init-openstack"),
-	NewReleaseRef("github.com/cloudfoundry-incubator/bosh-vsphere-cpi-release", "vSphere", "init-vsphere"),
-	NewReleaseRef("github.com/cloudfoundry-incubator/bosh-vcloud-cpi-release", "vCloud", "init-vcloud"),
-	NewReleaseRef("github.com/cloudfoundry-incubator/bosh-azure-cpi-release", "Azure", "init-azure"),
-	NewReleaseRef("github.com/cloudfoundry-incubator/bosh-softlayer-cpi-release", "SoftLayer", "init-softlayer"),
+	NewReleaseRef("github.com/cloudfoundry-incubator/bosh-aws-cpi-release", "AWS", "init-aws-v1"),
+	NewReleaseRef("github.com/cloudfoundry-incubator/bosh-openstack-cpi-release", "OpenStack", "init-openstack-v1"),
+	NewReleaseRef("github.com/cloudfoundry-incubator/bosh-vsphere-cpi-release", "vSphere", "init-vsphere-v1"),
+	NewReleaseRef("github.com/cloudfoundry-incubator/bosh-vcloud-cpi-release", "vCloud", "init-vcloud-v1"),
+	NewReleaseRef("github.com/cloudfoundry-incubator/bosh-azure-cpi-release", "Azure", "init-azure-v1"),
+	NewReleaseRef("github.com/cloudfoundry-incubator/bosh-softlayer-cpi-release", "SoftLayer", "init-softlayer-v1"),
 }
 
 func NewReleaseRef(fullSource, prettyName, docPage string) ReleaseRef {
