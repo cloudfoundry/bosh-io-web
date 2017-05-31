@@ -63,10 +63,18 @@ func (i PeriodicGithubNoteImporter) Import() error {
 }
 
 func (i PeriodicGithubNoteImporter) importNotes() error {
-	allGhReleases, err := i.fetchAllReleasesFromGithub()
+	allBoshGhReleases, err := i.fetchAllReleasesFromGithub("cloudfoundry", "bosh")
 	if err != nil {
 		return err
 	}
+
+	allStemcellGhReleases, err := i.fetchAllReleasesFromGithub("cloudfoundry", "bosh-linux-stemcell-builder")
+	if err != nil {
+		return err
+	}
+
+	allGhReleases := allBoshGhReleases
+	allGhReleases = append(allGhReleases, allStemcellGhReleases...)
 
 	const notePrefix = "Stemcell "
 
@@ -95,7 +103,7 @@ func (i PeriodicGithubNoteImporter) importNotes() error {
 	return nil
 }
 
-func (i PeriodicGithubNoteImporter) fetchAllReleasesFromGithub() ([]github.RepositoryRelease, error) {
+func (i PeriodicGithubNoteImporter) fetchAllReleasesFromGithub(orgName, repoName string) ([]github.RepositoryRelease, error) {
 	i.logger.Debug(i.logTag, "Fetching github releases for stemcells")
 
 	conf := &oauth2.Config{}
@@ -108,7 +116,7 @@ func (i PeriodicGithubNoteImporter) fetchAllReleasesFromGithub() ([]github.Repos
 	listOpts := &github.ListOptions{PerPage: 30, Page: 0}
 
 	for {
-		releases, resp, err := client.Repositories.ListReleases("cloudfoundry", "bosh", listOpts)
+		releases, resp, err := client.Repositories.ListReleases(orgName, repoName, listOpts)
 		if err != nil {
 			return allReleases, bosherr.WrapError(err, "Listing github releases")
 		}
