@@ -11,10 +11,11 @@ import (
 
 var (
 	s3StemcellAgentRegexp = regexp.MustCompile(`ruby|go|agent`)
-	s3StemcellRegexp      = regexp.MustCompile(`\A(([\w-]+/)?\w+/)?(?P<flavor>[\w-]+)-stemcell-(?P<version>[\.\d]+)-(?P<name>(?P<inf_name>\w+)-(?P<hv_name>\w+(-\w+)?)-(?P<os_name>centos|ubuntu)(?P<os_version>-trusty|-lucid|-\d+)?(?P<agent_type>-go_agent)?(?P<disk_fmt>-raw)?)\.tgz\z`)
+	s3StemcellRegexp      = regexp.MustCompile(`\A(([\w-]+/)?\w+/)?(?P<flavor>[\w-]+)-stemcell-(?P<version>[\.\d]+)-(?P<name>(?P<inf_name>\w+)-(?P<hv_name>\w+(-\w+)?)-(?P<os_name>centos|ubuntu|windows)(?P<os_version>-trusty|-lucid|2012R2|-\d+)?(?P<agent_type>-go_agent)?(?P<disk_fmt>-raw)?)\.tgz\z`)
 
 	// Previous verisons derived checksums from other locations instead of DB
-	minChecksumedVersion, _ = semiver.NewVersionFromString("3262.2")
+	minLinuxChecksumedVersion, _   = semiver.NewVersionFromString("3262.2")
+	minWindowsChecksumedVersion, _ = semiver.NewVersionFromString("1079.0")
 )
 
 type S3Stemcell struct {
@@ -148,7 +149,11 @@ func (f S3Stemcell) IsDeprecated() bool {
 func (f S3Stemcell) URL() string { return f.url }
 
 func (f S3Stemcell) MustHaveSHA1() bool {
-	return f.version.IsGt(minChecksumedVersion)
+	if f.osName == "windows" {
+		return f.version.IsGt(minWindowsChecksumedVersion)
+	}
+
+	return f.version.IsGt(minLinuxChecksumedVersion)
 }
 
 func (f S3Stemcell) Notes() (bhnotesrepo.NoteRec, bool, error) {

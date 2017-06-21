@@ -227,6 +227,45 @@ var _ = Describe("NewS3Stemcell", func() {
 			AgentType: "go",
 		},
 
+		"light-bosh-stemcell-1089.0-aws-xen-hvm-windows2012R2-go_agent.tgz": ExtractedPieces{
+			Name:    "bosh-aws-xen-hvm-windows2012R2-go_agent",
+			Version: "1089.0",
+
+			InfName: "aws",
+			HvName:  "xen-hvm",
+
+			OSName:    "windows",
+			OSVersion: "2012R2",
+
+			AgentType: "go",
+		},
+
+		"light-bosh-stemcell-1089.0-azure-hyperv-windows2012R2-go_agent.tgz": ExtractedPieces{
+			Name:    "bosh-azure-hyperv-windows2012R2-go_agent",
+			Version: "1089.0",
+
+			InfName: "azure",
+			HvName:  "hyperv",
+
+			OSName:    "windows",
+			OSVersion: "2012R2",
+
+			AgentType: "go",
+		},
+
+		"light-bosh-stemcell-1089.0-google-kvm-windows2012R2-go_agent.tgz": ExtractedPieces{
+			Name:    "bosh-google-kvm-windows2012R2-go_agent",
+			Version: "1089.0",
+
+			InfName: "google",
+			HvName:  "kvm",
+
+			OSName:    "windows",
+			OSVersion: "2012R2",
+
+			AgentType: "go",
+		},
+
 		// Softlayer stemcell
 		"light-bosh-stemcell-3232.4-softlayer-esxi-ubuntu-trusty-go_agent.tgz": ExtractedPieces{
 			Name:    "bosh-softlayer-esxi-ubuntu-trusty-go_agent",

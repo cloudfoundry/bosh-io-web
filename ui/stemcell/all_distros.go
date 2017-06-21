@@ -13,13 +13,23 @@ var (
 		},
 
 		Distro{
+			Name: "Windows 2012R2",
+
+			OSMatches: []StemcellOSMatch{
+				{OSName: "windows", OSVersion: "2012R2"},
+			},
+
+			Sort: 2,
+		},
+
+		Distro{
 			Name: "CentOS 7.x",
 
 			OSMatches: []StemcellOSMatch{
 				{OSName: "centos", OSVersion: "7"},
 			},
 
-			Sort: 2,
+			Sort: 3,
 		},
 	}
 )
