@@ -66,7 +66,7 @@ type StemcellSource struct {
 	MD5  string `json:"md5"`
 	SHA1 string `json:"sha1,omitempty"`
 
-	UpdatedAt string `json:"-"`
+	UpdatedAt string `json:"updated_at"`
 }
 
 type stemcellAPIRecord struct {
