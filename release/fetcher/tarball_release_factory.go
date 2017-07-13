@@ -68,6 +68,7 @@ func (f TarballReleaseFactory) NewTarballRelease(manifestPath string) TarballRel
 
 	uploader := bhtarball.NewUploader(
 		f.blobstore,
+		f.runner,
 		f.logger,
 	)
 

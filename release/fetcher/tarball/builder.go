@@ -2,21 +2,10 @@ package tarball
 
 import (
 	"path/filepath"
-	"regexp"
 
 	bosherr "github.com/cloudfoundry/bosh-agent/errors"
 	boshlog "github.com/cloudfoundry/bosh-agent/logger"
 	boshsys "github.com/cloudfoundry/bosh-agent/system"
-)
-
-var (
-	/*
-		Running command 'bosh create release releases/bosh-90.yml':
-		...
-		Generated /Users/pivotal/workspace/bosh/release/releases/bosh-90.tgz
-		Release size: 123.9M
-	*/
-	builderReleasePathRegex = regexp.MustCompile(`Generated (.+\.tgz)`)
 )
 
 type Builder struct {
@@ -44,24 +33,21 @@ func NewBuilder(
 func (tr Builder) Build(manifestPath string) (string, error) {
 	tr.logger.Debug(tr.logTag, "Building tarball from '%s'", manifestPath)
 
+	tgzPath := manifestPath + ".tgz"
+
 	cmd := boshsys.Command{
-		Name: "bosh",
-		Args: []string{"create", "release", manifestPath},
+		Name: "bosh2",
+		Args: []string{"create-release", manifestPath, "--tarball", tgzPath},
 
 		WorkingDir: tr.buildReleaseWorkingDir(manifestPath),
 	}
 
-	stdout, _, _, err := tr.runner.RunComplexCommand(cmd)
+	_, _, _, err := tr.runner.RunComplexCommand(cmd)
 	if err != nil {
 		return "", bosherr.WrapError(err, "Running bosh create release")
 	}
 
-	pathMatches := builderReleasePathRegex.FindStringSubmatch(stdout)
-	if len(pathMatches) != 2 {
-		return "", bosherr.WrapError(err, "tgz path was not found in '%s'", stdout)
-	}
-
-	return pathMatches[1], nil
+	return tgzPath, nil
 }
 
 func (tr Builder) CleanUp(tgzPath string) error {

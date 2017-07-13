@@ -1,9 +1,12 @@
 package tarball
 
 import (
+	"strings"
+
 	boshblob "github.com/cloudfoundry/bosh-agent/blobstore"
 	bosherr "github.com/cloudfoundry/bosh-agent/errors"
 	boshlog "github.com/cloudfoundry/bosh-agent/logger"
+	boshsys "github.com/cloudfoundry/bosh-agent/system"
 
 	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
 	bhreltarsrepo "github.com/cppforlife/bosh-hub/release/releasetarsrepo"
@@ -11,6 +14,7 @@ import (
 
 type Uploader struct {
 	blobstore boshblob.Blobstore
+	runner    boshsys.CmdRunner
 
 	logTag string
 	logger boshlog.Logger
@@ -18,10 +22,12 @@ type Uploader struct {
 
 func NewUploader(
 	blobstore boshblob.Blobstore,
+	runner boshsys.CmdRunner,
 	logger boshlog.Logger,
 ) Uploader {
 	return Uploader{
 		blobstore: blobstore,
+		runner:    runner,
 
 		logTag: "Uploader",
 		logger: logger,
@@ -36,9 +42,20 @@ func (u Uploader) Upload(relVerRec bhrelsrepo.ReleaseVersionRec, tgzPath string)
 		return bosherr.WrapError(err, "Creating release tarball")
 	}
 
+	cmd := boshsys.Command{
+		Name: "shasum",
+		Args: []string{"-a", "256", tgzPath},
+	}
+
+	sha256, _, _, err := u.runner.RunComplexCommand(cmd)
+	if err != nil {
+		return bosherr.WrapError(err, "Running bosh create release")
+	}
+
 	relTarRec := bhreltarsrepo.ReleaseTarballRec{
 		BlobID: blobID,
 		SHA1:   sha,
+		Digest: "sha256:" + strings.Trim(sha256, " "),
 	}
 
 	err = relVerRec.SetTarball(relTarRec)
