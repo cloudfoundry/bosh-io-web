@@ -112,18 +112,6 @@ header h2 a.logo {
   text-decoration: none;
 }
 
-header h2 .logo .cursor {
-  margin: 0;
-  padding: 0;
-  text-decoration: none;
-  animation: 1s blink step-end infinite;
-}
-
-@keyframes blink {
-  from, to { color: transparent; }
-  50%      { color: #000; }
-}
-
 header h2 > a,
 header h2 > a:active,
 header h2 > a:hover,
