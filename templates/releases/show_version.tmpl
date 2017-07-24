@@ -49,6 +49,7 @@
           <pre>
 releases:
 - name: {{ .Name }}
+  version: "{{ .Version }}"
   url: {{ .UserVisibleDownloadURL }}
   sha1: {{ .TarballSHA1 }}
 </pre>
@@ -64,6 +65,7 @@ releases:
           <pre>
 releases:
 - name: {{ .Name }}
+  version: "{{ .Version }}"
   url: {{ .UserVisibleDownloadURL }}
   sha1: {{ .TarballSHA1 }}
 </pre>
@@ -73,13 +75,14 @@ releases:
           <p>Upload this release version to the Director:</p>
 
           <pre class="terminal">
-$ bosh upload release {{ .UserVisibleDownloadURL }}</pre>
+$ bosh upload-release {{ .UserVisibleDownloadURL }} --sha1 {{ .TarballSHA1 }}</pre>
 
           <p>Modify deployment manifest to use this release in addition to any other used releases:</p>
 
           <pre class="prettyprint">
 releases:
-- {name: {{ .Name }}, version: "{{ .Version }}"}
+- name: {{ .Name }}
+  version: "{{ .Version }}"
 </pre>
 
           <p>Finally add needed deployment jobs and specify values for required properties.</p>
