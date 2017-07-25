@@ -101,8 +101,12 @@ main { padding-bottom: 30px; }
 .page-header > span { text-transform: none; }
 
 /* Header */
+header {
+  text-align: center;
+}
+
 header h2 {
-  margin: 25px 0 30px;
+  margin: 15px 0 10px;
   padding: 10px 0;
   color: #000;
 }
@@ -111,6 +115,11 @@ header h2 a.logo {
   font-size: 33px;
   text-decoration: none;
   text-transform: uppercase;
+}
+
+header h2 a.logo img {
+  width: 50px;
+  margin-top: -5px;
 }
 
 header h2 > a,
@@ -131,12 +140,10 @@ header h2 > .dropdown .btn { line-height: 1; }
 
 header h2 > .dropdown .caret { color: #000; }
 
-header h2 { float: left; }
-
 header .menu {
-  float: right;
-  margin: 30px 0 15px;
+  margin: 5px 0 15px;
   padding: 0;
+  display: inline-block;
 }
 
 header .menu li {
