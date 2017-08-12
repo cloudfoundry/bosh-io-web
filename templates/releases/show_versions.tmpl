@@ -47,10 +47,10 @@ releases:
                 {{ else }}
                   <pre class="terminal">{{ if .IsLatest }}
 # Upload latest version, currently {{ .Version }}
-$ bosh upload release {{ .UserVisibleLatestDownloadURL }}
+$ bosh upload-release {{ .UserVisibleLatestDownloadURL }} --sha1 {{ .TarballSHA1 }}
 
 # Upload specific version{{ end }}
-$ bosh upload release {{ .UserVisibleDownloadURL }}
+$ bosh upload-release {{ .UserVisibleDownloadURL }} --sha1 {{ .TarballSHA1 }}
 </pre>
 
                 {{ end }}
