@@ -3,16 +3,13 @@
 
   "Repos": {
     "Type": "db",
+    "ConnURL": "postgres://localhost:5432/bosh-io-sep-7-1?sslmode=disable",
 
-    "ConnURL": "postgres://localhost:5432/boshhub?sslmode=disable",
-
-    "PredefinedReleaseSources": [
-      "github.com/concourse/concourse"
-    ],
+    "ReleasesDir": "/Users/pivotal/workspace/bosh-io/releases",
+    "ReleasesIndexDir": "/Users/pivotal/workspace/bosh-io/releases-index",
 
     "ReleaseTarballLinker": {
       "Type": "S3",
-
       "BaseURL": "https://s3.amazonaws.com/bosh-hub-release-tarballs"
     }
   },
@@ -23,23 +20,6 @@
       "Includes": ["aws", "openstack"]
     }
   ],
-
-  "Watcher": {
-    "Enabled": false,
-    "Period": 60000000000
-  },
-
-  "Importer": {
-    "Enabled": false,
-    "Period": 60000000000,
-
-    "BlobstoreType": "s3",
-    "BlobstoreOptions": {
-      "access_key_id": "AKI...",
-      "secret_access_key": "WG3L....",
-      "bucket_name": "bosh-hub-releases"
-    }
-  },
 
   "ReleaseNoteImporter": {
     "Enabled": false,

@@ -9,11 +9,8 @@ import (
 
 	bhbibrepo "github.com/cppforlife/bosh-hub/bosh-init-bin/repo"
 	bhchecksrepo "github.com/cppforlife/bosh-hub/checksumsrepo"
-	bhimperrsrepo "github.com/cppforlife/bosh-hub/release/importerrsrepo"
-	bhimpsrepo "github.com/cppforlife/bosh-hub/release/importsrepo"
 	bhjobsrepo "github.com/cppforlife/bosh-hub/release/jobsrepo"
 	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
-	bhwatchersrepo "github.com/cppforlife/bosh-hub/release/watchersrepo"
 	bhstemsrepo "github.com/cppforlife/bosh-hub/stemcell/stemsrepo"
 )
 
@@ -26,10 +23,6 @@ type FactoryRepos interface {
 	StemcellsRepo() bhstemsrepo.StemcellsRepository
 
 	BoshInitBinsRepo() bhbibrepo.Repository
-
-	ImportsRepo() bhimpsrepo.ImportsRepository
-	ImportErrsRepo() bhimperrsrepo.ImportErrsRepository
-	WatchersRepo() bhwatchersrepo.WatchersRepository
 
 	ChecksumsRepo() bhchecksrepo.ChecksumsRepository
 }
@@ -45,10 +38,6 @@ type Factory struct {
 
 	JobsController     JobsController
 	PackagesController PackagesController
-
-	ReleaseWatchersController   ReleaseWatchersController
-	ReleaseImportsController    ReleaseImportsController
-	ReleaseImportErrsController ReleaseImportErrsController
 
 	ChecksumsController ChecksumsController
 
@@ -90,10 +79,6 @@ func NewFactory(privateToken string, checksumPrivs []ChecksumReqMatch, r Factory
 
 		JobsController:     NewJobsController(r.ReleasesRepo(), r.ReleaseVersionsRepo(), r.JobsRepo(), logger),
 		PackagesController: NewPackagesController(r.ReleasesRepo(), r.ReleaseVersionsRepo(), runner, logger),
-
-		ReleaseWatchersController:   NewReleaseWatchersController(r.WatchersRepo(), privateURLPrefix, logger),
-		ReleaseImportsController:    NewReleaseImportsController(r.ImportsRepo(), privateURLPrefix, logger),
-		ReleaseImportErrsController: NewReleaseImportErrsController(r.ImportErrsRepo(), privateURLPrefix, logger),
 
 		ChecksumsController: NewChecksumsController(checksumPrivs, r.ChecksumsRepo(), logger),
 

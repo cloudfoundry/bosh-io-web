@@ -1,16 +1,15 @@
 package jobsrepo
 
 import (
-	bosherr "github.com/cloudfoundry/bosh-agent/errors"
 	boshlog "github.com/cloudfoundry/bosh-agent/logger"
-	bpindex "github.com/cppforlife/bosh-provisioner/index"
 	bpreljob "github.com/cppforlife/bosh-provisioner/release/job"
 
+	bhrelver "github.com/cppforlife/bosh-hub/release/relver"
 	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
 )
 
 type CJRepository struct {
-	index  bpindex.Index
+	relVerFactory bhrelver.Factory
 	logger boshlog.Logger
 }
 
@@ -20,11 +19,11 @@ type relVerRecKey struct {
 }
 
 func NewConcreteJobsRepository(
-	index bpindex.Index,
+	relVerFactory bhrelver.Factory,
 	logger boshlog.Logger,
 ) CJRepository {
 	return CJRepository{
-		index:  index,
+		relVerFactory: relVerFactory,
 		logger: logger,
 	}
 }
@@ -32,23 +31,15 @@ func NewConcreteJobsRepository(
 func (r CJRepository) FindAll(relVerRec bhrelsrepo.ReleaseVersionRec) ([]bpreljob.Job, error) {
 	var relJobs []bpreljob.Job
 
-	key := relVerRecKey{Source: relVerRec.Source, VersionRaw: relVerRec.VersionRaw}
-
-	err := r.index.Find(key, &relJobs)
+	relVer, err := r.relVerFactory.Find(relVerRec.Source, relVerRec.VersionRaw)
 	if err != nil {
-		return relJobs, bosherr.WrapError(err, "Finding release jobs")
+		return nil, err
+	}
+
+	err = relVer.ReadV1("jobs", &relJobs)
+	if err != nil {
+		return nil, err
 	}
 
 	return relJobs, nil
-}
-
-func (r CJRepository) SaveAll(relVerRec bhrelsrepo.ReleaseVersionRec, relJobs []bpreljob.Job) error {
-	key := relVerRecKey{Source: relVerRec.Source, VersionRaw: relVerRec.VersionRaw}
-
-	err := r.index.Save(key, relJobs)
-	if err != nil {
-		return bosherr.WrapError(err, "Saving release jobs")
-	}
-
-	return nil
 }

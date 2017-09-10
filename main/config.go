@@ -8,9 +8,7 @@ import (
 
 	bhbibimp "github.com/cppforlife/bosh-hub/bosh-init-bin/importer"
 	bhctrls "github.com/cppforlife/bosh-hub/controllers"
-	bhimporter "github.com/cppforlife/bosh-hub/release/importer"
 	bhnoteimporter "github.com/cppforlife/bosh-hub/release/noteimporter"
-	bhwatcher "github.com/cppforlife/bosh-hub/release/watcher"
 	bhstemsimp "github.com/cppforlife/bosh-hub/stemcell/importer"
 	bhstemnoteimporter "github.com/cppforlife/bosh-hub/stemcell/noteimporter"
 )
@@ -26,9 +24,6 @@ type Config struct {
 	ActAsWorker bool
 
 	ChecksumPrivs []bhctrls.ChecksumReqMatch
-
-	Watcher  bhwatcher.FactoryOptions
-	Importer bhimporter.FactoryOptions
 
 	ReleaseNoteImporter  bhnoteimporter.FactoryOptions
 	StemcellNoteImporter bhstemnoteimporter.FactoryOptions

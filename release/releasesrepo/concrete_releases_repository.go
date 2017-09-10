@@ -1,56 +1,52 @@
 package releasesrepo
 
 import (
+	"strings"
+	"path/filepath"
 	"sort"
+	"encoding/json"
 
+	boshsys "github.com/cloudfoundry/bosh-agent/system"
 	bosherr "github.com/cloudfoundry/bosh-agent/errors"
 	boshlog "github.com/cloudfoundry/bosh-agent/logger"
-
-	bpindex "github.com/cppforlife/bosh-provisioner/index"
+	"gopkg.in/yaml.v2"
 
 	bhnotesrepo "github.com/cppforlife/bosh-hub/release/notesrepo"
 	bhreltarsrepo "github.com/cppforlife/bosh-hub/release/releasetarsrepo"
 )
 
 type CRRepository struct {
-	predefinedSources []string
 	avatarsResolver   avatarsResolver
+	releasesDir string
+	releasesIndexDir string
 
-	index           bpindex.Index
 	releaseTarsRepo bhreltarsrepo.ReleaseTarballsRepository
 	notesRepo       bhnotesrepo.NotesRepository
+
+	fs boshsys.FileSystem
 
 	logTag string
 	logger boshlog.Logger
 }
 
-type sourceToRelVerRecKey struct {
-	Source string
-}
-
-type predefinedAvatarsResolver struct {
-	locationToURL map[string]string
-}
-
-func (r predefinedAvatarsResolver) Resolve(location string) string {
-	return r.locationToURL[location]
-}
 
 func NewConcreteReleasesRepository(
-	predefinedSources []string,
-	predefinedAvatars map[string]string,
-	index bpindex.Index,
+	releasesDir string,
+	releasesIndexDir string,
 	notesRepo bhnotesrepo.NotesRepository,
 	releaseTarsRepo bhreltarsrepo.ReleaseTarballsRepository,
+	fs boshsys.FileSystem,
 	logger boshlog.Logger,
 ) CRRepository {
 	return CRRepository{
-		predefinedSources: predefinedSources,
-		avatarsResolver:   predefinedAvatarsResolver{predefinedAvatars},
+		avatarsResolver:   predefinedAvatarsResolver{releasesDir, fs},
+		releasesDir: releasesDir,
+		releasesIndexDir: 	releasesIndexDir,
 
-		index:           index,
 		releaseTarsRepo: releaseTarsRepo,
 		notesRepo:       notesRepo,
+
+		fs: fs,
 
 		logTag: "CRRepository",
 		logger: logger,
@@ -60,8 +56,17 @@ func NewConcreteReleasesRepository(
 func (r CRRepository) ListCurated() ([]ReleaseVersionRec, error) {
 	var relVerRecs []ReleaseVersionRec
 
-	for _, source := range r.predefinedSources {
-		recs, err := r.FindAll(source)
+	defs, err := r.defs()
+	if err != nil {
+		return nil, err
+	}
+
+	for _, def := range defs {
+		if !def.Homepage {
+			continue
+		}
+
+		recs, err := r.FindAll(def.TrimmedURL())
 		if err == nil {
 			relVerRecs = append(relVerRecs, recs...)
 		}
@@ -75,16 +80,15 @@ func (r CRRepository) ListCurated() ([]ReleaseVersionRec, error) {
 }
 
 func (r CRRepository) ListAll() ([]Source, error) {
-	var sourceKeys []sourceToRelVerRecKey
 	var sources []Source
 
-	err := r.index.ListKeys(&sourceKeys)
+	defs, err := r.defs()
 	if err != nil {
-		return sources, bosherr.WrapError(err, "Listing all releases")
+		return nil, err
 	}
 
-	for _, sourceKey := range sourceKeys {
-		sources = append(sources, Source{Full: sourceKey.Source})
+	for _, def := range defs {
+		sources = append(sources, Source{Full: def.TrimmedURL()})
 	}
 
 	for i, _ := range sources {
@@ -94,6 +98,10 @@ func (r CRRepository) ListAll() ([]Source, error) {
 	return sources, nil
 }
 
+type releaseV1YAML struct {
+	Version string `yaml:"Version"`
+}
+
 func (r CRRepository) FindAll(source string) ([]ReleaseVersionRec, error) {
 	var relVerRecs []ReleaseVersionRec
 
@@ -101,15 +109,30 @@ func (r CRRepository) FindAll(source string) ([]ReleaseVersionRec, error) {
 		return relVerRecs, bosherr.New("Expected source to be non-empty")
 	}
 
-	err := r.index.Find(sourceToRelVerRecKey{source}, &relVerRecs)
+	foundPaths, err := r.fs.Glob(filepath.Join(r.releasesIndexDir, source, "*", "release.v1.yml"))
 	if err != nil {
-		return relVerRecs, bosherr.WrapError(err, "Finding release version records")
+		return nil, bosherr.WrapError(err, "Globbing release versions")
 	}
 
-	for i, _ := range relVerRecs {
-		// Make sure to change real relVerRec
-		relVerRecs[i].notesRepo = r.notesRepo
-		relVerRecs[i].releaseTarsRepo = r.releaseTarsRepo
+	for _, path := range foundPaths {
+		contents, err := r.fs.ReadFileString(path)
+		if err != nil {
+			return nil, bosherr.WrapError(err, "Reading release version")
+		}
+
+		var v1 releaseV1YAML
+
+		err = json.Unmarshal([]byte(contents), &v1)
+		if err != nil {
+			return nil, bosherr.WrapError(err, "Unmarshaling release version")
+		}
+
+		relVerRec, err := r.Find(source, v1.Version)
+		if err != nil {
+			return nil, bosherr.WrapError(err, "Building release version")
+		}
+
+		relVerRecs = append(relVerRecs, relVerRec)
 	}
 
 	return relVerRecs, nil
@@ -155,99 +178,27 @@ func (r CRRepository) Find(source, version string) (ReleaseVersionRec, error) {
 	return relVerRec, nil
 }
 
-func (r CRRepository) Add(relVerRec ReleaseVersionRec) error {
-	r.logger.Debug(r.logTag, "Adding release '%v'", relVerRec)
-
-	err := relVerRec.Validate()
-	if err != nil {
-		return bosherr.WrapError(err, "Validating release version record")
-	}
-
-	// Try to add release version record up to 5 times
-	for i := 0; i < 5; i++ {
-		tryAgain, err := r.tryToAddRelVerRec(relVerRec)
-		if err != nil {
-			return bosherr.WrapError(err, "Trying to add release version record")
-		}
-
-		if !tryAgain {
-			return nil
-		}
-	}
-
-	return bosherr.New("Failed to add release verison record several times")
+type releaseDefYAML struct {
+	URL string
+	Homepage bool
 }
 
-func (r CRRepository) Contains(relVerRec ReleaseVersionRec) (bool, error) {
-	r.logger.Debug(r.logTag, "Checking release '%v' existence", relVerRec)
-
-	err := relVerRec.Validate()
-	if err != nil {
-		return false, bosherr.WrapError(err, "Validating release version record")
-	}
-
-	var relVerRecs []ReleaseVersionRec
-
-	err = r.index.Find(sourceToRelVerRecKey{relVerRec.Source}, &relVerRecs)
-	if err != nil {
-		if err == bpindex.ErrNotFound {
-			return false, nil
-		}
-
-		return false, bosherr.WrapError(err, "Finding release version records")
-	}
-
-	r.logger.Debug(r.logTag,
-		"Found release versions '%v' for source '%s'", relVerRecs, relVerRec.Source)
-
-	// Make sure version is not already in the list
-	for _, existingRelVerRec := range relVerRecs {
-		if existingRelVerRec.Equals(relVerRec) {
-			return true, nil
-		}
-	}
-
-	return false, nil
+func (d releaseDefYAML) TrimmedURL() string {
+	return strings.TrimPrefix(d.URL, "https://")
 }
 
-// tryToAddRelVerRec
-// todo refactor to be generic add-retry key
-func (r CRRepository) tryToAddRelVerRec(relVerRec ReleaseVersionRec) (bool, error) {
-	var relVerRecs []ReleaseVersionRec
-
-	// Find release for that source and disallow any modifications until it gets saved
-	lockedRec, err := r.index.FindLocked(sourceToRelVerRecKey{relVerRec.Source}, &relVerRecs)
-
-	// Release locked record no matter what
-	// todo weird error handling
-	defer lockedRec.Release()
-
+func (r CRRepository) defs() ([]releaseDefYAML, error) {
+	contents, err := r.fs.ReadFileString(filepath.Join(r.releasesDir, "index.yml"))
 	if err != nil {
-		if err != bpindex.ErrNotFound {
-			return false, bosherr.WrapError(err, "Finding release version records")
-		}
+		return nil, bosherr.WrapError(err, "Reading releases")
 	}
 
-	// Make sure version is not already in the list
-	for _, existingRelVerRec := range relVerRecs {
-		if existingRelVerRec.Equals(relVerRec) {
-			return false, nil
-		}
-	}
+	var defs []releaseDefYAML
 
-	// Add new release version to the release
-	relVerRecs = append(relVerRecs, relVerRec)
-
-	err = lockedRec.Save(relVerRecs)
+	err = yaml.Unmarshal([]byte(contents), &defs)
 	if err != nil {
-		if err == bpindex.ErrChanged {
-			// Try adding release version for the release
-			return true, nil
-		}
-
-		return false, bosherr.WrapError(err, "Adding release version records")
+		return nil, bosherr.WrapError(err, "Unmarshaling releases")
 	}
 
-	// Successfully added release version for the release
-	return false, nil
+	return defs, nil
 }

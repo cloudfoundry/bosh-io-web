@@ -3,8 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	// "net/http"
-	// "net/http/pprof"
 	"html/template"
 	"os"
 	"strings"
@@ -12,16 +10,12 @@ import (
 	boshlog "github.com/cloudfoundry/bosh-agent/logger"
 	boshsys "github.com/cloudfoundry/bosh-agent/system"
 	boshuuid "github.com/cloudfoundry/bosh-agent/uuid"
-	bpdload "github.com/cppforlife/bosh-provisioner/downloader"
 	mart "github.com/go-martini/martini"
 	martrend "github.com/martini-contrib/render"
 
 	bhbibimp "github.com/cppforlife/bosh-hub/bosh-init-bin/importer"
 	bhctrls "github.com/cppforlife/bosh-hub/controllers"
-	bhfetcher "github.com/cppforlife/bosh-hub/release/fetcher"
-	bhimporter "github.com/cppforlife/bosh-hub/release/importer"
 	bhnoteimporter "github.com/cppforlife/bosh-hub/release/noteimporter"
-	bhwatcher "github.com/cppforlife/bosh-hub/release/watcher"
 	bhstemsimp "github.com/cppforlife/bosh-hub/stemcell/importer"
 	bhstemnoteimporter "github.com/cppforlife/bosh-hub/stemcell/noteimporter"
 )
@@ -39,7 +33,7 @@ var (
 func main() {
 	flag.Parse()
 
-	logger, fs, runner, uuidGen := basicDeps(*debugOpt)
+	logger, fs, runner, _ := basicDeps(*debugOpt)
 	defer logger.HandlePanic("Main")
 
 	config, err := NewConfigFromPath(*configPathOpt, fs)
@@ -53,25 +47,6 @@ func main() {
 
 	controllerFactory, err := bhctrls.NewFactory(*privateTokenOpt, config.ChecksumPrivs, repos, runner, logger)
 	ensureNoErr(logger, "Failed building controller factory", err)
-
-	downloader := bpdload.NewDefaultMuxDownloader(fs, runner, nil, logger)
-	fetcher := bhfetcher.NewConcreteFetcher(fs, downloader, logger)
-
-	{
-		watcherFactory, err := bhwatcher.NewFactory(
-			config.Watcher, repos, fetcher, logger)
-		ensureNoErr(logger, "Failed building watcher factory", err)
-
-		go watcherFactory.Watcher.Watch()
-	}
-
-	{
-		importerFactory, err := bhimporter.NewFactory(
-			config.Importer, repos, fetcher, fs, runner, downloader, uuidGen, logger)
-		ensureNoErr(logger, "Failed building importer factory", err)
-
-		go importerFactory.Importer.Import()
-	}
 
 	{
 		releaseNoteImporterFactory, err := bhnoteimporter.NewFactory(config.ReleaseNoteImporter, repos, logger)
@@ -146,20 +121,6 @@ func runControllers(controllerFactory bhctrls.Factory, analyticsConfig Analytics
 	checksumsController := controllerFactory.ChecksumsController
 	m.Get("/checksums/**", checksumsController.Find)
 	m.Post("/checksums/**", checksumsController.Save)
-
-	// Watching release
-	releaseWatchersController := controllerFactory.ReleaseWatchersController
-	m.Get(controllerFactory.PrivateURL("/release_watchers"), releaseWatchersController.Index)
-	m.Post(controllerFactory.PrivateURL("/release_watchers"), releaseWatchersController.WatchOrUnwatch) // actually Watch/Unwatch
-
-	// Importing release
-	releaseImportsController := controllerFactory.ReleaseImportsController
-	m.Get(controllerFactory.PrivateURL("/release_imports"), releaseImportsController.Index)
-	m.Post(controllerFactory.PrivateURL("/release_imports"), releaseImportsController.Delete) // actually Delete
-
-	releaseImportErrsController := controllerFactory.ReleaseImportErrsController
-	m.Get(controllerFactory.PrivateURL("/release_import_errs"), releaseImportErrsController.Index)
-	m.Post(controllerFactory.PrivateURL("/release_import_errs"), releaseImportErrsController.Delete) // actually Delete
 
 	// Release viewing
 	releasesController := controllerFactory.ReleasesController

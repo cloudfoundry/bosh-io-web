@@ -15,7 +15,6 @@ type ReleaseTarballRec struct {
 
 	BlobID string
 	SHA1   string
-	Digest string
 }
 
 func (r ReleaseTarballRec) ActualDownloadURL() (string, error) {

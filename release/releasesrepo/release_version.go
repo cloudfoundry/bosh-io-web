@@ -56,10 +56,6 @@ func (r ReleaseVersionRec) Tarball() (bhreltarsrepo.ReleaseTarballRec, error) {
 	return r.releaseTarsRepo.Find(r.Source, r.VersionRaw)
 }
 
-func (r ReleaseVersionRec) SetTarball(relTarRec bhreltarsrepo.ReleaseTarballRec) error {
-	return r.releaseTarsRepo.Save(r.Source, r.VersionRaw, relTarRec)
-}
-
 func (r ReleaseVersionRec) Notes() (bhnotesrepo.NoteRec, bool, error) {
 	return r.notesRepo.Find(r.Source, r.VersionRaw)
 }
