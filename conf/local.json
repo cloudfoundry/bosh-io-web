@@ -40,12 +40,5 @@
     "Period": 30000000000,
 
     "Buckets": [{ "URL": "https://s3.amazonaws.com/bosh-jenkins-artifacts" }]
-  },
-
-  "BoshInitBinImporter": {
-    "Enabled": false,
-    "Period": 30000000000,
-
-    "Buckets": [{ "URL": "https://s3.amazonaws.com/bosh-init-artifacts" }]
   }
 }

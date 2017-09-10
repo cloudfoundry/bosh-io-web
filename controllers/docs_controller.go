@@ -10,7 +10,6 @@ import (
 	mart "github.com/go-martini/martini"
 	martrend "github.com/martini-contrib/render"
 
-	bhbibrepo "github.com/cppforlife/bosh-hub/bosh-init-bin/repo"
 	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
 	bhstemsrepo "github.com/cppforlife/bosh-hub/stemcell/stemsrepo"
 	bhrelui "github.com/cppforlife/bosh-hub/ui/release"
@@ -27,7 +26,6 @@ type DocsController struct {
 	releasesRepo        bhrelsrepo.ReleasesRepository
 	releaseVersionsRepo bhrelsrepo.ReleaseVersionsRepository
 	stemcellsRepo       bhstemsrepo.StemcellsRepository
-	boshInitBinsRepo    bhbibrepo.Repository
 
 	defaultTmpl string
 	errorTmpl   string
@@ -40,14 +38,12 @@ func NewDocsController(
 	releasesRepo bhrelsrepo.ReleasesRepository,
 	releaseVersionsRepo bhrelsrepo.ReleaseVersionsRepository,
 	stemcellsRepo bhstemsrepo.StemcellsRepository,
-	boshInitBinsRepo bhbibrepo.Repository,
 	logger boshlog.Logger,
 ) DocsController {
 	return DocsController{
 		releasesRepo:        releasesRepo,
 		releaseVersionsRepo: releaseVersionsRepo,
 		stemcellsRepo:       stemcellsRepo,
-		boshInitBinsRepo:    boshInitBinsRepo,
 
 		defaultTmpl: "index",
 		errorTmpl:   "error",
@@ -59,11 +55,6 @@ func NewDocsController(
 
 type docPage struct {
 	ContributeChangesURL string
-}
-
-type installBoshInitPage struct {
-	docPage
-	LatestBoshInitBinGroups []bhbibrepo.BinaryGroup
 }
 
 type initManifestPage struct {
@@ -97,15 +88,6 @@ func (c DocsController) Page(r martrend.Render, params mart.Params) {
 func (c DocsController) findPage(tmpl string) (interface{}, error) {
 	page := docPage{
 		ContributeChangesURL: fmt.Sprintf("%s/%s.html.md.erb", docsControllerGithubURL, tmpl),
-	}
-
-	if tmpl == "install-bosh-init" {
-		binGroups, err := c.boshInitBinsRepo.FindLatest()
-		if err != nil {
-			return nil, err
-		}
-
-		return installBoshInitPage{docPage: page, LatestBoshInitBinGroups: binGroups}, nil
 	}
 
 	// init-<cpi> pages have an example manifest which lists latest releases

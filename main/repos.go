@@ -8,7 +8,6 @@ import (
 	boshsys "github.com/cloudfoundry/bosh-agent/system"
 	bpindex "github.com/cppforlife/bosh-provisioner/index"
 
-	bhbibrepo "github.com/cppforlife/bosh-hub/bosh-init-bin/repo"
 	bhchecksumsrepo "github.com/cppforlife/bosh-hub/checksumsrepo"
 	bhindex "github.com/cppforlife/bosh-hub/index"
 	bhrelver "github.com/cppforlife/bosh-hub/release/relver"
@@ -49,7 +48,6 @@ type Repos struct {
 
 	s3StemcellsRepo    bhstemsrepo.S3StemcellsRepository
 	stemcellNotesRepo  bhstemnotesrepo.NotesRepository
-	s3BoshInitBinsRepo bhbibrepo.S3Repository
 
 	checksumsRepo bhchecksumsrepo.ChecksumsRepository
 }
@@ -113,7 +111,6 @@ func NewRepos(options ReposOptions, fs boshsys.FileSystem, logger boshlog.Logger
 
 		s3StemcellsRepo:    bhstemsrepo.NewS3StemcellsRepository(i.s3StemcellsIndex, checksumsRepo, stemcellNotesRepo, logger),
 		stemcellNotesRepo:  stemcellNotesRepo,
-		s3BoshInitBinsRepo: bhbibrepo.NewS3Repository(i.s3BoshInitBinsIndex, logger),
 
 		checksumsRepo: checksumsRepo,
 	}
@@ -132,9 +129,6 @@ func (r Repos) JobsRepo() bhjobsrepo.JobsRepository { return r.jobsRepo }
 func (r Repos) S3StemcellsRepo() bhstemsrepo.S3StemcellsRepository { return r.s3StemcellsRepo }
 func (r Repos) StemcellNotesRepo() bhstemnotesrepo.NotesRepository { return r.stemcellNotesRepo }
 func (r Repos) StemcellsRepo() bhstemsrepo.StemcellsRepository     { return r.s3StemcellsRepo }
-
-func (r Repos) S3BoshInitBinsRepo() bhbibrepo.S3Repository { return r.s3BoshInitBinsRepo }
-func (r Repos) BoshInitBinsRepo() bhbibrepo.Repository     { return r.s3BoshInitBinsRepo }
 
 func (r Repos) ChecksumsRepo() bhchecksumsrepo.ChecksumsRepository { return r.checksumsRepo }
 
@@ -188,11 +182,6 @@ func newDBRepoIndicies(url string, logger boshlog.Logger) (repoIndicies, error) 
 		return repoIndicies{}, err
 	}
 
-	s3BoshInitBinsAdapter, err := adapterPool.NewAdapter("s3_bosh_init_bins")
-	if err != nil {
-		return repoIndicies{}, err
-	}
-
 	checksumsAdapter, err := adapterPool.NewAdapter("checksums")
 	if err != nil {
 		return repoIndicies{}, err
@@ -204,7 +193,6 @@ func newDBRepoIndicies(url string, logger boshlog.Logger) (repoIndicies, error) 
 
 		s3StemcellsIndex:    bhindex.NewDBIndex(s3StemcellsAdapter, logger),
 		stemcellNotesIndex:  bhindex.NewDBIndex(stemcellNotesAdapter, logger),
-		s3BoshInitBinsIndex: bhindex.NewDBIndex(s3BoshInitBinsAdapter, logger),
 
 		checksumsIndex: bhindex.NewDBIndex(checksumsAdapter, logger),
 	}

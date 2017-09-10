@@ -7,7 +7,6 @@ import (
 	boshlog "github.com/cloudfoundry/bosh-agent/logger"
 	boshsys "github.com/cloudfoundry/bosh-agent/system"
 
-	bhbibrepo "github.com/cppforlife/bosh-hub/bosh-init-bin/repo"
 	bhchecksrepo "github.com/cppforlife/bosh-hub/checksumsrepo"
 	bhjobsrepo "github.com/cppforlife/bosh-hub/release/jobsrepo"
 	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
@@ -21,8 +20,6 @@ type FactoryRepos interface {
 
 	S3StemcellsRepo() bhstemsrepo.S3StemcellsRepository
 	StemcellsRepo() bhstemsrepo.StemcellsRepository
-
-	BoshInitBinsRepo() bhbibrepo.Repository
 
 	ChecksumsRepo() bhchecksrepo.ChecksumsRepository
 }
@@ -60,7 +57,6 @@ func NewFactory(privateToken string, checksumPrivs []ChecksumReqMatch, r Factory
 			r.ReleasesRepo(),
 			r.ReleaseVersionsRepo(),
 			r.StemcellsRepo(),
-			r.BoshInitBinsRepo(),
 			logger,
 		),
 

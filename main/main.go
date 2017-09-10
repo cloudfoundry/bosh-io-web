@@ -13,7 +13,6 @@ import (
 	mart "github.com/go-martini/martini"
 	martrend "github.com/martini-contrib/render"
 
-	bhbibimp "github.com/cppforlife/bosh-hub/bosh-init-bin/importer"
 	bhctrls "github.com/cppforlife/bosh-hub/controllers"
 	bhnoteimporter "github.com/cppforlife/bosh-hub/release/noteimporter"
 	bhstemsimp "github.com/cppforlife/bosh-hub/stemcell/importer"
@@ -67,13 +66,6 @@ func main() {
 		ensureNoErr(logger, "Failed building stemcell note importer factory", err)
 
 		go stemcellNoteImporterFactory.Importer.Import()
-	}
-
-	{
-		boshInitBinImporterFactory := bhbibimp.NewFactory(config.BoshInitBinImporter, repos, logger)
-		ensureNoErr(logger, "Failed building bosh-init bin importer factory", err)
-
-		go boshInitBinImporterFactory.Importer.Import()
 	}
 
 	if config.ActAsWorker {
