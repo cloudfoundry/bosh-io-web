@@ -1,27 +1,36 @@
 package notesrepo
 
 import (
+	"path/filepath"
+	"encoding/json"
+
 	bosherr "github.com/cloudfoundry/bosh-agent/errors"
 	boshlog "github.com/cloudfoundry/bosh-agent/logger"
-
-	bpindex "github.com/cppforlife/bosh-provisioner/index"
+	boshsys "github.com/cloudfoundry/bosh-agent/system"
 )
 
+type NotesRepository interface {
+	Find(version string) (NoteRec, bool, error)
+}
+
+type NoteRec struct {
+	Content string
+}
+
 type CNRepository struct {
-	index  bpindex.Index
+	stemcellsIndexDir string
+	fs boshsys.FileSystem
 	logger boshlog.Logger
 }
 
-type noteRecKey struct {
-	VersionRaw string
-}
-
 func NewConcreteNotesRepository(
-	index bpindex.Index,
+	stemcellsIndexDir string,
+	fs boshsys.FileSystem,
 	logger boshlog.Logger,
 ) CNRepository {
 	return CNRepository{
-		index:  index,
+		stemcellsIndexDir:  stemcellsIndexDir,
+		fs: fs,
 		logger: logger,
 	}
 }
@@ -29,27 +38,15 @@ func NewConcreteNotesRepository(
 func (r CNRepository) Find(version string) (NoteRec, bool, error) {
 	var noteRec NoteRec
 
-	key := noteRecKey{VersionRaw: version}
-
-	err := r.index.Find(key, &noteRec)
+	contents, err := r.fs.ReadFile(filepath.Join(r.stemcellsIndexDir, version, "notes.v1.yml"))
 	if err != nil {
-		if err == bpindex.ErrNotFound {
-			return noteRec, false, nil
-		}
+		return noteRec, false, nil
+	}
 
-		return noteRec, false, bosherr.WrapError(err, "Finding notes")
+	err = json.Unmarshal(contents, &noteRec)
+	if err != nil {
+		return noteRec, false, bosherr.WrapError(err, "Unmarshaling stemcell notes")
 	}
 
 	return noteRec, true, nil
-}
-
-func (r CNRepository) Save(version string, noteRec NoteRec) error {
-	key := noteRecKey{VersionRaw: version}
-
-	err := r.index.Save(key, noteRec)
-	if err != nil {
-		return bosherr.WrapError(err, "Saving notes")
-	}
-
-	return nil
 }

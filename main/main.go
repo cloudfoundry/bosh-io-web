@@ -14,8 +14,6 @@ import (
 	martrend "github.com/martini-contrib/render"
 
 	bhctrls "github.com/cppforlife/bosh-hub/controllers"
-	bhstemsimp "github.com/cppforlife/bosh-hub/stemcell/importer"
-	bhstemnoteimporter "github.com/cppforlife/bosh-hub/stemcell/noteimporter"
 )
 
 const mainLogTag = "main"
@@ -23,9 +21,7 @@ const mainLogTag = "main"
 var (
 	debugOpt      = flag.Bool("debug", false, "Output debug logs")
 	configPathOpt = flag.String("configPath", "", "Path to configuration file")
-
-	assetsIDOpt     = flag.String("assetsID", "", "Assets ID value")
-	privateTokenOpt = flag.String("privateToken", "", "Private token value")
+	assetsIDOpt   = flag.String("assetsID", "", "Assets ID value")
 )
 
 func main() {
@@ -37,34 +33,13 @@ func main() {
 	config, err := NewConfigFromPath(*configPathOpt, fs)
 	ensureNoErr(logger, "Loading config", err)
 
-	err = config.Validate()
-	ensureNoErr(logger, "Validating config", err)
-
 	repos, err := NewRepos(config.Repos, fs, logger)
 	ensureNoErr(logger, "Failed building repos", err)
 
-	controllerFactory, err := bhctrls.NewFactory(*privateTokenOpt, config.ChecksumPrivs, repos, runner, logger)
+	controllerFactory, err := bhctrls.NewFactory(repos, runner, logger)
 	ensureNoErr(logger, "Failed building controller factory", err)
 
-	{
-		stemcellImporterFactory := bhstemsimp.NewFactory(config.StemcellImporter, repos, logger)
-		ensureNoErr(logger, "Failed building stemcell importer factory", err)
-
-		go stemcellImporterFactory.Importer.Import()
-	}
-
-	{
-		stemcellNoteImporterFactory, err := bhstemnoteimporter.NewFactory(config.StemcellNoteImporter, repos, logger)
-		ensureNoErr(logger, "Failed building stemcell note importer factory", err)
-
-		go stemcellNoteImporterFactory.Importer.Import()
-	}
-
-	if config.ActAsWorker {
-		select {}
-	} else {
-		runControllers(controllerFactory, config.Analytics, logger)
-	}
+	runControllers(controllerFactory, config.Analytics, logger)
 }
 
 func basicDeps(debug bool) (boshlog.Logger, boshsys.FileSystem, boshsys.CmdRunner, boshuuid.Generator) {
@@ -101,11 +76,6 @@ func runControllers(controllerFactory bhctrls.Factory, analyticsConfig Analytics
 	m.Get("/docs", docsController.Page)
 	m.Get("/docs/**", docsController.Page)
 
-	// General checksum mgmt
-	checksumsController := controllerFactory.ChecksumsController
-	m.Get("/checksums/**", checksumsController.Find)
-	m.Post("/checksums/**", checksumsController.Save)
-
 	// Release viewing
 	releasesController := controllerFactory.ReleasesController
 	m.Get("/releases", releasesController.Index)
@@ -128,16 +98,6 @@ func runControllers(controllerFactory bhctrls.Factory, analyticsConfig Analytics
 	// ...make sure /d/** is after /d/stemcells/**
 	releaseTarballsController := controllerFactory.ReleaseTarballsController
 	m.Get("/d/**", releaseTarballsController.Download)
-
-	// todo turn on based on config
-	// m.Get("/debug/pprof", http.HandlerFunc(pprof.Index))
-	// m.Get("/debug/pprof/cmdline", http.HandlerFunc(pprof.Cmdline))
-	// m.Get("/debug/pprof/profile", http.HandlerFunc(pprof.Profile))
-	// m.Get("/debug/pprof/symbol", http.HandlerFunc(pprof.Symbol))
-	// m.Get("/debug/pprof/goroutine", pprof.Handler("goroutine").ServeHTTP)
-	// m.Get("/debug/pprof/threadcreate", pprof.Handler("threadcreate").ServeHTTP)
-	// m.Get("/debug/pprof/heap", pprof.Handler("heap").ServeHTTP)
-	// m.Get("/debug/pprof/block", pprof.Handler("block").ServeHTTP)
 
 	m.Run()
 }

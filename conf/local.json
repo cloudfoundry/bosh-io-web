@@ -2,36 +2,13 @@
   "Description": "Configuration used by local server for testing.",
 
   "Repos": {
-    "Type": "db",
-    "ConnURL": "postgres://localhost:5432/bosh-io-sep-7-1?sslmode=disable",
-
     "ReleasesDir": "/Users/pivotal/workspace/bosh-io/releases",
     "ReleasesIndexDir": "/Users/pivotal/workspace/bosh-io/releases-index",
+    "StemcellsIndexDir": "/Users/pivotal/workspace/bosh-io/stemcells-legacy-index",
 
     "ReleaseTarballLinker": {
       "Type": "S3",
       "BaseURL": "https://s3.amazonaws.com/bosh-hub-release-tarballs"
     }
-  },
-
-  "ChecksumPrivs": [
-    {
-      "Token": "8228205572f152c14e16542e2752821b10e7e965d74527d275efe2026952140f8caf4de698b232bb",
-      "Includes": ["aws", "openstack"]
-    }
-  ],
-
-  "StemcellNoteImporter": {
-    "Enabled": false,
-    "Period": 60000000000,
-
-    "GithubPersonalAccessToken": "858..."
-  },
-
-  "StemcellImporter": {
-    "Enabled": false,
-    "Period": 30000000000,
-
-    "Buckets": [{ "URL": "https://s3.amazonaws.com/bosh-jenkins-artifacts" }]
   }
 }

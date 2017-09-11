@@ -5,10 +5,6 @@ import (
 
 	bosherr "github.com/cloudfoundry/bosh-agent/errors"
 	boshsys "github.com/cloudfoundry/bosh-agent/system"
-
-	bhctrls "github.com/cppforlife/bosh-hub/controllers"
-	bhstemsimp "github.com/cppforlife/bosh-hub/stemcell/importer"
-	bhstemnoteimporter "github.com/cppforlife/bosh-hub/stemcell/noteimporter"
 )
 
 type Config struct {
@@ -17,14 +13,6 @@ type Config struct {
 	APIKey string
 
 	Analytics AnalyticsConfig
-
-	// Does not start web server; just does background work
-	ActAsWorker bool
-
-	ChecksumPrivs []bhctrls.ChecksumReqMatch
-
-	StemcellNoteImporter bhstemnoteimporter.FactoryOptions
-	StemcellImporter    bhstemsimp.FactoryOptions
 }
 
 type AnalyticsConfig struct {
@@ -45,15 +33,4 @@ func NewConfigFromPath(path string, fs boshsys.FileSystem) (Config, error) {
 	}
 
 	return config, nil
-}
-
-func (c Config) Validate() error {
-	for i, match := range c.ChecksumPrivs {
-		err := match.Validate()
-		if err != nil {
-			return bosherr.WrapError(err, "Validating ChecksumPrivs[%d]", i)
-		}
-	}
-
-	return nil
 }

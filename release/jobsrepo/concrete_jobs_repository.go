@@ -11,6 +11,10 @@ import (
 	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
 )
 
+type JobsRepository interface {
+	FindAll(bhrelsrepo.ReleaseVersionRec) ([]bpreljob.Job, error)
+}
+
 type CJRepository struct {
 	relVerFactory bhrelver.Factory
 	logger boshlog.Logger

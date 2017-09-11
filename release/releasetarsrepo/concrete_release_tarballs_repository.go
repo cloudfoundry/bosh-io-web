@@ -11,6 +11,10 @@ import (
 	bhs3 "github.com/cppforlife/bosh-hub/s3"
 )
 
+type ReleaseTarballsRepository interface {
+	Find(source, version string) (ReleaseTarballRec, error)
+}
+
 type CRTRepository struct {
 	relVerFactory bhrelver.Factory
 	urlFactory bhs3.URLFactory

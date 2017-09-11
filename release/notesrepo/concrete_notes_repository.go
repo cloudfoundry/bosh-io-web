@@ -9,6 +9,14 @@ import (
 	bhrelver "github.com/cppforlife/bosh-hub/release/relver"
 )
 
+type NotesRepository interface {
+	Find(source, version string) (NoteRec, bool, error)
+}
+
+type NoteRec struct {
+	Content string
+}
+
 type CNRepository struct {
 	relVerFactory bhrelver.Factory
 	logger boshlog.Logger

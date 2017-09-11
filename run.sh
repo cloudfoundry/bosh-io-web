@@ -5,8 +5,7 @@
 
 configPath=$1
 assetsID=$2
-privateToken=$3
-debug=$4
+debug=$3
 
 if [ -z "$configPath" ]; then
   configPath=prod-conf/web.json
@@ -16,17 +15,7 @@ if [ -z "$assetsID" ]; then
   assetsID=$(cat prod-conf/assets-id)
 fi
 
-if [ -z "$privateToken" ]; then
-  privateToken=$(cat prod-conf/private-token)
-fi
-
 export PATH=/usr/local/bin:/usr/bin:/bin:/app/bin:$PATH
-
-# Make bosh-blostore-s3 available
-export PATH=$PWD:$PATH
-
-# Make bosh_cli available
-export PATH=$PWD/vendor/bundle/bin:$PATH
 
 if [ -z "$debug" ]; then
   # Martini will cache compiled templates
@@ -35,4 +24,4 @@ fi
 
 chmod +x ./bosh-hub
 
-exec ./bosh-hub -configPath $configPath -assetsID "$assetsID" -privateToken "$privateToken" $debug
+exec ./bosh-hub -configPath $configPath -assetsID "$assetsID" $debug
