@@ -2,7 +2,6 @@ package relver
 
 import (
 	"path/filepath"
-	"encoding/json"
 
 	bosherr "github.com/cloudfoundry/bosh-agent/errors"
 	boshsys "github.com/cloudfoundry/bosh-agent/system"
@@ -16,25 +15,42 @@ type RelVer struct {
 	fs boshsys.FileSystem
 }
 
-func (r RelVer) ReadV1(filename string, out interface{}) error {
-	foundPaths, err := r.fs.Glob(filepath.Join(r.releasesIndexDir, r.source, "*-"+r.versionRaw, filename+".v1.yml"))
+func (r RelVer) Read(fileName string) ([]byte, error) {
+	foundPaths, err := r.fs.Glob(filepath.Join(r.releasesIndexDir, r.source, "*-"+r.versionRaw, fileName))
 	if err != nil {
-		return bosherr.WrapError(err, "Globbing release versions")
+		return nil, bosherr.WrapError(err, "Globbing release versions")
 	}
 
 	if len(foundPaths) != 1 {
-		return bosherr.WrapError(err, "Finding release version")
+		return nil, bosherr.WrapError(err, "Finding release version")
 	}
 
 	contents, err := r.fs.ReadFile(foundPaths[0])
 	if err != nil {
-		return bosherr.WrapError(err, "Reading release job file")
+		return nil, bosherr.WrapError(err, "Reading release file")
 	}
 
-	err = json.Unmarshal(contents, &out)
+	return contents, err
+}
+
+func (r RelVer) ReadOptinal(fileName string) ([]byte, bool, error) {
+	foundPaths, err := r.fs.Glob(filepath.Join(r.releasesIndexDir, r.source, "*-"+r.versionRaw, fileName))
 	if err != nil {
-		return bosherr.WrapError(err, "Unmarshaling release jobs")
+		return nil, false, bosherr.WrapError(err, "Globbing release versions")
 	}
 
-	return nil
+	if len(foundPaths) > 1 {
+		return nil, false, bosherr.WrapError(err, "Finding release version")
+	}
+
+	if len(foundPaths) == 1 {
+		contents, err := r.fs.ReadFile(foundPaths[0])
+		if err != nil {
+			return nil, false, bosherr.WrapError(err, "Reading release file")
+		}
+
+		return contents, true, err
+	}
+
+	return nil, false, nil
 }

@@ -1,7 +1,10 @@
 package jobsrepo
 
 import (
+	"encoding/json"
+
 	boshlog "github.com/cloudfoundry/bosh-agent/logger"
+	bosherr "github.com/cloudfoundry/bosh-agent/errors"
 	bpreljob "github.com/cppforlife/bosh-provisioner/release/job"
 
 	bhrelver "github.com/cppforlife/bosh-hub/release/relver"
@@ -36,9 +39,14 @@ func (r CJRepository) FindAll(relVerRec bhrelsrepo.ReleaseVersionRec) ([]bpreljo
 		return nil, err
 	}
 
-	err = relVer.ReadV1("jobs", &relJobs)
+	contents, err := relVer.Read("jobs.v1.yml")
 	if err != nil {
 		return nil, err
+	}
+
+	err = json.Unmarshal(contents, &relJobs)
+	if err != nil {
+		return nil, bosherr.WrapError(err, "Unmarshaling release jobs")
 	}
 
 	return relJobs, nil

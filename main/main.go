@@ -14,7 +14,6 @@ import (
 	martrend "github.com/martini-contrib/render"
 
 	bhctrls "github.com/cppforlife/bosh-hub/controllers"
-	bhnoteimporter "github.com/cppforlife/bosh-hub/release/noteimporter"
 	bhstemsimp "github.com/cppforlife/bosh-hub/stemcell/importer"
 	bhstemnoteimporter "github.com/cppforlife/bosh-hub/stemcell/noteimporter"
 )
@@ -46,13 +45,6 @@ func main() {
 
 	controllerFactory, err := bhctrls.NewFactory(*privateTokenOpt, config.ChecksumPrivs, repos, runner, logger)
 	ensureNoErr(logger, "Failed building controller factory", err)
-
-	{
-		releaseNoteImporterFactory, err := bhnoteimporter.NewFactory(config.ReleaseNoteImporter, repos, logger)
-		ensureNoErr(logger, "Failed building release note importer factory", err)
-
-		go releaseNoteImporterFactory.Importer.Import()
-	}
 
 	{
 		stemcellImporterFactory := bhstemsimp.NewFactory(config.StemcellImporter, repos, logger)

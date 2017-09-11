@@ -60,10 +60,6 @@ func (r ReleaseVersionRec) Notes() (bhnotesrepo.NoteRec, bool, error) {
 	return r.notesRepo.Find(r.Source, r.VersionRaw)
 }
 
-func (r ReleaseVersionRec) SetNotes(noteRec bhnotesrepo.NoteRec) error {
-	return r.notesRepo.Save(r.Source, r.VersionRaw, noteRec)
-}
-
 func (r ReleaseVersionRec) Equals(other ReleaseVersionRec) bool {
 	return r.Source == other.Source && r.VersionRaw == other.VersionRaw
 }

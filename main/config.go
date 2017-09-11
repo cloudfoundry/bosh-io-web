@@ -7,7 +7,6 @@ import (
 	boshsys "github.com/cloudfoundry/bosh-agent/system"
 
 	bhctrls "github.com/cppforlife/bosh-hub/controllers"
-	bhnoteimporter "github.com/cppforlife/bosh-hub/release/noteimporter"
 	bhstemsimp "github.com/cppforlife/bosh-hub/stemcell/importer"
 	bhstemnoteimporter "github.com/cppforlife/bosh-hub/stemcell/noteimporter"
 )
@@ -24,9 +23,7 @@ type Config struct {
 
 	ChecksumPrivs []bhctrls.ChecksumReqMatch
 
-	ReleaseNoteImporter  bhnoteimporter.FactoryOptions
 	StemcellNoteImporter bhstemnoteimporter.FactoryOptions
-
 	StemcellImporter    bhstemsimp.FactoryOptions
 }
 

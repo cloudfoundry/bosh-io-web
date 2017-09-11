@@ -1,28 +1,25 @@
 package notesrepo
 
 import (
+	"encoding/json"
+
 	bosherr "github.com/cloudfoundry/bosh-agent/errors"
 	boshlog "github.com/cloudfoundry/bosh-agent/logger"
 
-	bpindex "github.com/cppforlife/bosh-provisioner/index"
+	bhrelver "github.com/cppforlife/bosh-hub/release/relver"
 )
 
 type CNRepository struct {
-	index  bpindex.Index
+	relVerFactory bhrelver.Factory
 	logger boshlog.Logger
 }
 
-type noteRecKey struct {
-	Source     string
-	VersionRaw string
-}
-
 func NewConcreteNotesRepository(
-	index bpindex.Index,
+	relVerFactory bhrelver.Factory,
 	logger boshlog.Logger,
 ) CNRepository {
 	return CNRepository{
-		index:  index,
+		relVerFactory:  relVerFactory,
 		logger: logger,
 	}
 }
@@ -30,27 +27,24 @@ func NewConcreteNotesRepository(
 func (r CNRepository) Find(source, version string) (NoteRec, bool, error) {
 	var noteRec NoteRec
 
-	key := noteRecKey{Source: source, VersionRaw: version}
-
-	err := r.index.Find(key, &noteRec)
+	relVer, err := r.relVerFactory.Find(source, version)
 	if err != nil {
-		if err == bpindex.ErrNotFound {
-			return noteRec, false, nil
+		return noteRec, false, err
+	}
+
+	contents, found, err := relVer.ReadOptinal("notes.v1.yml")
+	if err != nil {
+		return noteRec, false, err
+	}
+
+	if found {
+		err = json.Unmarshal(contents, &noteRec)
+		if err != nil {
+			return noteRec, false, bosherr.WrapError(err, "Unmarshaling release notes")
 		}
 
-		return noteRec, false, bosherr.WrapError(err, "Finding notes")
+		return noteRec, true, nil
 	}
 
-	return noteRec, true, nil
-}
-
-func (r CNRepository) Save(source, version string, noteRec NoteRec) error {
-	key := noteRecKey{Source: source, VersionRaw: version}
-
-	err := r.index.Save(key, noteRec)
-	if err != nil {
-		return bosherr.WrapError(err, "Saving notes")
-	}
-
-	return nil
+	return noteRec, false, nil
 }

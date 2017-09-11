@@ -2,60 +2,44 @@ package releasetarsrepo
 
 import (
 	"encoding/xml"
-	"regexp"
 	"path/filepath"
 
 	bosherr "github.com/cloudfoundry/bosh-agent/errors"
-	boshsys "github.com/cloudfoundry/bosh-agent/system"
 	boshlog "github.com/cloudfoundry/bosh-agent/logger"
 
+	bhrelver "github.com/cppforlife/bosh-hub/release/relver"
 	bhs3 "github.com/cppforlife/bosh-hub/s3"
 )
 
 type CRTRepository struct {
-	releasesIndexDir      string
+	relVerFactory bhrelver.Factory
 	urlFactory bhs3.URLFactory
-	fs boshsys.FileSystem
 	logger     boshlog.Logger
 }
 
 func NewConcreteReleaseTarballsRepository(
-	releasesIndexDir string,
+	relVerFactory bhrelver.Factory,
 	urlFactory bhs3.URLFactory,
-	fs boshsys.FileSystem,
 	logger boshlog.Logger,
 ) CRTRepository {
 	return CRTRepository{
-		releasesIndexDir:      releasesIndexDir,
+		relVerFactory:      relVerFactory,
 		urlFactory: urlFactory,
-		fs: fs,
 		logger:     logger,
 	}
 }
 
-var (
-	sourceChars = regexp.MustCompile(`\Agithub.com/[a-zA-Z\-0-9\/_]+\z`)
-	versionChars = regexp.MustCompile(`\A[a-zA-Z-0-9\._+-]+\z`)
-)
-
 func (r CRTRepository) Find(source, version string) (ReleaseTarballRec, error) {
 	var relTarRec ReleaseTarballRec
 
-	if !sourceChars.MatchString(source) {
-		return relTarRec, bosherr.New("Release tarball: Invalid source")
-	}
-
-	if !versionChars.MatchString(version) {
-		return relTarRec, bosherr.New("Invalid version")
-	}
-
-	foundPaths, err := r.fs.Glob(filepath.Join(r.releasesIndexDir, source, "*-"+version, "source.meta4"))
+	relVer, err := r.relVerFactory.Find(source, version)
 	if err != nil {
-		return relTarRec, bosherr.WrapError(err, "Globbing release versions")
+		return relTarRec, err
 	}
 
-	if len(foundPaths) != 1 {
-		return relTarRec, bosherr.WrapError(err, "Finding release version")
+	contents, err := relVer.Read("source.meta4")
+	if err != nil {
+		return relTarRec, err
 	}
 
 	relTarRec.urlFactory = r.urlFactory
@@ -63,11 +47,6 @@ func (r CRTRepository) Find(source, version string) (ReleaseTarballRec, error) {
 	relTarRec.versionRaw = version
 
 	var meta4 Metalink
-
-	contents, err := r.fs.ReadFile(foundPaths[0])
-	if err != nil {
-		return relTarRec, bosherr.WrapError(err, "Reading meta4 file")
-	}
 
 	err = xml.Unmarshal(contents, &meta4)
 	if err != nil {

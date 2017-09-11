@@ -86,10 +86,8 @@ func NewRepos(options ReposOptions, fs boshsys.FileSystem, logger boshlog.Logger
 	}
 
 	relVerFactory := bhrelver.NewFactory(options.ReleasesIndexDir, fs, logger)
-
-	releaseNotesRepo := bhnotesrepo.NewConcreteNotesRepository(i.releaseNotesIndex, logger)
-	releaseTarsRepo := bhreltarsrepo.NewConcreteReleaseTarballsRepository(
-		options.ReleasesIndexDir, linkerFactory, fs, logger)
+	releaseNotesRepo := bhnotesrepo.NewConcreteNotesRepository(relVerFactory, logger)
+	releaseTarsRepo := bhreltarsrepo.NewConcreteReleaseTarballsRepository(relVerFactory, linkerFactory, logger)
 
 	releasesRepo := bhrelsrepo.NewConcreteReleasesRepository(
 		options.ReleasesDir,
@@ -133,9 +131,6 @@ func (r Repos) StemcellsRepo() bhstemsrepo.StemcellsRepository     { return r.s3
 func (r Repos) ChecksumsRepo() bhchecksumsrepo.ChecksumsRepository { return r.checksumsRepo }
 
 type repoIndicies struct {
-	releaseNotesIndex    bpindex.Index
-	releaseTarsIndex     bpindex.Index
-
 	s3StemcellsIndex    bpindex.Index
 	stemcellNotesIndex  bpindex.Index
 	s3BoshInitBinsIndex bpindex.Index
@@ -145,9 +140,6 @@ type repoIndicies struct {
 
 func newFileRepoIndicies(dir string, fs boshsys.FileSystem) repoIndicies {
 	return repoIndicies{
-		releaseNotesIndex:    bpindex.NewFileIndex(filepath.Join(dir, "release_notes.json"), fs),
-		releaseTarsIndex:     bpindex.NewFileIndex(filepath.Join(dir, "release_tarballs.json"), fs),
-
 		s3StemcellsIndex:    bpindex.NewFileIndex(filepath.Join(dir, "s3_stemcells.json"), fs),
 		stemcellNotesIndex:  bpindex.NewFileIndex(filepath.Join(dir, "stemcell_notes.json"), fs),
 		s3BoshInitBinsIndex: bpindex.NewFileIndex(filepath.Join(dir, "s3_bosh_init_bins.json"), fs),
@@ -158,16 +150,6 @@ func newFileRepoIndicies(dir string, fs boshsys.FileSystem) repoIndicies {
 
 func newDBRepoIndicies(url string, logger boshlog.Logger) (repoIndicies, error) {
 	adapterPool, err := bhindex.NewPostgresAdapterPool(url, logger)
-	if err != nil {
-		return repoIndicies{}, err
-	}
-
-	releaseNotesAdapter, err := adapterPool.NewAdapter("release_notes")
-	if err != nil {
-		return repoIndicies{}, err
-	}
-
-	releasesTarballsAdapter, err := adapterPool.NewAdapter("release_tarballs")
 	if err != nil {
 		return repoIndicies{}, err
 	}
@@ -188,9 +170,6 @@ func newDBRepoIndicies(url string, logger boshlog.Logger) (repoIndicies, error) 
 	}
 
 	indicies := repoIndicies{
-		releaseNotesIndex:    bhindex.NewDBIndex(releaseNotesAdapter, logger),
-		releaseTarsIndex:     bhindex.NewDBIndex(releasesTarballsAdapter, logger),
-
 		s3StemcellsIndex:    bhindex.NewDBIndex(s3StemcellsAdapter, logger),
 		stemcellNotesIndex:  bhindex.NewDBIndex(stemcellNotesAdapter, logger),
 
