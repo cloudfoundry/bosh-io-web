@@ -8,11 +8,11 @@ import (
 )
 
 type RelVer struct {
-	source string
+	source     string
 	versionRaw string
 
 	releasesIndexDir string
-	fs boshsys.FileSystem
+	fs               boshsys.FileSystem
 }
 
 func (r RelVer) Read(fileName string) ([]byte, error) {

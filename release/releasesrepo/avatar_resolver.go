@@ -1,9 +1,9 @@
 package releasesrepo
 
 import (
-	"strings"
-	"path/filepath"
 	"gopkg.in/yaml.v2"
+	"path/filepath"
+	"strings"
 
 	bosherr "github.com/cloudfoundry/bosh-agent/errors"
 	boshsys "github.com/cloudfoundry/bosh-agent/system"
@@ -11,7 +11,7 @@ import (
 
 type predefinedAvatarsResolver struct {
 	releasesDir string
-	fs boshsys.FileSystem
+	fs          boshsys.FileSystem
 }
 
 func (r predefinedAvatarsResolver) Resolve(location string) string {
@@ -31,7 +31,7 @@ func (r predefinedAvatarsResolver) Resolve(location string) string {
 
 type avatarDefYAML struct {
 	RepoURL string `yaml:"repo_url"`
-	URL string
+	URL     string
 }
 
 func (d avatarDefYAML) Location() string {

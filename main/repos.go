@@ -5,11 +5,11 @@ import (
 	boshlog "github.com/cloudfoundry/bosh-agent/logger"
 	boshsys "github.com/cloudfoundry/bosh-agent/system"
 
-	bhrelver "github.com/cppforlife/bosh-hub/release/relver"
 	bhjobsrepo "github.com/cppforlife/bosh-hub/release/jobsrepo"
 	bhnotesrepo "github.com/cppforlife/bosh-hub/release/notesrepo"
 	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
 	bhreltarsrepo "github.com/cppforlife/bosh-hub/release/releasetarsrepo"
+	bhrelver "github.com/cppforlife/bosh-hub/release/relver"
 	bhs3 "github.com/cppforlife/bosh-hub/s3"
 	bhstemnotesrepo "github.com/cppforlife/bosh-hub/stemcell/notesrepo"
 	bhstemsrepo "github.com/cppforlife/bosh-hub/stemcell/stemsrepo"
@@ -21,8 +21,8 @@ type ReposOptions struct {
 	Dir     string
 	ConnURL string
 
-	ReleasesDir string
-	ReleasesIndexDir string
+	ReleasesDir       string
+	ReleasesIndexDir  string
 	StemcellsIndexDir string
 
 	ReleaseTarballLinker ReleaseTarballLinkerOptions
@@ -42,8 +42,8 @@ type Repos struct {
 	releaseVersionsRepo bhrelsrepo.ReleaseVersionsRepository
 	jobsRepo            bhjobsrepo.JobsRepository
 
-	s3StemcellsRepo    bhstemsrepo.S3StemcellsRepository
-	stemcellNotesRepo  bhstemnotesrepo.NotesRepository
+	s3StemcellsRepo   bhstemsrepo.S3StemcellsRepository
+	stemcellNotesRepo bhstemnotesrepo.NotesRepository
 }
 
 func NewRepos(options ReposOptions, fs boshsys.FileSystem, logger boshlog.Logger) (Repos, error) {
@@ -88,15 +88,17 @@ func NewRepos(options ReposOptions, fs boshsys.FileSystem, logger boshlog.Logger
 		releaseVersionsRepo: bhrelsrepo.NewConcreteReleaseVersionsRepository(options.ReleasesIndexDir, fs, logger),
 		jobsRepo:            bhjobsrepo.NewConcreteJobsRepository(relVerFactory, logger),
 
-		s3StemcellsRepo:    bhstemsrepo.NewS3StemcellsRepository(options.StemcellsIndexDir, stemcellNotesRepo, fs, logger),
-		stemcellNotesRepo:  stemcellNotesRepo,
+		s3StemcellsRepo:   bhstemsrepo.NewS3StemcellsRepository(options.StemcellsIndexDir, stemcellNotesRepo, fs, logger),
+		stemcellNotesRepo: stemcellNotesRepo,
 	}
 
 	return repos, nil
 }
 
 func (r Repos) ReleasesRepo() bhrelsrepo.ReleasesRepository { return r.releasesRepo }
-func (r Repos) ReleaseVersionsRepo() bhrelsrepo.ReleaseVersionsRepository { return r.releaseVersionsRepo }
+func (r Repos) ReleaseVersionsRepo() bhrelsrepo.ReleaseVersionsRepository {
+	return r.releaseVersionsRepo
+}
 func (r Repos) JobsRepo() bhjobsrepo.JobsRepository { return r.jobsRepo }
 
 func (r Repos) S3StemcellsRepo() bhstemsrepo.S3StemcellsRepository { return r.s3StemcellsRepo }

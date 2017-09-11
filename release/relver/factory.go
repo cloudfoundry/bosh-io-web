@@ -3,15 +3,15 @@ package relver
 import (
 	"regexp"
 
-	boshlog "github.com/cloudfoundry/bosh-agent/logger"
 	bosherr "github.com/cloudfoundry/bosh-agent/errors"
+	boshlog "github.com/cloudfoundry/bosh-agent/logger"
 	boshsys "github.com/cloudfoundry/bosh-agent/system"
 )
 
 type Factory struct {
 	releasesIndexDir string
-	fs boshsys.FileSystem
-	logger boshlog.Logger
+	fs               boshsys.FileSystem
+	logger           boshlog.Logger
 }
 
 func NewFactory(releasesIndexDir string, fs boshsys.FileSystem, logger boshlog.Logger) Factory {
@@ -19,7 +19,7 @@ func NewFactory(releasesIndexDir string, fs boshsys.FileSystem, logger boshlog.L
 }
 
 var (
-	sourceChars = regexp.MustCompile(`\Agithub.com/[a-zA-Z\-0-9\/_]+\z`)
+	sourceChars  = regexp.MustCompile(`\Agithub.com/[a-zA-Z\-0-9\/_]+\z`)
 	versionChars = regexp.MustCompile(`\A[a-zA-Z-0-9\._+-]+\z`)
 )
 

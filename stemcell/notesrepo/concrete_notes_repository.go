@@ -1,8 +1,8 @@
 package notesrepo
 
 import (
-	"path/filepath"
 	"encoding/json"
+	"path/filepath"
 
 	bosherr "github.com/cloudfoundry/bosh-agent/errors"
 	boshlog "github.com/cloudfoundry/bosh-agent/logger"
@@ -19,8 +19,8 @@ type NoteRec struct {
 
 type CNRepository struct {
 	stemcellsIndexDir string
-	fs boshsys.FileSystem
-	logger boshlog.Logger
+	fs                boshsys.FileSystem
+	logger            boshlog.Logger
 }
 
 func NewConcreteNotesRepository(
@@ -29,9 +29,9 @@ func NewConcreteNotesRepository(
 	logger boshlog.Logger,
 ) CNRepository {
 	return CNRepository{
-		stemcellsIndexDir:  stemcellsIndexDir,
-		fs: fs,
-		logger: logger,
+		stemcellsIndexDir: stemcellsIndexDir,
+		fs:                fs,
+		logger:            logger,
 	}
 }
 

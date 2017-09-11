@@ -19,7 +19,7 @@ type NoteRec struct {
 
 type CNRepository struct {
 	relVerFactory bhrelver.Factory
-	logger boshlog.Logger
+	logger        boshlog.Logger
 }
 
 func NewConcreteNotesRepository(
@@ -27,8 +27,8 @@ func NewConcreteNotesRepository(
 	logger boshlog.Logger,
 ) CNRepository {
 	return CNRepository{
-		relVerFactory:  relVerFactory,
-		logger: logger,
+		relVerFactory: relVerFactory,
+		logger:        logger,
 	}
 }
 

@@ -1,8 +1,8 @@
 package stemsrepo
 
 import (
-	"path/filepath"
 	"encoding/json"
+	"path/filepath"
 
 	bosherr "github.com/cloudfoundry/bosh-agent/errors"
 	boshlog "github.com/cloudfoundry/bosh-agent/logger"
@@ -12,10 +12,10 @@ import (
 )
 
 type S3StemcellsRepository struct {
-	stemcellsIndexDir         string
-	notesRepo     bhnotesrepo.NotesRepository
-	fs boshsys.FileSystem
-	logger        boshlog.Logger
+	stemcellsIndexDir string
+	notesRepo         bhnotesrepo.NotesRepository
+	fs                boshsys.FileSystem
+	logger            boshlog.Logger
 }
 
 type s3StemcellRec struct {
@@ -36,10 +36,10 @@ func NewS3StemcellsRepository(
 	logger boshlog.Logger,
 ) S3StemcellsRepository {
 	return S3StemcellsRepository{
-		stemcellsIndexDir:         stemcellsIndexDir,
-		notesRepo:     notesRepo,
-		fs: fs,
-		logger:        logger,
+		stemcellsIndexDir: stemcellsIndexDir,
+		notesRepo:         notesRepo,
+		fs:                fs,
+		logger:            logger,
 	}
 }
 

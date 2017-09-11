@@ -17,8 +17,8 @@ type ReleaseTarballsRepository interface {
 
 type CRTRepository struct {
 	relVerFactory bhrelver.Factory
-	urlFactory bhs3.URLFactory
-	logger     boshlog.Logger
+	urlFactory    bhs3.URLFactory
+	logger        boshlog.Logger
 }
 
 func NewConcreteReleaseTarballsRepository(
@@ -27,9 +27,9 @@ func NewConcreteReleaseTarballsRepository(
 	logger boshlog.Logger,
 ) CRTRepository {
 	return CRTRepository{
-		relVerFactory:      relVerFactory,
-		urlFactory: urlFactory,
-		logger:     logger,
+		relVerFactory: relVerFactory,
+		urlFactory:    urlFactory,
+		logger:        logger,
 	}
 }
 
@@ -58,7 +58,7 @@ func (r CRTRepository) Find(source, version string) (ReleaseTarballRec, error) {
 	}
 
 	relTarRec.BlobID = filepath.Base(meta4.Files[0].URLs[0].URL)
-	relTarRec.SHA1   = meta4.Files[0].Hashes[0].Hash
+	relTarRec.SHA1 = meta4.Files[0].Hashes[0].Hash
 
 	return relTarRec, nil
 }

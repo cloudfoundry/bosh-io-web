@@ -1,37 +1,37 @@
 package releasesrepo
 
 import (
+	"encoding/json"
+	"path/filepath"
 	"regexp"
-		"path/filepath"
-		"encoding/json"
 
 	bosherr "github.com/cloudfoundry/bosh-agent/errors"
-	boshsys "github.com/cloudfoundry/bosh-agent/system"
 	boshlog "github.com/cloudfoundry/bosh-agent/logger"
+	boshsys "github.com/cloudfoundry/bosh-agent/system"
 
 	bprel "github.com/cppforlife/bosh-provisioner/release"
 )
 
 type CRVRepository struct {
-	releasesIndexDir      string
-	fs boshsys.FileSystem
-	logger boshlog.Logger
+	releasesIndexDir string
+	fs               boshsys.FileSystem
+	logger           boshlog.Logger
 }
 
 func NewConcreteReleaseVersionsRepository(
-	releasesIndexDir      string,
+	releasesIndexDir string,
 	fs boshsys.FileSystem,
 	logger boshlog.Logger,
 ) CRVRepository {
 	return CRVRepository{
-		releasesIndexDir:      releasesIndexDir,
-		fs: fs,
-		logger: logger,
+		releasesIndexDir: releasesIndexDir,
+		fs:               fs,
+		logger:           logger,
 	}
 }
 
 var (
-	sourceChars = regexp.MustCompile(`\Agithub.com/[a-zA-Z\-0-9\/_]+\z`)
+	sourceChars  = regexp.MustCompile(`\Agithub.com/[a-zA-Z\-0-9\/_]+\z`)
 	versionChars = regexp.MustCompile(`\A[a-zA-Z-0-9\._+-]+\z`)
 )
 

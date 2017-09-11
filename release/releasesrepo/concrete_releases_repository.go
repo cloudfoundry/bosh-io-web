@@ -1,14 +1,14 @@
 package releasesrepo
 
 import (
-	"strings"
+	"encoding/json"
 	"path/filepath"
 	"sort"
-	"encoding/json"
+	"strings"
 
-	boshsys "github.com/cloudfoundry/bosh-agent/system"
 	bosherr "github.com/cloudfoundry/bosh-agent/errors"
 	boshlog "github.com/cloudfoundry/bosh-agent/logger"
+	boshsys "github.com/cloudfoundry/bosh-agent/system"
 	"gopkg.in/yaml.v2"
 
 	bhnotesrepo "github.com/cppforlife/bosh-hub/release/notesrepo"
@@ -16,8 +16,8 @@ import (
 )
 
 type CRRepository struct {
-	avatarsResolver   avatarsResolver
-	releasesDir string
+	avatarsResolver  avatarsResolver
+	releasesDir      string
 	releasesIndexDir string
 
 	releaseTarsRepo bhreltarsrepo.ReleaseTarballsRepository
@@ -29,7 +29,6 @@ type CRRepository struct {
 	logger boshlog.Logger
 }
 
-
 func NewConcreteReleasesRepository(
 	releasesDir string,
 	releasesIndexDir string,
@@ -39,9 +38,9 @@ func NewConcreteReleasesRepository(
 	logger boshlog.Logger,
 ) CRRepository {
 	return CRRepository{
-		avatarsResolver:   predefinedAvatarsResolver{releasesDir, fs},
-		releasesDir: releasesDir,
-		releasesIndexDir: 	releasesIndexDir,
+		avatarsResolver:  predefinedAvatarsResolver{releasesDir, fs},
+		releasesDir:      releasesDir,
+		releasesIndexDir: releasesIndexDir,
 
 		releaseTarsRepo: releaseTarsRepo,
 		notesRepo:       notesRepo,
@@ -179,7 +178,7 @@ func (r CRRepository) Find(source, version string) (ReleaseVersionRec, error) {
 }
 
 type releaseDefYAML struct {
-	URL string
+	URL      string
 	Homepage bool
 }
 

@@ -3,12 +3,12 @@ package jobsrepo
 import (
 	"encoding/json"
 
-	boshlog "github.com/cloudfoundry/bosh-agent/logger"
 	bosherr "github.com/cloudfoundry/bosh-agent/errors"
+	boshlog "github.com/cloudfoundry/bosh-agent/logger"
 	bpreljob "github.com/cppforlife/bosh-provisioner/release/job"
 
-	bhrelver "github.com/cppforlife/bosh-hub/release/relver"
 	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
+	bhrelver "github.com/cppforlife/bosh-hub/release/relver"
 )
 
 type JobsRepository interface {
@@ -17,7 +17,7 @@ type JobsRepository interface {
 
 type CJRepository struct {
 	relVerFactory bhrelver.Factory
-	logger boshlog.Logger
+	logger        boshlog.Logger
 }
 
 type relVerRecKey struct {
@@ -31,7 +31,7 @@ func NewConcreteJobsRepository(
 ) CJRepository {
 	return CJRepository{
 		relVerFactory: relVerFactory,
-		logger: logger,
+		logger:        logger,
 	}
 }
 
