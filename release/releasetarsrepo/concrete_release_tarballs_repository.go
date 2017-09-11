@@ -58,7 +58,14 @@ func (r CRTRepository) Find(source, version string) (ReleaseTarballRec, error) {
 	}
 
 	relTarRec.BlobID = filepath.Base(meta4.Files[0].URLs[0].URL)
-	relTarRec.SHA1 = meta4.Files[0].Hashes[0].Hash
+
+	for _, hash := range meta4.Files[0].Hashes {
+		if hash.Type == "sha-1" {
+			relTarRec.SHA1 = hash.Hash
+
+			break
+		}
+	}
 
 	return relTarRec, nil
 }
