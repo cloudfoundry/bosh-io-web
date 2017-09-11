@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # This script is called by the buildpack
 # (https://github.com/shageman/buildpack-binary)
 
@@ -9,6 +11,7 @@ debug=$3
 
 if [ -z "$configPath" ]; then
   configPath=prod-conf/web.json
+  ./git-init-clone.sh
 fi
 
 if [ -z "$assetsID" ]; then

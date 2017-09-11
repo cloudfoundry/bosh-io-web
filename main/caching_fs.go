@@ -36,6 +36,18 @@ func NewCachingFileSystem(fs boshsys.FileSystem, logger boshlog.Logger) *Caching
 	}
 }
 
+func (f *CachingFileSystem) DropCache() {
+	f.logger.Info(f.logTag, "Reloading data")
+
+	f.readCacheLock.Lock()
+	f.readCache = map[string][]byte{}
+	f.readCacheLock.Unlock()
+
+	f.globCacheLock.Lock()
+	f.globCache = map[string][]string{}
+	f.globCacheLock.Unlock()
+}
+
 func (f *CachingFileSystem) HomeDir(username string) (path string, err error) {
 	return f.fs.HomeDir(username)
 }

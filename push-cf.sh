@@ -9,8 +9,7 @@ curr=bosh-hub
 
 echo "Pull down creds from lastpass to ./prod-conf"
 rm -rf ./prod-conf && mkdir ./prod-conf
-lpass show --notes "bosh-io-web-json-conf" > ./prod-conf/web.json
-lpass show --notes "bosh-io-rds-combined-ca-bundle-pem" > ./prod-conf/rds-combined-ca-bundle.pem
+lpass show --notes "bosh-io-web-json-conf-sep10" > ./prod-conf/web.json
 
 if [ ! -f prod-conf/web.json ]; then
   echo 'Missing web.json config'

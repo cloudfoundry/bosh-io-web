@@ -1,6 +1,10 @@
 package main
 
 import (
+	"os"
+	"os/signal"
+	"syscall"
+
 	bosherr "github.com/cloudfoundry/bosh-agent/errors"
 	boshlog "github.com/cloudfoundry/bosh-agent/logger"
 	boshsys "github.com/cloudfoundry/bosh-agent/system"
@@ -47,7 +51,20 @@ type Repos struct {
 }
 
 func NewRepos(options ReposOptions, fs boshsys.FileSystem, logger boshlog.Logger) (Repos, error) {
-	fs = NewCachingFileSystem(fs, logger)
+	cachingFS := NewCachingFileSystem(fs, logger)
+	fs = cachingFS
+
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGHUP)
+
+	go func() {
+		for {
+			select {
+			case <-sigs:
+				cachingFS.DropCache()
+			}
+		}
+	}()
 
 	var err error
 
