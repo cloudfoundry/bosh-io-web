@@ -2,62 +2,40 @@ package releasesrepo
 
 import (
 	"encoding/json"
-	"path/filepath"
-	"regexp"
 
 	bosherr "github.com/cloudfoundry/bosh-agent/errors"
 	boshlog "github.com/cloudfoundry/bosh-agent/logger"
-	boshsys "github.com/cloudfoundry/bosh-agent/system"
 
+	bhrelver "github.com/cppforlife/bosh-hub/release/relver"
 	bprel "github.com/cppforlife/bosh-provisioner/release"
 )
 
 type CRVRepository struct {
-	releasesIndexDir string
-	fs               boshsys.FileSystem
-	logger           boshlog.Logger
+	relVerFactory bhrelver.Factory
+	logger        boshlog.Logger
 }
 
 func NewConcreteReleaseVersionsRepository(
-	releasesIndexDir string,
-	fs boshsys.FileSystem,
+	relVerFactory bhrelver.Factory,
 	logger boshlog.Logger,
 ) CRVRepository {
 	return CRVRepository{
-		releasesIndexDir: releasesIndexDir,
-		fs:               fs,
-		logger:           logger,
+		relVerFactory: relVerFactory,
+		logger:        logger,
 	}
 }
-
-var (
-	sourceChars  = regexp.MustCompile(`\Agithub.com/[a-zA-Z\-0-9\/_]+\z`)
-	versionChars = regexp.MustCompile(`\A[a-zA-Z-0-9\._+-]+\z`)
-)
 
 func (r CRVRepository) Find(relVerRec ReleaseVersionRec) (bprel.Release, error) {
 	var rel bprel.Release
 
-	if !sourceChars.MatchString(relVerRec.Source) {
-		return rel, bosherr.New("Release version: Invalid source")
-	}
-
-	if !versionChars.MatchString(relVerRec.VersionRaw) {
-		return rel, bosherr.New("Invalid version")
-	}
-
-	foundPaths, err := r.fs.Glob(filepath.Join(r.releasesIndexDir, relVerRec.Source, "*-"+relVerRec.VersionRaw, "release.v1.yml"))
+	relVer, err := r.relVerFactory.Find(relVerRec.Source, relVerRec.VersionRaw)
 	if err != nil {
-		return rel, bosherr.WrapError(err, "Globbing release versions")
+		return rel, err
 	}
 
-	if len(foundPaths) != 1 {
-		return rel, bosherr.WrapError(err, "Finding release version")
-	}
-
-	contents, err := r.fs.ReadFile(foundPaths[0])
+	contents, err := relVer.Read("release.v1.yml")
 	if err != nil {
-		return rel, bosherr.WrapError(err, "Reading release file")
+		return rel, err
 	}
 
 	err = json.Unmarshal(contents, &rel)

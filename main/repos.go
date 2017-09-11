@@ -85,7 +85,7 @@ func NewRepos(options ReposOptions, fs boshsys.FileSystem, logger boshlog.Logger
 	repos := Repos{
 		releasesRepo: releasesRepo,
 
-		releaseVersionsRepo: bhrelsrepo.NewConcreteReleaseVersionsRepository(options.ReleasesIndexDir, fs, logger),
+		releaseVersionsRepo: bhrelsrepo.NewConcreteReleaseVersionsRepository(relVerFactory, logger),
 		jobsRepo:            bhjobsrepo.NewConcreteJobsRepository(relVerFactory, logger),
 
 		s3StemcellsRepo:   bhstemsrepo.NewS3StemcellsRepository(options.StemcellsIndexDir, stemcellNotesRepo, fs, logger),
