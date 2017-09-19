@@ -61,7 +61,7 @@ func (r CRRepository) ListCurated() ([]ReleaseVersionRec, error) {
 	}
 
 	for _, def := range defs {
-		if !def.Homepage {
+		if !def.OnHomePage() {
 			continue
 		}
 
@@ -178,8 +178,17 @@ func (r CRRepository) Find(source, version string) (ReleaseVersionRec, error) {
 }
 
 type releaseDefYAML struct {
-	URL      string
-	Homepage bool
+	URL        string
+	Categories []string
+}
+
+func (d releaseDefYAML) OnHomePage() bool {
+	for _, cat := range d.Categories {
+		if cat == "homepage" {
+			return true
+		}
+	}
+	return false
 }
 
 func (d releaseDefYAML) TrimmedURL() string {
