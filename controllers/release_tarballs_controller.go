@@ -3,8 +3,8 @@ package controllers
 import (
 	"net/http"
 
-	bosherr "github.com/cloudfoundry/bosh-agent/errors"
-	boshlog "github.com/cloudfoundry/bosh-agent/logger"
+	bosherr "github.com/cloudfoundry/bosh-utils/errors"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 	mart "github.com/go-martini/martini"
 	martrend "github.com/martini-contrib/render"
 
@@ -37,7 +37,7 @@ func (c ReleaseTarballsController) Download(req *http.Request, r martrend.Render
 	relSource := params["_1"]
 
 	if len(relSource) == 0 {
-		err := bosherr.New("Param 'source' must be non-empty")
+		err := bosherr.Error("Param 'source' must be non-empty")
 		r.HTML(400, c.errorTmpl, err)
 		return
 	}

@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"sync"
 
-	boshlog "github.com/cloudfoundry/bosh-agent/logger"
-	boshsys "github.com/cloudfoundry/bosh-agent/system"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
+	boshsys "github.com/cloudfoundry/bosh-utils/system"
 )
 
 type CachingFileSystem struct {
@@ -48,6 +48,10 @@ func (f *CachingFileSystem) DropCache() {
 	f.globCacheLock.Unlock()
 }
 
+func (f *CachingFileSystem) ChangeTempRoot(path string) error {
+	return f.fs.ChangeTempRoot(path)
+}
+
 func (f *CachingFileSystem) HomeDir(username string) (path string, err error) {
 	return f.fs.HomeDir(username)
 }
@@ -68,7 +72,7 @@ func (f *CachingFileSystem) Chmod(path string, perm os.FileMode) (err error) {
 	return f.fs.Chmod(path, perm)
 }
 
-func (f *CachingFileSystem) OpenFile(path string, flag int, perm os.FileMode) (boshsys.ReadWriteCloseStater, error) {
+func (f *CachingFileSystem) OpenFile(path string, flag int, perm os.FileMode) (boshsys.File, error) {
 	return f.fs.OpenFile(path, flag, perm)
 }
 
@@ -80,8 +84,12 @@ func (f *CachingFileSystem) WriteFile(path string, content []byte) (err error) {
 	return f.fs.WriteFile(path, content)
 }
 
-func (f *CachingFileSystem) ConvergeFileContents(path string, content []byte) (written bool, err error) {
-	return f.fs.ConvergeFileContents(path, content)
+func (f *CachingFileSystem) ExpandPath(path string) (string, error) {
+	return f.fs.ExpandPath(path)
+}
+
+func (f *CachingFileSystem) ConvergeFileContents(path string, content []byte, opts ...boshsys.ConvergeFileContentsOpts) (written bool, err error) {
+	return f.fs.ConvergeFileContents(path, content, opts...)
 }
 
 func (f *CachingFileSystem) ReadFileString(path string) (string, error) {
@@ -124,20 +132,44 @@ func (f *CachingFileSystem) Symlink(oldPath, newPath string) (err error) {
 	return f.fs.Symlink(oldPath, newPath)
 }
 
-func (f *CachingFileSystem) ReadLink(symlinkPath string) (targetPath string, err error) {
-	return f.fs.ReadLink(symlinkPath)
+func (f *CachingFileSystem) ReadAndFollowLink(symlinkPath string) (targetPath string, err error) {
+	return f.fs.ReadAndFollowLink(symlinkPath)
+}
+
+func (f *CachingFileSystem) Readlink(symlinkPath string) (targetPath string, err error) {
+	return f.fs.Readlink(symlinkPath)
 }
 
 func (f *CachingFileSystem) CopyFile(srcPath, dstPath string) (err error) {
 	return f.fs.CopyFile(srcPath, dstPath)
 }
 
-func (f *CachingFileSystem) TempFile(prefix string) (file *os.File, err error) {
+func (f *CachingFileSystem) CopyDir(srcPath, dstPath string) error {
+	return f.fs.CopyDir(srcPath, dstPath)
+}
+
+func (f *CachingFileSystem) TempFile(prefix string) (boshsys.File, error) {
 	return f.fs.TempFile(prefix)
 }
 
 func (f *CachingFileSystem) TempDir(prefix string) (path string, err error) {
 	return f.fs.TempDir(prefix)
+}
+
+func (f *CachingFileSystem) Lstat(path string) (os.FileInfo, error) {
+	return f.fs.Lstat(path)
+}
+
+func (f *CachingFileSystem) Stat(path string) (os.FileInfo, error) {
+	return f.fs.Stat(path)
+}
+
+func (f *CachingFileSystem) RecursiveGlob(pattern string) (matches []string, err error) {
+	return f.fs.RecursiveGlob(pattern)
+}
+
+func (f *CachingFileSystem) WriteFileQuietly(path string, content []byte) error {
+	return f.fs.WriteFileQuietly(path, content)
 }
 
 func (f *CachingFileSystem) Glob(pattern string) ([]string, error) {

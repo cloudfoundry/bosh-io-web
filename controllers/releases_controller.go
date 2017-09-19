@@ -3,9 +3,9 @@ package controllers
 import (
 	"net/http"
 
-	bosherr "github.com/cloudfoundry/bosh-agent/errors"
-	boshlog "github.com/cloudfoundry/bosh-agent/logger"
-	boshsys "github.com/cloudfoundry/bosh-agent/system"
+	bosherr "github.com/cloudfoundry/bosh-utils/errors"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
+	boshsys "github.com/cloudfoundry/bosh-utils/system"
 	mart "github.com/go-martini/martini"
 	martrend "github.com/martini-contrib/render"
 
@@ -117,7 +117,7 @@ func (c ReleasesController) extractShowParams(req *http.Request, params mart.Par
 	relSource := params["_1"]
 
 	if len(relSource) == 0 {
-		return "", "", "", "", bosherr.New("Param 'source' must be non-empty")
+		return "", "", "", "", bosherr.Error("Param 'source' must be non-empty")
 	}
 
 	showAll := req.URL.Query().Get("all")

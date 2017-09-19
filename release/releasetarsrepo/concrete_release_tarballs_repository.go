@@ -1,12 +1,12 @@
 package releasetarsrepo
 
 import (
-	"errors"
 	"encoding/xml"
+	"errors"
 	"path/filepath"
 
-	bosherr "github.com/cloudfoundry/bosh-agent/errors"
-	boshlog "github.com/cloudfoundry/bosh-agent/logger"
+	bosherr "github.com/cloudfoundry/bosh-utils/errors"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 
 	bhrelver "github.com/cppforlife/bosh-hub/release/relver"
 	bhs3 "github.com/cppforlife/bosh-hub/s3"

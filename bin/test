@@ -4,14 +4,12 @@ result=0
 
 bin=$(dirname $0)
 
-go install github.com/onsi/ginkgo/ginkgo
-
 echo -e "\n Formatting packages..."
 go fmt github.com/cppforlife/bosh-hub/...
 let "result+=$?"
 
 echo -e "\n Testing packages..."
-ginkgo -r $bin/..
+ginkgo -skipPackage vendor -r $bin/..
 let "result+=$?"
 
 echo -e "\n Vetting packages for potential issues..."

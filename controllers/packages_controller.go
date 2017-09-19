@@ -3,9 +3,9 @@ package controllers
 import (
 	"net/http"
 
-	bosherr "github.com/cloudfoundry/bosh-agent/errors"
-	boshlog "github.com/cloudfoundry/bosh-agent/logger"
-	boshsys "github.com/cloudfoundry/bosh-agent/system"
+	bosherr "github.com/cloudfoundry/bosh-utils/errors"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
+	boshsys "github.com/cloudfoundry/bosh-utils/system"
 	mart "github.com/go-martini/martini"
 	martrend "github.com/martini-contrib/render"
 
@@ -86,7 +86,7 @@ func (c PackagesController) Show(req *http.Request, r martrend.Render, params ma
 		}
 	}
 
-	err = bosherr.New("Release package '%s' is not found", pkgName)
+	err = bosherr.Errorf("Release package '%s' is not found", pkgName)
 	r.HTML(404, c.errorTmpl, err)
 }
 
@@ -94,7 +94,7 @@ func (c PackagesController) extractShowParams(req *http.Request, params mart.Par
 	relSource := req.URL.Query().Get("source")
 
 	if len(relSource) == 0 {
-		return "", "", "", bosherr.New("Param 'source' must be non-empty")
+		return "", "", "", bosherr.Error("Param 'source' must be non-empty")
 	}
 
 	relVersion := req.URL.Query().Get("version")
@@ -102,7 +102,7 @@ func (c PackagesController) extractShowParams(req *http.Request, params mart.Par
 	pkgName := params["name"]
 
 	if len(pkgName) == 0 {
-		return "", "", "", bosherr.New("Param 'name' must be non-empty")
+		return "", "", "", bosherr.Error("Param 'name' must be non-empty")
 	}
 
 	return relSource, relVersion, pkgName, nil

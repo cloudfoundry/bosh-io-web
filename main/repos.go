@@ -5,9 +5,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	bosherr "github.com/cloudfoundry/bosh-agent/errors"
-	boshlog "github.com/cloudfoundry/bosh-agent/logger"
-	boshsys "github.com/cloudfoundry/bosh-agent/system"
+	bosherr "github.com/cloudfoundry/bosh-utils/errors"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
+	boshsys "github.com/cloudfoundry/bosh-utils/system"
 
 	bhjobsrepo "github.com/cppforlife/bosh-hub/release/jobsrepo"
 	bhnotesrepo "github.com/cppforlife/bosh-hub/release/notesrepo"
@@ -78,7 +78,7 @@ func NewRepos(options ReposOptions, fs boshsys.FileSystem, logger boshlog.Logger
 	case linkerOpts.Type == "S3":
 		linkerFactory = bhs3.NewDirectURLFactory(linkerOpts.BaseURL)
 	default:
-		err = bosherr.New("Expected linker type '%s'", linkerOpts.Type)
+		err = bosherr.Errorf("Expected linker type '%s'", linkerOpts.Type)
 	}
 	if err != nil {
 		return Repos{}, err

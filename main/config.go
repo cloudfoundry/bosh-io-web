@@ -3,8 +3,8 @@ package main
 import (
 	"encoding/json"
 
-	bosherr "github.com/cloudfoundry/bosh-agent/errors"
-	boshsys "github.com/cloudfoundry/bosh-agent/system"
+	bosherr "github.com/cloudfoundry/bosh-utils/errors"
+	boshsys "github.com/cloudfoundry/bosh-utils/system"
 )
 
 type Config struct {
@@ -24,7 +24,7 @@ func NewConfigFromPath(path string, fs boshsys.FileSystem) (Config, error) {
 
 	bytes, err := fs.ReadFile(path)
 	if err != nil {
-		return config, bosherr.WrapError(err, "Reading config %s", path)
+		return config, bosherr.WrapErrorf(err, "Reading config %s", path)
 	}
 
 	err = json.Unmarshal(bytes, &config)

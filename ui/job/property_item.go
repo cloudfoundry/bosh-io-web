@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	bosherr "github.com/cloudfoundry/bosh-agent/errors"
+	bosherr "github.com/cloudfoundry/bosh-utils/errors"
 )
 
 type PropertyItem struct {
@@ -118,7 +118,7 @@ func (i PropertyItem) HasLongKey() bool {
 func (i PropertyItem) DefaultAsYAML() (string, error) {
 	result, err := i.Property.DefaultAsYAML()
 	if err != nil {
-		return "", bosherr.WrapError(err, "Indenting property '%s' default", i.Property.Name)
+		return "", bosherr.WrapErrorf(err, "Indenting property '%s' default", i.Property.Name)
 	}
 
 	// YAML encoder might add extra new line breaks

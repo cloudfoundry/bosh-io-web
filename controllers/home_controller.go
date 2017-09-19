@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	boshlog "github.com/cloudfoundry/bosh-agent/logger"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 	martrend "github.com/martini-contrib/render"
 
 	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"

@@ -6,9 +6,9 @@ import (
 	"sort"
 	"strings"
 
-	bosherr "github.com/cloudfoundry/bosh-agent/errors"
-	boshlog "github.com/cloudfoundry/bosh-agent/logger"
-	boshsys "github.com/cloudfoundry/bosh-agent/system"
+	bosherr "github.com/cloudfoundry/bosh-utils/errors"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
+	boshsys "github.com/cloudfoundry/bosh-utils/system"
 	"gopkg.in/yaml.v2"
 
 	bhnotesrepo "github.com/cppforlife/bosh-hub/release/notesrepo"
@@ -105,7 +105,7 @@ func (r CRRepository) FindAll(source string) ([]ReleaseVersionRec, error) {
 	var relVerRecs []ReleaseVersionRec
 
 	if len(source) == 0 {
-		return relVerRecs, bosherr.New("Expected source to be non-empty")
+		return relVerRecs, bosherr.Error("Expected source to be non-empty")
 	}
 
 	foundPaths, err := r.fs.Glob(filepath.Join(r.releasesIndexDir, source, "*", "release.v1.yml"))
@@ -141,7 +141,7 @@ func (r CRRepository) FindLatest(source string) (ReleaseVersionRec, error) {
 	var relVerRec ReleaseVersionRec
 
 	if len(source) == 0 {
-		return relVerRec, bosherr.New("Expected source to be non-empty")
+		return relVerRec, bosherr.Error("Expected source to be non-empty")
 	}
 
 	relVerRecs, err := r.FindAll(source)
@@ -150,7 +150,7 @@ func (r CRRepository) FindLatest(source string) (ReleaseVersionRec, error) {
 	}
 
 	if len(relVerRecs) == 0 {
-		return relVerRec, bosherr.New("Expected to find at least one release version record")
+		return relVerRec, bosherr.Error("Expected to find at least one release version record")
 	}
 
 	sort.Sort(ReleaseVersionRecSorting(relVerRecs))
