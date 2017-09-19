@@ -1,0 +1,47 @@
+[[constraint]]
+  branch = "master"
+  name = "github.com/cloudfoundry-incubator/candiedyaml"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/cloudfoundry/bosh-utils"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/cppforlife/bosh-provisioner"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/cppforlife/go-semi-semantic"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/dustin/go-humanize"
+
+[[constraint]]
+  name = "github.com/go-martini/martini"
+  version = "1.0.0"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/martini-contrib/render"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/microcosm-cc/bluemonday"
+
+[[constraint]]
+  name = "github.com/onsi/ginkgo"
+  version = "1.4.0"
+
+[[constraint]]
+  name = "github.com/onsi/gomega"
+  version = "1.2.0"
+
+[[constraint]]
+  name = "github.com/russross/blackfriday"
+  version = "1.0.0"
+
+[[constraint]]
+  branch = "v2"
+  name = "gopkg.in/yaml.v2"
