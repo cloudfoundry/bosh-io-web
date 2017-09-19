@@ -10,8 +10,8 @@ import (
 	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 	boshsys "github.com/cloudfoundry/bosh-utils/system"
 
-	bhjobui "github.com/cppforlife/bosh-hub/ui/job"
-	bhrelui "github.com/cppforlife/bosh-hub/ui/release"
+	bhjobui "github.com/bosh-io/web/ui/job"
+	bhrelui "github.com/bosh-io/web/ui/release"
 )
 
 type ReleaseGraph struct {

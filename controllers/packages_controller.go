@@ -9,8 +9,8 @@ import (
 	mart "github.com/go-martini/martini"
 	martrend "github.com/martini-contrib/render"
 
-	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
-	bhrelui "github.com/cppforlife/bosh-hub/ui/release"
+	bhrelsrepo "github.com/bosh-io/web/release/releasesrepo"
+	bhrelui "github.com/bosh-io/web/ui/release"
 )
 
 type PackagesController struct {

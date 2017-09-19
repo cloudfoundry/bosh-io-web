@@ -10,7 +10,7 @@ import (
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/russross/blackfriday"
 
-	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
+	bhrelsrepo "github.com/bosh-io/web/release/releasesrepo"
 )
 
 type Release struct {

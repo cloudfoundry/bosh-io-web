@@ -8,10 +8,10 @@ import (
 	mart "github.com/go-martini/martini"
 	martrend "github.com/martini-contrib/render"
 
-	bhjobsrepo "github.com/cppforlife/bosh-hub/release/jobsrepo"
-	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
-	bhjobui "github.com/cppforlife/bosh-hub/ui/job"
-	bhrelui "github.com/cppforlife/bosh-hub/ui/release"
+	bhjobsrepo "github.com/bosh-io/web/release/jobsrepo"
+	bhrelsrepo "github.com/bosh-io/web/release/releasesrepo"
+	bhjobui "github.com/bosh-io/web/ui/job"
+	bhrelui "github.com/bosh-io/web/ui/release"
 )
 
 type JobsController struct {

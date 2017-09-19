@@ -9,8 +9,8 @@ import (
 	mart "github.com/go-martini/martini"
 	martrend "github.com/martini-contrib/render"
 
-	bhstemsrepo "github.com/cppforlife/bosh-hub/stemcell/stemsrepo"
-	bhstemui "github.com/cppforlife/bosh-hub/ui/stemcell"
+	bhstemsrepo "github.com/bosh-io/web/stemcell/stemsrepo"
+	bhstemui "github.com/bosh-io/web/ui/stemcell"
 )
 
 type StemcellsController struct {

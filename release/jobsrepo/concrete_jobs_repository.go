@@ -7,8 +7,8 @@ import (
 	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 	bpreljob "github.com/cppforlife/bosh-provisioner/release/job"
 
-	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
-	bhrelver "github.com/cppforlife/bosh-hub/release/relver"
+	bhrelsrepo "github.com/bosh-io/web/release/releasesrepo"
+	bhrelver "github.com/bosh-io/web/release/relver"
 )
 
 type JobsRepository interface {

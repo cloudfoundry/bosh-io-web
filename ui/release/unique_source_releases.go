@@ -3,7 +3,7 @@ package release
 import (
 	"sort"
 
-	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
+	bhrelsrepo "github.com/bosh-io/web/release/releasesrepo"
 )
 
 type UniqueSourceReleases []*SameSourceReleases

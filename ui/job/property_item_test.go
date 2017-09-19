@@ -4,7 +4,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	. "github.com/cppforlife/bosh-hub/ui/job"
+	. "github.com/bosh-io/web/ui/job"
 )
 
 var _ = Describe("NewPropertyItems", func() {

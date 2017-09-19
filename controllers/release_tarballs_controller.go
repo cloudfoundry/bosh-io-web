@@ -8,7 +8,7 @@ import (
 	mart "github.com/go-martini/martini"
 	martrend "github.com/martini-contrib/render"
 
-	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
+	bhrelsrepo "github.com/bosh-io/web/release/releasesrepo"
 )
 
 type ReleaseTarballsController struct {

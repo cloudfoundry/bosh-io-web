@@ -11,7 +11,7 @@ import (
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/russross/blackfriday"
 
-	bhstemsrepo "github.com/cppforlife/bosh-hub/stemcell/stemsrepo"
+	bhstemsrepo "github.com/bosh-io/web/stemcell/stemsrepo"
 )
 
 var (

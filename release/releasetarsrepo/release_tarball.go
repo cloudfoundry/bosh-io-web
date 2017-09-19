@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	bhs3 "github.com/cppforlife/bosh-hub/s3"
+	bhs3 "github.com/bosh-io/web/s3"
 )
 
 type ReleaseTarballRec struct {

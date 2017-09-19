@@ -8,7 +8,7 @@ if [ -z "$config" ]; then
   config=conf/local.json
 fi
 
-go build -o bosh-hub github.com/cppforlife/bosh-hub/main
+go build -o bosh-hub github.com/bosh-io/web/main
 
 if [ ! -f $config ]; then
   echo "Missing $config file"

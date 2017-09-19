@@ -6,7 +6,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	. "github.com/cppforlife/bosh-hub/stemcell/stemsrepo"
+	. "github.com/bosh-io/web/stemcell/stemsrepo"
 )
 
 var _ = Describe("NewS3Stemcell", func() {

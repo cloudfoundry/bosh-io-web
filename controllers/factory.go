@@ -4,9 +4,9 @@ import (
 	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 	boshsys "github.com/cloudfoundry/bosh-utils/system"
 
-	bhjobsrepo "github.com/cppforlife/bosh-hub/release/jobsrepo"
-	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
-	bhstemsrepo "github.com/cppforlife/bosh-hub/stemcell/stemsrepo"
+	bhjobsrepo "github.com/bosh-io/web/release/jobsrepo"
+	bhrelsrepo "github.com/bosh-io/web/release/releasesrepo"
+	bhstemsrepo "github.com/bosh-io/web/stemcell/stemsrepo"
 )
 
 type FactoryRepos interface {

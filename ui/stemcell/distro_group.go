@@ -3,7 +3,7 @@ package stemcell
 import (
 	"sort"
 
-	bhstemsrepo "github.com/cppforlife/bosh-hub/stemcell/stemsrepo"
+	bhstemsrepo "github.com/bosh-io/web/stemcell/stemsrepo"
 )
 
 type DistroGroup struct {

@@ -5,7 +5,7 @@ import (
 
 	semiver "github.com/cppforlife/go-semi-semantic/version"
 
-	bhstemsrepo "github.com/cppforlife/bosh-hub/stemcell/stemsrepo"
+	bhstemsrepo "github.com/bosh-io/web/stemcell/stemsrepo"
 )
 
 type UniqueVersionStemcells []*SameVersionStemcells

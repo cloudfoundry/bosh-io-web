@@ -5,7 +5,7 @@ result=0
 bin=$(dirname $0)
 
 echo -e "\n Formatting packages..."
-go fmt github.com/cppforlife/bosh-hub/...
+go fmt github.com/bosh-io/web/...
 let "result+=$?"
 
 echo -e "\n Testing packages..."
@@ -13,11 +13,11 @@ ginkgo -skipPackage vendor -r $bin/..
 let "result+=$?"
 
 echo -e "\n Vetting packages for potential issues..."
-go vet github.com/cppforlife/bosh-hub/...
+go vet github.com/bosh-io/web/...
 let "result+=$?"
 
 echo -e "\n Running build script to confirm everything compiles..."
-go build -o bosh-hub github.com/cppforlife/bosh-hub/main
+go build -o bosh-hub github.com/bosh-io/web/main
 let "result+=$?"
 
 if [ $result -eq 0 ]; then

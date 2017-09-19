@@ -13,7 +13,7 @@ import (
 	mart "github.com/go-martini/martini"
 	martrend "github.com/martini-contrib/render"
 
-	bhctrls "github.com/cppforlife/bosh-hub/controllers"
+	bhctrls "github.com/bosh-io/web/controllers"
 )
 
 const mainLogTag = "main"

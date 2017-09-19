@@ -8,7 +8,7 @@ import (
 	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 	boshsys "github.com/cloudfoundry/bosh-utils/system"
 
-	bhnotesrepo "github.com/cppforlife/bosh-hub/stemcell/notesrepo"
+	bhnotesrepo "github.com/bosh-io/web/stemcell/notesrepo"
 )
 
 type S3StemcellsRepository struct {

@@ -4,10 +4,10 @@ import (
 	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 	martrend "github.com/martini-contrib/render"
 
-	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
-	bhstemsrepo "github.com/cppforlife/bosh-hub/stemcell/stemsrepo"
-	bhrelui "github.com/cppforlife/bosh-hub/ui/release"
-	bhstemui "github.com/cppforlife/bosh-hub/ui/stemcell"
+	bhrelsrepo "github.com/bosh-io/web/release/releasesrepo"
+	bhstemsrepo "github.com/bosh-io/web/stemcell/stemsrepo"
+	bhrelui "github.com/bosh-io/web/ui/release"
+	bhstemui "github.com/bosh-io/web/ui/stemcell"
 )
 
 type HomeController struct {

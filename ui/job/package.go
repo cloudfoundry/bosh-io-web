@@ -6,7 +6,7 @@ import (
 
 	bpreljob "github.com/cppforlife/bosh-provisioner/release/job"
 
-	bhrelui "github.com/cppforlife/bosh-hub/ui/release"
+	bhrelui "github.com/bosh-io/web/ui/release"
 )
 
 type Package struct {

@@ -6,7 +6,7 @@ import (
 
 	semiver "github.com/cppforlife/go-semi-semantic/version"
 
-	bhnotesrepo "github.com/cppforlife/bosh-hub/stemcell/notesrepo"
+	bhnotesrepo "github.com/bosh-io/web/stemcell/notesrepo"
 )
 
 var (

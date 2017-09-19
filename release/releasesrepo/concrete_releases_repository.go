@@ -11,8 +11,8 @@ import (
 	boshsys "github.com/cloudfoundry/bosh-utils/system"
 	"gopkg.in/yaml.v2"
 
-	bhnotesrepo "github.com/cppforlife/bosh-hub/release/notesrepo"
-	bhreltarsrepo "github.com/cppforlife/bosh-hub/release/releasetarsrepo"
+	bhnotesrepo "github.com/bosh-io/web/release/notesrepo"
+	bhreltarsrepo "github.com/bosh-io/web/release/releasetarsrepo"
 )
 
 type CRRepository struct {

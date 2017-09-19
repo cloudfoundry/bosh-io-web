@@ -9,14 +9,14 @@ import (
 	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 	boshsys "github.com/cloudfoundry/bosh-utils/system"
 
-	bhjobsrepo "github.com/cppforlife/bosh-hub/release/jobsrepo"
-	bhnotesrepo "github.com/cppforlife/bosh-hub/release/notesrepo"
-	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
-	bhreltarsrepo "github.com/cppforlife/bosh-hub/release/releasetarsrepo"
-	bhrelver "github.com/cppforlife/bosh-hub/release/relver"
-	bhs3 "github.com/cppforlife/bosh-hub/s3"
-	bhstemnotesrepo "github.com/cppforlife/bosh-hub/stemcell/notesrepo"
-	bhstemsrepo "github.com/cppforlife/bosh-hub/stemcell/stemsrepo"
+	bhjobsrepo "github.com/bosh-io/web/release/jobsrepo"
+	bhnotesrepo "github.com/bosh-io/web/release/notesrepo"
+	bhrelsrepo "github.com/bosh-io/web/release/releasesrepo"
+	bhreltarsrepo "github.com/bosh-io/web/release/releasetarsrepo"
+	bhrelver "github.com/bosh-io/web/release/relver"
+	bhs3 "github.com/bosh-io/web/s3"
+	bhstemnotesrepo "github.com/bosh-io/web/stemcell/notesrepo"
+	bhstemsrepo "github.com/bosh-io/web/stemcell/stemsrepo"
 )
 
 type ReposOptions struct {

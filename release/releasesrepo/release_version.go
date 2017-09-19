@@ -6,8 +6,8 @@ import (
 	bosherr "github.com/cloudfoundry/bosh-utils/errors"
 	semiver "github.com/cppforlife/go-semi-semantic/version"
 
-	bhnotesrepo "github.com/cppforlife/bosh-hub/release/notesrepo"
-	bhreltarsrepo "github.com/cppforlife/bosh-hub/release/releasetarsrepo"
+	bhnotesrepo "github.com/bosh-io/web/release/notesrepo"
+	bhreltarsrepo "github.com/bosh-io/web/release/releasetarsrepo"
 )
 
 type ReleaseVersionRec struct {

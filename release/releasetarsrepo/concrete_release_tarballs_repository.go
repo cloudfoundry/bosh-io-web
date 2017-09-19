@@ -8,8 +8,8 @@ import (
 	bosherr "github.com/cloudfoundry/bosh-utils/errors"
 	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 
-	bhrelver "github.com/cppforlife/bosh-hub/release/relver"
-	bhs3 "github.com/cppforlife/bosh-hub/s3"
+	bhrelver "github.com/bosh-io/web/release/relver"
+	bhs3 "github.com/bosh-io/web/s3"
 )
 
 type ReleaseTarballsRepository interface {

@@ -9,13 +9,13 @@ import (
 	mart "github.com/go-martini/martini"
 	martrend "github.com/martini-contrib/render"
 
-	bhjobsrepo "github.com/cppforlife/bosh-hub/release/jobsrepo"
-	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
-	bhstemsrepo "github.com/cppforlife/bosh-hub/stemcell/stemsrepo"
-	bhjobui "github.com/cppforlife/bosh-hub/ui/job"
-	bhmiscui "github.com/cppforlife/bosh-hub/ui/misc"
-	bhrelui "github.com/cppforlife/bosh-hub/ui/release"
-	bhstemui "github.com/cppforlife/bosh-hub/ui/stemcell"
+	bhjobsrepo "github.com/bosh-io/web/release/jobsrepo"
+	bhrelsrepo "github.com/bosh-io/web/release/releasesrepo"
+	bhstemsrepo "github.com/bosh-io/web/stemcell/stemsrepo"
+	bhjobui "github.com/bosh-io/web/ui/job"
+	bhmiscui "github.com/bosh-io/web/ui/misc"
+	bhrelui "github.com/bosh-io/web/ui/release"
+	bhstemui "github.com/bosh-io/web/ui/stemcell"
 )
 
 type ReleasesController struct {

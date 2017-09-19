@@ -3,7 +3,7 @@ package release
 import (
 	"fmt"
 
-	bhrelsrepo "github.com/cppforlife/bosh-hub/release/releasesrepo"
+	bhrelsrepo "github.com/bosh-io/web/release/releasesrepo"
 )
 
 type Source struct {
