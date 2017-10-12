@@ -117,11 +117,6 @@ header h2 a.logo {
   text-transform: uppercase;
 }
 
-header h2 a.logo img {
-  width: 50px;
-  margin-top: -5px;
-}
-
 header h2 > a,
 header h2 > a:active,
 header h2 > a:hover,
@@ -255,6 +250,14 @@ pre.bash {
 
 /* Footer */
 footer { padding-bottom: 30px; }
+
+footer p.clam {
+  text-align: center;
+}
+
+footer p.clam img {
+  width: 55px;
+}
 
 svg { display: block; }
 
