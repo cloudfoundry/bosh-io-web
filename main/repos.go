@@ -25,9 +25,11 @@ type ReposOptions struct {
 	Dir     string
 	ConnURL string
 
-	ReleasesDir       string
-	ReleasesIndexDir  string
-	StemcellsIndexDir string
+	ReleasesDir      string
+	ReleasesIndexDir string
+
+	StemcellsIndexDirs      []string
+	StemcellsLegacyIndexDir string
 
 	ReleaseTarballLinker ReleaseTarballLinkerOptions
 }
@@ -97,7 +99,8 @@ func NewRepos(options ReposOptions, fs boshsys.FileSystem, logger boshlog.Logger
 		logger,
 	)
 
-	stemcellNotesRepo := bhstemnotesrepo.NewConcreteNotesRepository(options.StemcellsIndexDir, fs, logger)
+	stemcellNotesRepo := bhstemnotesrepo.NewConcreteNotesRepository(
+		options.StemcellsLegacyIndexDir, options.StemcellsIndexDirs, fs, logger)
 
 	repos := Repos{
 		releasesRepo: releasesRepo,
@@ -105,7 +108,8 @@ func NewRepos(options ReposOptions, fs boshsys.FileSystem, logger boshlog.Logger
 		releaseVersionsRepo: bhrelsrepo.NewConcreteReleaseVersionsRepository(relVerFactory, logger),
 		jobsRepo:            bhjobsrepo.NewConcreteJobsRepository(relVerFactory, logger),
 
-		s3StemcellsRepo:   bhstemsrepo.NewS3StemcellsRepository(options.StemcellsIndexDir, stemcellNotesRepo, fs, logger),
+		s3StemcellsRepo: bhstemsrepo.NewS3StemcellsRepository(
+			options.StemcellsLegacyIndexDir, options.StemcellsIndexDirs, stemcellNotesRepo, fs, logger),
 		stemcellNotesRepo: stemcellNotesRepo,
 	}
 

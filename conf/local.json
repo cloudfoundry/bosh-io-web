@@ -4,7 +4,13 @@
   "Repos": {
     "ReleasesDir": "/Users/pivotal/workspace/bosh-io/releases",
     "ReleasesIndexDir": "/Users/pivotal/workspace/bosh-io/releases-index",
-    "StemcellsIndexDir": "/Users/pivotal/workspace/bosh-io/stemcells-legacy-index",
+    "StemcellsLegacyIndexDir": "/Users/pivotal/workspace/bosh-io/stemcells-legacy-index",
+    "StemcellsIndexDirs": [
+      "/Users/pivotal/workspace/bosh-io/stemcells-core-index",
+      "/Users/pivotal/workspace/bosh-io/stemcells-cpi-index",
+      "/Users/pivotal/workspace/bosh-io/stemcells-windows-index",
+      "/Users/pivotal/workspace/bosh-io/stemcells-softlayer-index"
+    ],
 
     "ReleaseTarballLinker": {
       "Type": "S3",

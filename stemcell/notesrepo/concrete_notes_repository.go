@@ -18,27 +18,31 @@ type NoteRec struct {
 }
 
 type CNRepository struct {
-	stemcellsIndexDir string
-	fs                boshsys.FileSystem
-	logger            boshlog.Logger
+	stemcellsLegacyIndexDir string
+	stemcellsIndexDirs      []string
+
+	fs     boshsys.FileSystem
+	logger boshlog.Logger
 }
 
 func NewConcreteNotesRepository(
-	stemcellsIndexDir string,
+	stemcellsLegacyIndexDir string,
+	stemcellsIndexDirs []string,
 	fs boshsys.FileSystem,
 	logger boshlog.Logger,
 ) CNRepository {
 	return CNRepository{
-		stemcellsIndexDir: stemcellsIndexDir,
-		fs:                fs,
-		logger:            logger,
+		stemcellsLegacyIndexDir: stemcellsLegacyIndexDir,
+		stemcellsIndexDirs:      stemcellsIndexDirs,
+		fs:                      fs,
+		logger:                  logger,
 	}
 }
 
 func (r CNRepository) Find(version string) (NoteRec, bool, error) {
 	var noteRec NoteRec
 
-	contents, err := r.fs.ReadFile(filepath.Join(r.stemcellsIndexDir, version, "notes.v1.yml"))
+	contents, err := r.fs.ReadFile(filepath.Join(r.stemcellsLegacyIndexDir, version, "notes.v1.yml"))
 	if err != nil {
 		return noteRec, false, nil
 	}
