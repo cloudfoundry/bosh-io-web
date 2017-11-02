@@ -14,7 +14,7 @@ bosh-hub
 bosh-blobstore-s3
 
 # Sub repos
-docs-bosh/
+docs-bosh
 prod-conf/
 
 # Ignore generated docs
