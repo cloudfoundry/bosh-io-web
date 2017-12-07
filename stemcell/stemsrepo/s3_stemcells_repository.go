@@ -116,7 +116,7 @@ func (r S3StemcellsRepository) loadLegacyIndex() ([]s3StemcellRec, error) {
 func (r S3StemcellsRepository) loadIndex(dir string) ([]s3StemcellRec, error) {
 	recs := []s3StemcellRec{}
 
-	foundPaths, err := r.fs.Glob(filepath.Join(dir, "published", "*", "*", "stemcells.meta4"))
+	foundPaths, err := r.fs.Glob(filepath.Join(dir, "published", "*", "*", "*.meta4"))
 	if err != nil {
 		return nil, bosherr.WrapError(err, "Globbing stemcells")
 	}
