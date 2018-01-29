@@ -115,9 +115,9 @@ GEM
     i18n (0.6.11)
     inflecto (0.0.2)
     ipaddress (0.8.0)
-    json (1.8.1)
+    json (1.8.6)
     kramdown (1.4.2)
-    libv8 (3.16.14.7)
+    libv8 (3.16.14.19)
     listen (2.7.11)
       celluloid (>= 0.15.2)
       rb-fsevent (>= 0.9.3)
@@ -186,7 +186,7 @@ GEM
     rb-inotify (0.9.5)
       ffi (>= 0.5.0)
     redcarpet (3.2.0)
-    ref (1.0.5)
+    ref (2.0.0)
     robotex (1.0.0)
     rouge (1.7.2)
     ruby-progressbar (1.6.0)
@@ -204,8 +204,8 @@ GEM
     sprockets-sass (1.2.0)
       sprockets (~> 2.0)
       tilt (~> 1.1)
-    therubyracer (0.12.1)
-      libv8 (~> 3.16.14.0)
+    therubyracer (0.12.3)
+      libv8 (~> 3.16.14.15)
       ref
     thor (0.19.1)
     thread_safe (0.3.4)
@@ -224,6 +224,7 @@ GEM
     vienna (0.4.0)
       rack (~> 1.5)
     wkhtmltopdf-binary-cf (0.12.3)
+    xmlrpc (0.3.0)
 
 PLATFORMS
   ruby
@@ -231,3 +232,7 @@ PLATFORMS
 DEPENDENCIES
   bookbinder!
   therubyracer
+  xmlrpc
+
+BUNDLED WITH
+   1.16.0
