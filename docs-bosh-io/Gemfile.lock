@@ -115,9 +115,9 @@ GEM
     i18n (0.6.11)
     inflecto (0.0.2)
     ipaddress (0.8.0)
-    json (1.8.1)
+    json (1.8.6)
     kramdown (1.4.2)
-    libv8 (3.16.14.7)
+    libv8 (3.16.14.19)
     listen (2.7.11)
       celluloid (>= 0.15.2)
       rb-fsevent (>= 0.9.3)
@@ -231,3 +231,6 @@ PLATFORMS
 DEPENDENCIES
   bookbinder!
   therubyracer
+
+BUNDLED WITH
+   1.15.4
