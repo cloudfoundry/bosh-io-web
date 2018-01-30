@@ -1,13 +1,6 @@
 ## `bosh-hub`
 
-* [Tech overview](docs/tech-overview.md)
-* [Prod setup](docs/prod-setup.md)
-* [Worker setup](docs/worker-setup.md)
-
-#### Misc
-
-* [Recorded releases](docs/recorded-releases.md)
-* [Using bosh-blobstore-s3](docs/using-bosh-blobstore-s3.md)
+* [Publishing stemcells](docs/publishing-stemcells.md)
 
 #### Run Documentation Locally
 
@@ -32,5 +25,3 @@ cd ..
 ```
 
 Open [http://localhost:3000/docs](http://localhost:3000/docs)
- 
-
