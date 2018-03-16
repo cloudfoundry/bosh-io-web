@@ -13,13 +13,23 @@ var (
 		},
 
 		Distro{
+			Name: "Windows 2016",
+
+			OSMatches: []StemcellOSMatch{
+				{OSName: "windows", OSVersion: "2016"},
+			},
+
+			Sort: 2,
+		},
+
+		Distro{
 			Name: "Windows 2012R2",
 
 			OSMatches: []StemcellOSMatch{
 				{OSName: "windows", OSVersion: "2012R2"},
 			},
 
-			Sort: 2,
+			Sort: 3,
 		},
 
 		Distro{
@@ -29,7 +39,7 @@ var (
 				{OSName: "centos", OSVersion: "7"},
 			},
 
-			Sort: 3,
+			Sort: 4,
 		},
 	}
 )

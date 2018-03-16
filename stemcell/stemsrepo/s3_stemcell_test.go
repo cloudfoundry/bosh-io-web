@@ -227,6 +227,19 @@ var _ = Describe("NewS3Stemcell", func() {
 			AgentType: "go",
 		},
 
+		"light-bosh-stemcell-1709.3-google-kvm-windows2016-go_agent.tgz": ExtractedPieces{
+			Name:    "bosh-google-kvm-windows2016-go_agent",
+			Version: "1709.3",
+
+			InfName: "google",
+			HvName:  "kvm",
+
+			OSName:    "windows",
+			OSVersion: "2016",
+
+			AgentType: "go",
+		},
+
 		"light-bosh-stemcell-1089.0-aws-xen-hvm-windows2012R2-go_agent.tgz": ExtractedPieces{
 			Name:    "bosh-aws-xen-hvm-windows2012R2-go_agent",
 			Version: "1089.0",
