@@ -19,7 +19,7 @@ cd docs-bosh-io
 bundle install 
 #`bundle update <gem>` can help in case `bundle install` has issues with installing dependencies  
 cd ..
-./build-docs.sh
+./build-docs.sh # bookbinder errors on missing links... but they end up working?
 ./run-local.sh
 
 ```
