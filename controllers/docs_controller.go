@@ -87,7 +87,7 @@ func (c DocsController) Page(r martrend.Render, params mart.Params) {
 
 func (c DocsController) findPage(tmpl string) (interface{}, error) {
 	page := docPage{
-		ContributeChangesURL: fmt.Sprintf("%s/%s.html.md.erb", docsControllerGithubURL, tmpl),
+		ContributeChangesURL: fmt.Sprintf("%s/%s.md", docsControllerGithubURL, tmpl),
 	}
 
 	// init-<cpi> pages have an example manifest which lists latest releases
