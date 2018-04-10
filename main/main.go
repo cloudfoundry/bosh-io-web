@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"html/template"
+	"net/http"
 	"os"
 	"strings"
 
@@ -69,8 +70,9 @@ func runControllers(controllerFactory bhctrls.Factory, analyticsConfig Analytics
 
 	configureAssets(m, analyticsConfig, logger)
 
-	homeController := controllerFactory.HomeController
-	m.Get("/", homeController.Home)
+	m.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, "/docs/", http.StatusTemporaryRedirect)
+	})
 
 	docsController := controllerFactory.DocsController
 	m.Get("/docs", docsController.Page)

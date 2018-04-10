@@ -19,7 +19,6 @@ type FactoryRepos interface {
 }
 
 type Factory struct {
-	HomeController HomeController
 	DocsController DocsController
 
 	ReleasesController        ReleasesController
@@ -33,8 +32,6 @@ type Factory struct {
 
 func NewFactory(r FactoryRepos, runner boshsys.CmdRunner, logger boshlog.Logger) (Factory, error) {
 	factory := Factory{
-		HomeController: NewHomeController(r.ReleasesRepo(), r.StemcellsRepo(), logger),
-
 		DocsController: NewDocsController(
 			r.ReleasesRepo(),
 			r.ReleaseVersionsRepo(),
