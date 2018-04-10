@@ -3,6 +3,9 @@ package main
 import (
 	"encoding/json"
 
+	yaml "gopkg.in/yaml.v2"
+
+	"github.com/bosh-io/web/controllers"
 	bosherr "github.com/cloudfoundry/bosh-utils/errors"
 	boshsys "github.com/cloudfoundry/bosh-utils/system"
 )
@@ -33,4 +36,20 @@ func NewConfigFromPath(path string, fs boshsys.FileSystem) (Config, error) {
 	}
 
 	return config, nil
+}
+
+func LoadRedirects(fs boshsys.FileSystem) (controllers.RedirectsConfig, error) {
+	var redirects controllers.RedirectsConfig
+
+	bytes, err := fs.ReadFile("conf/redirects.yml")
+	if err != nil {
+		return redirects, bosherr.WrapErrorf(err, "Reading redirects")
+	}
+
+	err = yaml.Unmarshal(bytes, &redirects)
+	if err != nil {
+		return redirects, bosherr.WrapErrorf(err, "Unmarshalling redirects")
+	}
+
+	return redirects, nil
 }

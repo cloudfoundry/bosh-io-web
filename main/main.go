@@ -37,7 +37,10 @@ func main() {
 	repos, err := NewRepos(config.Repos, fs, logger)
 	ensureNoErr(logger, "Failed building repos", err)
 
-	controllerFactory, err := bhctrls.NewFactory(repos, runner, logger)
+	redirects, err := LoadRedirects(fs)
+	ensureNoErr(logger, "Failed loading redirects", err)
+
+	controllerFactory, err := bhctrls.NewFactory(redirects, repos, runner, logger)
 	ensureNoErr(logger, "Failed building controller factory", err)
 
 	runControllers(controllerFactory, config.Analytics, logger)
@@ -69,6 +72,8 @@ func runControllers(controllerFactory bhctrls.Factory, analyticsConfig Analytics
 	m := mart.Classic()
 
 	configureAssets(m, analyticsConfig, logger)
+
+	m.Use(controllerFactory.RedirectsController.ServeHTTP)
 
 	m.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/docs/", http.StatusTemporaryRedirect)

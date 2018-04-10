@@ -19,6 +19,8 @@ type FactoryRepos interface {
 }
 
 type Factory struct {
+	RedirectsController RedirectsController
+
 	DocsController DocsController
 
 	ReleasesController        ReleasesController
@@ -30,8 +32,10 @@ type Factory struct {
 	PackagesController PackagesController
 }
 
-func NewFactory(r FactoryRepos, runner boshsys.CmdRunner, logger boshlog.Logger) (Factory, error) {
+func NewFactory(redirects RedirectsConfig, r FactoryRepos, runner boshsys.CmdRunner, logger boshlog.Logger) (Factory, error) {
 	factory := Factory{
+		RedirectsController: NewRedirectsController(redirects),
+
 		DocsController: NewDocsController(
 			r.ReleasesRepo(),
 			r.ReleaseVersionsRepo(),
