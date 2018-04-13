@@ -1,4 +1,5 @@
 # old: new
+/docs: /docs/
 /docs/README.html: /docs/README/
 /docs/about.html: /docs/about/
 /docs/addons-common.html: /docs/addons-common/

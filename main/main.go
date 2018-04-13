@@ -74,14 +74,16 @@ func runControllers(controllerFactory bhctrls.Factory, analyticsConfig Analytics
 	configureAssets(m, analyticsConfig, logger)
 
 	m.Use(controllerFactory.RedirectsController.ServeHTTP)
+	m.NotFound(controllerFactory.NotFoundController.ServeHTTP)
 
 	m.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/docs/", http.StatusTemporaryRedirect)
 	})
 
-	docsController := controllerFactory.DocsController
-	m.Get("/docs", docsController.Page)
-	m.Get("/docs/**", docsController.Page)
+	m.Get("/docs/**",
+		mart.Static("templates/docs", mart.StaticOptions{Prefix: "/docs"}),
+		controllerFactory.NotFoundController.ServeHTTP,
+	)
 
 	// Release viewing
 	releasesController := controllerFactory.ReleasesController
