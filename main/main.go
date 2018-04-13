@@ -143,6 +143,15 @@ func configureAssets(m *mart.ClassicMartini, analyticsConfig AnalyticsConfig, lo
 		},
 	}
 
+	utilityFuncs := template.FuncMap{
+		"add": func(i1 int, i2 int) int {
+			return i1 + i2
+		},
+		"sub": func(i1 int, i2 int) int {
+			return i1 - i2
+		},
+	}
+
 	// Use prefix to cache bust images, stylesheets, and js
 	m.Use(mart.Static(
 		"./public",
@@ -164,7 +173,7 @@ func configureAssets(m *mart.ClassicMartini, analyticsConfig AnalyticsConfig, lo
 			Layout:     "layout",
 			Directory:  "./templates",
 			Extensions: []string{".tmpl", ".html"},
-			Funcs:      []template.FuncMap{assetsFuncs, analyticsConfigFuncs, htmlFuncs},
+			Funcs:      []template.FuncMap{assetsFuncs, analyticsConfigFuncs, htmlFuncs, utilityFuncs},
 		},
 	))
 }

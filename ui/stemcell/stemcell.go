@@ -26,6 +26,17 @@ var (
 		"warden":    "BOSH Lite", // todo warden and boshlite are flipped
 	}
 
+	fullInfNames = map[string]string{
+		"aws":       "Amazon Web Services",
+		"openstack": "OpenStack",
+		"vsphere":   "VMware vSphere",
+		"vcloud":    "VMware vCloud",
+		"azure":     "Microsoft Azure",
+		"google":    "Google Cloud Platform",
+		"softlayer": "SoftLayer",
+		"warden":    "BOSH Lite", // todo warden and boshlite are flipped
+	}
+
 	prettyHvNames = map[string]string{
 		"xen":      "Xen",
 		"xen-hvm":  "Xen-HVM",
@@ -56,7 +67,9 @@ type Stemcell struct {
 }
 
 type StemcellSource struct {
-	friendlyName string
+	friendlyName       string
+	infrastructureName string
+	linkName           string
 
 	isLight    bool
 	isForChina bool
@@ -107,6 +120,11 @@ func (s *Stemcell) AddAsSource(s_ bhstemsrepo.Stemcell) {
 		infName = s_.InfName()
 	}
 
+	infNameFull, ok := fullInfNames[s_.InfName()]
+	if !ok {
+		infNameFull = s_.InfName()
+	}
+
 	hvName, ok := prettyHvNames[s_.HvName()]
 	if !ok {
 		hvName = s_.HvName()
@@ -117,17 +135,22 @@ func (s *Stemcell) AddAsSource(s_ bhstemsrepo.Stemcell) {
 		optionalDiskFormat = fmt.Sprintf(" (%s)", s_.DiskFormat())
 	}
 
+	linkName := "Full Stemcell"
 	optionalLight := ""
 	if s_.IsLight() {
 		if s_.IsForChina() {
 			optionalLight = " Light China"
+			linkName = "Light China Stemcell"
 		} else {
 			optionalLight = " Light"
+			linkName = "Light Stemcell"
 		}
 	}
 
 	source := &StemcellSource{
-		friendlyName: fmt.Sprintf("%s %s%s%s", infName, hvName, optionalDiskFormat, optionalLight),
+		friendlyName:       fmt.Sprintf("%s %s%s%s", infName, hvName, optionalDiskFormat, optionalLight),
+		infrastructureName: infNameFull,
+		linkName:           linkName,
 
 		URL:  s_.URL(),
 		Size: s_.Size(),
@@ -237,7 +260,9 @@ func (s Stemcell) AllVersionsURL() string { return fmt.Sprintf("/stemcells/%s", 
 
 func (s StemcellSource) UserVisibleDownloadURL() string { return s.URL }
 func (s StemcellSource) FriendlyName() string           { return s.friendlyName }
+func (s StemcellSource) InfrastructureName() string     { return s.infrastructureName }
 func (s StemcellSource) FormattedSize() string          { return humanize.Bytes(s.Size) }
+func (s StemcellSource) LinkName() string               { return s.linkName }
 
 func (s StemcellManifestNameSorting) Len() int           { return len(s) }
 func (s StemcellManifestNameSorting) Less(i, j int) bool { return s[i].ManifestName < s[j].ManifestName }
