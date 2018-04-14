@@ -1,0 +1,85 @@
+<div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+  <div class="md-sidebar_scrollwrap">
+    <div class="md-sidebar__inner">
+      <nav class="md-nav md-nav--primary" data-md-level="0">
+        <ul class="md-nav__list" data-md-scrollfix>
+          <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+            <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+              <label class="md-nav__title">Releases</label>
+              <ul class="md-nav__list" data-md-scrollfix>
+                <li class="md-nav__item">
+                  <a href="/releases/" title="Releases" class="md-nav__link">All Releases</a>
+                </li>
+                <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+                  <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4-3" type="checkbox" id="nav-4-3" checked>
+                  <label class="md-nav__link" for="nav-4-3">
+                    {{ .Name }}/{{ .Version }}
+                  </label>
+                  <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+                    <label class="md-nav__title" for="nav-4-3">{{ .Name }}/{{ .Version }}</label>
+                    <ul class="md-nav__list" data-md-scrollfix>
+                    <li class="md-nav__item">
+                      <a href="{{ .URL }}" title="Overview" class="md-nav__link">Overview</a>
+                    </li>
+                    {{ if .Jobs }}
+                      <li class="md-nav__item md-nav__item--nested">
+                        <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4-12" type="checkbox" id="nav-4-12" checked="">
+                        <label class="md-nav__link" for="nav-4-12">
+                          Jobs
+                        </label>
+                        <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+                          <label class="md-nav__title" for="nav-4-12">
+                            Jobs
+                          </label>
+                          <ul class="md-nav__list" data-md-scrollfix="">
+                            {{ range .Jobs }}
+                              <li class="md-nav__item">
+                                <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
+                                <label class="md-nav__link" for="toc">
+                                  {{ .Name }}
+                                </label>
+                                <a href="{{ .URL }}" title="{{ .Name }}" class="md-nav__link">
+                                  {{ .Name }}
+                                </a>
+                              </li>
+                            {{ end }}
+                          </ul>
+                        </nav>
+                      </li>
+                    {{ end }}
+                    {{ if .Packages }}
+                      <li class="md-nav__item md-nav__item--nested">
+                        <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4-13" type="checkbox" id="nav-4-13" checked="">
+                        <label class="md-nav__link" for="nav-4-13">
+                          Packages
+                        </label>
+                        <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+                          <label class="md-nav__title" for="nav-4-13">
+                            Packages
+                          </label>
+                          <ul class="md-nav__list" data-md-scrollfix="">
+                            {{ range .Packages }}
+                              <li class="md-nav__item">
+                                <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
+                                <label class="md-nav__link" for="toc">
+                                  {{ .Name }}
+                                </label>
+                                <a href="{{ .URL }}" title="{{ .Name }}" class="md-nav__link">
+                                  {{ .Name }}
+                                </a>
+                              </li>
+                            {{ end }}
+                          </ul>
+                        </nav>
+                      </li>
+                    {{ end }}
+                  </nav>
+                </li>
+              </ul>
+            </nav>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>

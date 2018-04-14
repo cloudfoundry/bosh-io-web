@@ -9,13 +9,16 @@
                 <label class="md-nav__title">Releases</label>
                 <ul class="md-nav__list" data-md-scrollfix>
                   <li class="md-nav__item">
-                    <a href="/releases/" title="Releases" class="md-nav__link">&laquo; All Releases</a>
-                  </li>
-                  <li class="md-nav__item">
-                    <a href="/releases/" title="cloudfoundry" class="md-nav__link">&laquo; cloudfoundry</a>
+                    <a href="/releases/" title="Releases" class="md-nav__link">All Releases</a>
                   </li>
                   <li class="md-nav__item md-nav__item--active">
-                    <a href="/releases/" title="bosh" class="md-nav__link md-nav__link--active">bosh</a>
+                    <a href="{{ .URL }}" title="{{ if .Releases }}{{ with index .Releases 0 }}{{ .Name }}{{ end }}{{ else }}{{ .Source.Short }}{{ end }}" class="md-nav__link md-nav__link--active">
+                      {{ if .Releases }}
+                        {{ with index .Releases 0 }}{{ .Name }}{{ end }}
+                      {{ else }}
+                        {{ .Source.Short }}
+                      {{ end }}
+                    </a>
                   </li>
                 </ul>
               </nav>
@@ -38,7 +41,7 @@
               <a href="#latest" title="Latest Version" class="md-nav__link">Latest Version</a>
             </li>
             <li class="md-nav__item">
-              <a href="#older" title="Version History" class="md-nav__link">Older Versions</a>
+              <a href="#versions" title="All Versions" class="md-nav__link">All Versions</a>
             </li>
           </ul>
         </nav>
@@ -75,10 +78,10 @@
       {{ end }}{{ end }}
 
 
-      <h2 id="older">Older Versions<a class="headerlink" href="#older" title="Permanent link">&para;</a></h2>
+      <h2 id="versions">All Versions<a class="headerlink" href="#older" title="Permanent link">&para;</a></h2>
 
       {{ if .Releases }}
-        {{ range .Releases }}{{ if (ne .IsLatest true) }}
+        {{ range .Releases }}
           <h3 id="v{{ .Version }}">v{{ .Version }}<a class="headerlink" href="#v{{ .Version }}" title="Permanent link">&para;</a></h3>
 
           <ul>
@@ -91,7 +94,7 @@
               {{ end }}
             </li>
           </ul>
-        {{ end }}{{ end }}
+        {{ end }}
       {{ else }}
         <p class="empty">No release versions</p>
       {{ end }}

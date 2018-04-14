@@ -1,0 +1,12 @@
+{{ range . }}
+  <li class="md-nav__item">
+    <a href="#{{ .Anchor }}" title="{{ .Key }}" class="md-nav__link">{{ .Key }}</a>
+    {{ if .Children }}
+      <nav class="md-nav">
+        <ul class="md-nav__list">
+          {{ template "jobs/_nav_properties" .Children }}
+        </ul>
+      </nav>
+    {{ end }}
+  </li>
+{{ end }}

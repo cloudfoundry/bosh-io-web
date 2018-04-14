@@ -10,88 +10,50 @@ import (
 type PropertyItem struct {
 	Indent int
 
-	Key    string
-	Anchor string
+	FullPath string
+	Key      string
+	Anchor   string
 
 	// HasDefaults shows if either this item or sub-items have defaults
 	MissingValues bool
 
+	// technically could have both...
 	Property *Property
+	Children map[string]*PropertyItem
 }
 
-func NewPropertyItems(props []Property) []PropertyItem {
-	var items []*PropertyItem
-	var itemsByIndent []*PropertyItem
+func NewPropertyItems(props []Property) map[string]*PropertyItem {
+	root := PropertyItem{
+		Children: map[string]*PropertyItem{},
+	}
 
-	var prevProp *Property
+	for _, prop := range props {
+		parts := strings.Split(prop.Name, ".")
+		relativeRoot := &root
 
-	for i, prop := range props {
-		depth, parts := matchingPropsDepth(prevProp, prop)
-
-		lastJ := len(parts) - 1
-
-		for j, part := range parts {
-			if j < depth {
-				continue
-			} else {
-				itemsByIndent = itemsByIndent[0:j]
-			}
-
-			item := PropertyItem{
-				Indent: j,
-				Key:    part,
-			}
-
-			if j == lastJ {
-				item.Property = &props[i]
-				item.MissingValues = !props[i].HasDefault()
-				item.Anchor = prop.Name
-
-				// Propagate missing value mark to the top level item
-				if item.MissingValues {
-					for _, item := range itemsByIndent {
-						item.MissingValues = true
-					}
+		for partIdx, part := range parts {
+			_, found := relativeRoot.Children[part]
+			if !found {
+				fullPath := strings.Join(parts[0:partIdx+1], ".")
+				relativeRoot.Children[part] = &PropertyItem{
+					Indent:   partIdx,
+					Key:      part,
+					FullPath: fullPath,
+					Anchor:   "p=" + fullPath,
+					Children: map[string]*PropertyItem{},
 				}
-			} else {
-				item.Anchor = strings.Join(parts[0:j+1], ".")
 			}
 
-			item.Anchor = "p=" + item.Anchor
-
-			items = append(items, &item)
-			itemsByIndent = append(itemsByIndent, &item)
+			relativeRoot = relativeRoot.Children[part]
 		}
 
-		prevProp = &props[i]
+		relativeRoot.Property = &prop
+		relativeRoot.MissingValues = !prop.HasDefault()
 	}
 
-	// Non-pointer items array
-	copiedItems := []PropertyItem{}
+	// TODO un-pointerify or use array like before?
 
-	for _, item := range items {
-		copiedItems = append(copiedItems, *item)
-	}
-
-	return copiedItems
-}
-
-func matchingPropsDepth(prevProp *Property, currProp Property) (int, []string) {
-	currParts := strings.Split(currProp.Name, ".")
-
-	if prevProp == nil {
-		return 0, currParts
-	}
-
-	prevParts := strings.Split(prevProp.Name, ".")
-
-	for i, currPart := range currParts {
-		if len(prevParts) == i || prevParts[i] != currPart {
-			return i, currParts
-		}
-	}
-
-	return len(currParts), currParts
+	return root.Children
 }
 
 func (i PropertyItem) PoundAnchor() string {

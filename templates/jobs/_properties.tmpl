@@ -1,4 +1,4 @@
-{{ range .PropertyItems }}
+{{ range . }}
   <h{{ add .Indent 3 }} id="{{ .Anchor }}"><code>{{ .Key }}</code><a class="headerlink" href="#{{ .Anchor }}" title="Permanent link">&para;</a></h{{ add .Indent 3 }}>
 
   {{ if .Property }}
@@ -21,9 +21,11 @@
         {{ end }}
       {{ end }}
     </dl>
-  {{ else }}
+  {{ end }}
+
+  {{ if .Children }}
     <blockquote>
+      {{ template "jobs/_properties" .Children }}
+    </blockquote>
   {{ end }}
 {{ end }}
-<!-- TODO don't know how to close; properties should be hierarchical -->
-</blockquote></blockquote></blockquote></blockquote></blockquote></blockquote>

@@ -1,33 +1,5 @@
 <div class="md-main__inner md-grid" data-md-component="container">
-  <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
-    <div class="md-sidebar_scrollwrap">
-      <div class="md-sidebar__inner">
-        <nav class="md-nav md-nav--primary" data-md-level="0">
-          <ul class="md-nav__list" data-md-scrollfix>
-            <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-              <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-                <label class="md-nav__title">Releases</label>
-                <ul class="md-nav__list" data-md-scrollfix>
-                  <li class="md-nav__item">
-                    <a href="/releases/" title="Releases" class="md-nav__link">&laquo; All Releases</a>
-                  </li>
-                  <li class="md-nav__item">
-                    <a href="/releases/" title="cloudfoundry" class="md-nav__link">&laquo; cloudfoundry</a>
-                  </li>
-                  <li class="md-nav__item">
-                    <a href="/releases/" title="bosh" class="md-nav__link">&laquo; bosh</a>
-                  </li>
-                  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-                    <a href="/releases/" title="v{{ .Version }}" class="md-nav__link md-nav__link--active">{{ .Version }}</a>
-                  </li>
-                </ul>
-              </nav>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </div>
-  </div>
+  {{ template "releases/_nav_version" . }}
   <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
     <div class="md-sidebar__scrollwrap">
       <div class="md-sidebar__inner">
