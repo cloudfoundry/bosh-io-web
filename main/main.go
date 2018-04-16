@@ -6,7 +6,8 @@ import (
 	"html/template"
 	"net/http"
 	"os"
-	"strings"
+	"path"
+	"path/filepath"
 
 	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 	boshsys "github.com/cloudfoundry/bosh-utils/system"
@@ -22,7 +23,6 @@ const mainLogTag = "main"
 var (
 	debugOpt      = flag.Bool("debug", false, "Output debug logs")
 	configPathOpt = flag.String("configPath", "", "Path to configuration file")
-	assetsIDOpt   = flag.String("assetsID", "", "Assets ID value")
 )
 
 func main() {
@@ -85,49 +85,124 @@ func runControllers(controllerFactory bhctrls.Factory, analyticsConfig Analytics
 		controllerFactory.NotFoundController.ServeHTTP,
 	)
 
-	// Release viewing
-	releasesController := controllerFactory.ReleasesController
-	m.Get("/releases", releasesController.Index)
-	m.Get("/releases/**", releasesController.Show)
-	m.Get("/api/v1/releases/**", releasesController.APIV1Index)
+	{
+		// Stemcell viewing
+		stemcellsController := controllerFactory.StemcellsController
+		m.Get("/stemcells", stemcellsController.Index)
+		m.Get("/stemcells/**", stemcellsController.Index)
 
-	jobsController := controllerFactory.JobsController
-	m.Get("/jobs/:name", jobsController.Show)
+		m.Get("/d/stemcells/**", stemcellsController.Download)
 
-	packagesController := controllerFactory.PackagesController
-	m.Get("/packages/:name", packagesController.Show)
+		m.Get("/api/v1/stemcells/**", stemcellsController.APIV1Index)
+	}
 
-	// Stemcell viewing
-	stemcellsController := controllerFactory.StemcellsController
-	m.Get("/stemcells", stemcellsController.Index)
-	m.Get("/stemcells/**", stemcellsController.Index)
-	m.Get("/d/stemcells/**", stemcellsController.Download)
-	m.Get("/api/v1/stemcells/**", stemcellsController.APIV1Index)
+	{
+		// Release viewing
+		releasesController := controllerFactory.ReleasesController
+		m.Get("/releases", releasesController.Index)
+		m.Get("/releases/**", releasesController.Show)
 
-	// ...make sure /d/** is after /d/stemcells/**
-	releaseTarballsController := controllerFactory.ReleaseTarballsController
-	m.Get("/d/**", releaseTarballsController.Download)
+		jobsController := controllerFactory.JobsController
+		m.Get("/jobs/:name", jobsController.Show)
+
+		packagesController := controllerFactory.PackagesController
+		m.Get("/packages/:name", packagesController.Show)
+
+		// ...make sure /d/** is after /d/stemcells/**
+		releaseTarballsController := controllerFactory.ReleaseTarballsController
+		m.Get("/d/**", releaseTarballsController.Download)
+
+		m.Get("/api/v1/releases/**", releasesController.APIV1Index)
+	}
 
 	m.Run()
 }
 
 func configureAssets(m *mart.ClassicMartini, analyticsConfig AnalyticsConfig, logger boshlog.Logger) {
-	assetsID := strings.TrimSpace(*assetsIDOpt)
+	themeStylesheetApplication, err := filepath.Glob("templates/docs/assets/stylesheets/application.*.css")
+	if err != nil {
+		logger.Error(mainLogTag, fmt.Sprintf("Failed to find application.*.css: %v", err))
+		os.Exit(1)
+	} else if len(themeStylesheetApplication) != 1 {
+		logger.Error(mainLogTag, fmt.Sprintf("Failed to find exactly one application.*.css: found %d", len(themeStylesheetApplication)))
+		os.Exit(1)
+	}
 
-	if len(assetsID) == 0 {
-		logger.Error(mainLogTag, "Expected non-empty assets ID")
+	themeStylesheetApplicationPalette, err := filepath.Glob("templates/docs/assets/stylesheets/application-palette.*.css")
+	if err != nil {
+		logger.Error(mainLogTag, fmt.Sprintf("Failed to find application-palette.*.css: %v", err))
+		os.Exit(1)
+	} else if len(themeStylesheetApplicationPalette) != 1 {
+		logger.Error(mainLogTag, fmt.Sprintf("Failed to find exactly one application-palette.*.css: found %d", len(themeStylesheetApplicationPalette)))
+		os.Exit(1)
+	}
+
+	themeStylesheetExtra, err := filepath.Glob("templates/docs/assets/stylesheets/extra.*.css")
+	if err != nil {
+		logger.Error(mainLogTag, fmt.Sprintf("Failed to find extra.*.css: %v", err))
+		os.Exit(1)
+	} else if len(themeStylesheetExtra) != 1 {
+		logger.Error(mainLogTag, fmt.Sprintf("Failed to find exactly one extra.*.css: found %d", len(themeStylesheetExtra)))
+		os.Exit(1)
+	}
+
+	themeJavascriptModernizr, err := filepath.Glob("templates/docs/assets/javascripts/modernizr.*.js")
+	if err != nil {
+		logger.Error(mainLogTag, fmt.Sprintf("Failed to find modernizr.*.js: %v", err))
+		os.Exit(1)
+	} else if len(themeJavascriptModernizr) != 1 {
+		logger.Error(mainLogTag, fmt.Sprintf("Failed to find exactly one modernizr.*.js: found %d", len(themeJavascriptModernizr)))
+		os.Exit(1)
+	}
+
+	themeJavascriptApplication, err := filepath.Glob("templates/docs/assets/javascripts/application.*.js")
+	if err != nil {
+		logger.Error(mainLogTag, fmt.Sprintf("Failed to find application.*.js: %v", err))
+		os.Exit(1)
+	} else if len(themeJavascriptApplication) != 1 {
+		logger.Error(mainLogTag, fmt.Sprintf("Failed to find exactly one application.*.js: found %d", len(themeJavascriptApplication)))
+		os.Exit(1)
+	}
+
+	themeImageFavicon, err := filepath.Glob("templates/docs/assets/images/favicon.*.png")
+	if err != nil {
+		logger.Error(mainLogTag, fmt.Sprintf("Failed to find favicon.*.png: %v", err))
+		os.Exit(1)
+	} else if len(themeImageFavicon) != 1 {
+		logger.Error(mainLogTag, fmt.Sprintf("Failed to find exactly one favicon.*.png: found %d", len(themeImageFavicon)))
+		os.Exit(1)
+	}
+
+	themeImageLogo, err := filepath.Glob("templates/docs/assets/images/logo.*.png")
+	if err != nil {
+		logger.Error(mainLogTag, fmt.Sprintf("Failed to find logo.*.png: %v", err))
+		os.Exit(1)
+	} else if len(themeImageLogo) != 1 {
+		logger.Error(mainLogTag, fmt.Sprintf("Failed to find exactly one logo.*.png: found %d", len(themeImageLogo)))
 		os.Exit(1)
 	}
 
 	assetsFuncs := template.FuncMap{
-		"cssPath": func(fileName string) (string, error) {
-			return "/" + assetsID + "/stylesheets/" + fileName, nil
+		"themeStylesheetApplication": func() string {
+			return fmt.Sprintf("/docs/assets/stylesheets/%s", path.Base(themeStylesheetApplication[0]))
 		},
-		"jsPath": func(fileName string) (string, error) {
-			return "/" + assetsID + "/javascript/" + fileName, nil
+		"themeStylesheetApplicationPalette": func() string {
+			return fmt.Sprintf("/docs/assets/stylesheets/%s", path.Base(themeStylesheetApplicationPalette[0]))
 		},
-		"imgPath": func(fileName string) (string, error) {
-			return "/" + assetsID + "/images/" + fileName, nil
+		"themeStylesheetExtra": func() string {
+			return fmt.Sprintf("/docs/assets/stylesheets/%s", path.Base(themeStylesheetExtra[0]))
+		},
+		"themeJavascriptModernizr": func() string {
+			return fmt.Sprintf("/docs/assets/javascripts/%s", path.Base(themeJavascriptModernizr[0]))
+		},
+		"themeJavascriptApplication": func() string {
+			return fmt.Sprintf("/docs/assets/javascripts/%s", path.Base(themeJavascriptApplication[0]))
+		},
+		"themeImageFavicon": func() string {
+			return fmt.Sprintf("/docs/assets/images/%s", path.Base(themeImageFavicon[0]))
+		},
+		"themeImageLogo": func() string {
+			return fmt.Sprintf("/docs/assets/images/%s", path.Base(themeImageLogo[0]))
 		},
 	}
 
@@ -152,27 +227,11 @@ func configureAssets(m *mart.ClassicMartini, analyticsConfig AnalyticsConfig, lo
 		},
 	}
 
-	// Use prefix to cache bust images, stylesheets, and js
-	m.Use(mart.Static(
-		"./public",
-		mart.StaticOptions{
-			Prefix: assetsID,
-		},
-	))
-
-	// Make sure docs' images are available as `docs/images/X`
-	m.Use(mart.Static(
-		"./templates/docs/images",
-		mart.StaticOptions{
-			Prefix: "docs/images",
-		},
-	))
-
 	m.Use(martrend.Renderer(
 		martrend.Options{
 			Layout:     "layout",
 			Directory:  "./templates",
-			Extensions: []string{".tmpl", ".html"},
+			Extensions: []string{".tmpl"},
 			Funcs:      []template.FuncMap{assetsFuncs, analyticsConfigFuncs, htmlFuncs, utilityFuncs},
 		},
 	))

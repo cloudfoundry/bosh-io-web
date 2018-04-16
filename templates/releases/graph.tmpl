@@ -1,38 +1,32 @@
-<header>
-  <div class="container">
-    <h2>
-      {{ template "shared/logo" }}
+{{ template "shared/_nav_tabs" "Releases" }}
+<main class="md-main">
+  <div class="md-main__inner md-grid" data-md-component="container">
+    {{ template "shared/_nav_primary" .NavPrimary }}
+    <div class="md-content">
+      <article class="md-content__inner md-typeset">
+        <h1>{{ .Name }}/{{ .Version }}</h1>
 
-      <span>release:</span>
-      <a href="{{ .AllVersionsURL }}">{{ .Source }}</a>
+        <p>
+          The following represents dependencies between jobs and packages. See below for more details.
+        </p>
 
-      <span>/</span>
-      <a href="{{ .URL }}">{{ .Version }}</a>
-    </h2>
-  </div>
-</header>
+        {{ if .Graph }}
+          <div>{{ .Graph.SVG }}</div>
+        {{ else }}
+          <p class="empty">No packages</p>
+        {{ end }}
 
-<main>
-  <div class="container page-sep">
-    <div class="row">
-      <div class="col-md-12">
-        <h3 class="page-header">Release <span>'{{ .Name }}' v{{ .Version }}</span></h3>
-
+        <p>
+          Legend:
+        </p>
+        
         <ul>
           <li>Solid nodes represent jobs</li>
           <li>Solid arrows represent jobs' runtime package dependencies</li>
           <li>Text nodes represent packages</li>
           <li>Dotted arrows represent packages' compilation dependencies</li>
         </ul>
-
-        <hr/>
-
-        {{ if .Graph }}
-          <center>{{ .Graph.SVG }}</center>
-        {{ else }}
-          <p class="empty">No packages</p>
-        {{ end }}
-      </div>
+      </article>
     </div>
   </div>
 </main>

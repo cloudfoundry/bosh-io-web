@@ -7,7 +7,7 @@
       <meta http-equiv="x-ua-compatible" content="ie=edge">
 
 
-        <link rel="canonical" href="https://bosh.io/docs/">
+        <!-- <link rel="canonical" href="https://bosh.io/docs/"> -->
 
 
 
@@ -29,22 +29,22 @@
 
         <meta name="lang:search.tokenizer" content="[\s\-]+">
 
-      <link rel="shortcut icon" href="/docs/assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-0.17.3, mkdocs-material-2.7.1">
+      <link rel="shortcut icon" href="{{ themeImageFavicon }}">
+      <meta name="generator" content="bosh-io/web, mkdocs-0.17.3, mkdocs-material-2.7.1">
 
 
 
-        <title>Cloud Foundry BOSH</title>
+        <title>Cloud Foundry BOSH</title><!-- TODO .PageTitle -->
 
 
 
-      <link rel="stylesheet" href="/docs/assets/stylesheets/application.8d40d89b.css">
+      <link rel="stylesheet" href="{{ themeStylesheetApplication }}">
 
-        <link rel="stylesheet" href="/docs/assets/stylesheets/application-palette.6079476c.css">
+        <link rel="stylesheet" href="{{ themeStylesheetApplicationPalette }}">
 
 
 
-      <script src="/docs/assets/javascripts/modernizr.1aa3b519.js"></script>
+      <script src="{{ themeJavascriptModernizr }}"></script>
 
 
       <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
@@ -55,7 +55,7 @@
       <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
 
-      <link rel="stylesheet" href="/docs/stylesheets/extra.css">
+      <link rel="stylesheet" href="{{ themeStylesheetExtra }}">
 
 
   </head>
@@ -101,9 +101,9 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://bosh.io/docs/" title="Cloud Foundry BOSH" class="md-header-nav__button md-logo">
+        <a href="/docs/" title="Cloud Foundry BOSH" class="md-header-nav__button md-logo">
 
-            <img src="/docs/images/logo.png" width="24" height="24">
+            <img src="{{ themeImageLogo }}" width="24" height="24">
 
         </a>
       </div>
@@ -118,7 +118,7 @@
                 Cloud Foundry BOSH
               </span>
               <span class="md-header-nav__topic">
-                Welcome
+                Cloud Foundry BOSH <!-- TODO .PageTitle -->
               </span>
 
 
@@ -192,91 +192,9 @@
 
 
 
-<nav class="md-tabs md-tabs--active" data-md-component="tabs">
-  <div class="md-tabs__inner md-grid">
-    <ul class="md-tabs__list">
 
 
-
-
-    <li class="md-tabs__item">
-
-        <a href="/docs/" title="About" class="md-tabs__link md-tabs__link--active">
-          About
-        </a>
-
-    </li>
-
-
-
-
-
-
-    <li class="md-tabs__item">
-
-        <a href="/docs/cli-v2-install/" title="Installation" class="md-tabs__link">
-          Installation
-        </a>
-
-    </li>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <li class="md-tabs__item">
-
-        <a href="/docs/update-cloud-config/" title="Guides" class="md-tabs__link">
-          Guides
-        </a>
-
-    </li>
-
-
-
-
-
-
-
-
-
-
-    <li class="md-tabs__item">
-
-        <a href="/docs/terminology/" title="Reference" class="md-tabs__link">
-          Reference
-        </a>
-
-    </li>
-
-
-
-
-
-
-      <li class="md-tabs__item"><a href="/stemcells/" title="Stemcells" class="md-tabs__link">Stemcells</a></li>
-      <li class="md-tabs__item"><a href="/releases/" title="Releases" class="md-tabs__link">Releases</a></li>
-    </ul>
-  </div>
-</nav>
-
-      <main class="md-main">
-    {{ yield }}
-
-    {{ template "shared/footer" }}
-
-    {{ template "shared/_google_analytics" }}
-
-  </main>
+  {{ yield }}
   <footer class="md-footer">
 
     <div class="md-footer-meta md-typeset">
@@ -284,10 +202,10 @@
         <div class="md-footer-copyright">
 
           powered by
-          <a href="http://www.mkdocs.org">MkDocs</a>
+          <a href="https://github.com/bosh-io/web">bosh-io/web</a>,
+          <a href="https://github.com/mkdocs/mkdocs">mkdocs</a>,
           and
-          <a href="https://squidfunk.github.io/mkdocs-material/">
-            Material for MkDocs</a>
+          <a href="https://github.com/squidfunk/mkdocs-material">material</a>
         </div>
 
 
@@ -308,13 +226,10 @@
 
       </div>
 
-        <script src="/docs/assets/javascripts/application.b438e6c5.js"></script>
+        <script src="{{ themeJavascriptApplication }}"></script>
 
-        <script>app.initialize({version:"0.17.3",url:{base:"."}})</script>
+        <script>app.initialize({version:"0.17.3",url:{base:"/docs"}})</script>
 
-
-
-
-
-    </body>
-  </html>
+    {{ template "shared/_google_analytics" }}
+  </body>
+</html>

@@ -47,11 +47,15 @@ func NewPropertyItems(props []Property) map[string]*PropertyItem {
 			relativeRoot = relativeRoot.Children[part]
 		}
 
-		relativeRoot.Property = &prop
+		relativeRoot.Property = &Property{
+			Name:        prop.Name,
+			Description: prop.Description,
+
+			Default:  prop.Default,
+			Examples: prop.Examples,
+		}
 		relativeRoot.MissingValues = !prop.HasDefault()
 	}
-
-	// TODO un-pointerify or use array like before?
 
 	return root.Children
 }

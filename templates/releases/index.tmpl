@@ -1,43 +1,53 @@
-<div class="md-main__inner md-grid" data-md-component="container">
-  <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
-    <div class="md-sidebar_scrollwrap">
-      <div class="md-sidebar__inner">
-        <nav class="md-nav md-nav--primary" data-md-level="0">
-          <ul class="md-nav__list" data-md-scrollfix>
-            <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-              <!-- removed checkbox+label? -->
-              <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-                <label class="md-nav__title">Releases</label>
-                <ul class="md-nav__list" data-md-scrollfix>
-                  <li class="md-nav__item md-nav__item--active">
-                    <a href="/releases/" title="All Releases" class="md-nav__link md-nav__link--active">All Releases</a>
-                  </li>
-                </ul>
-              </nav>
-            </li>
-          </ul>
-        </nav>
+{{ template "shared/_nav_tabs" "Releases" }}
+<main class="md-main">
+  <div class="md-main__inner md-grid" data-md-component="container">
+    {{ template "shared/_nav_primary" .NavPrimary }}
+    <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner">
+          <nav class="md-nav md-nav--secondary">
+            <label class="md-nav__title" for="toc">Table of contents</label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              <li class="md-nav__item">
+                <a href="#community-releases" title="Community Releases" class="md-nav__link">Community Releases</a>
+              </li>
+              <li class="md-nav__item">
+                <a href="#submit-a-release" title="Submit a Release" class="md-nav__link">Submit a Release</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
-    <div class="md-sidebar__scrollwrap">
-      <div class="md-sidebar__inner">
-        <nav class="md-nav md-nav--secondary">
-          <label class="md-nav__title" for="toc">Table of contents</label>
-          <ul class="md-nav__list" data-md-scrollfix="">
-            <li class="md-nav__item">
-              <a href="#community-releases" title="Community Releases" class="md-nav__link">Community Releases</a>
-            </li>
-            <li class="md-nav__item">
-              <a href="#submit-a-release" title="Submit a Release" class="md-nav__link">Submit a Release</a>
-            </li>
+    <div class="md-content">
+      <article class="md-content__inner md-typeset">
+        <h1>Releases</h1>
+
+        <p>A release is a versioned collection of configuration properties, configuration templates, start up scripts, source code, binary artifacts, and anything else required to build and deploy software in a reproducible way (<a href="/docs/release.html">learn more</a>).</p>
+
+        <h2 id="community-releases">Community Releases<a class="headerlink" href="#community-releases" title="Permanent link">&para;</a></h2>
+
+        {{ if .UniqueSources }}
+          <ul>
+            {{ range .UniqueSources }}
+              <li class="list-group-item">
+                <a href="{{ .URL }}">
+                  {{ if .AvatarURL }}
+                    <img src="{{ .AvatarURL }}" style="width:18px;vertical-align:text-bottom;">
+                  {{ end }}
+                  {{ .Short }}
+                </a>
+              </li>
+            {{ end }}
           </ul>
-        </nav>
-      </div>
+        {{ else }}
+          <p>No releases found</p>
+        {{ end }}
+
+        <h2 id="submit-a-release">Submit a Release<a class="headerlink" href="#submit-a-release" title="Permanent link">&para;</a></h2>
+
+        <p>Are you the maintainer of a community release and interested in seeing it listed here? Take a look at our <a href="https://github.com/bosh-io/releases">bosh-io/releases</a> repository for details and to send us a pull request with your release.</p>
+      </article>
     </div>
-  </div>
-  <div class="md-content">
-    {{ template "releases/all" . }}
   </div>
 </div>

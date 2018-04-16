@@ -1,63 +1,73 @@
-<div class="md-main__inner md-grid" data-md-component="container">
-  {{ template "releases/_nav_version" .Release }}
+{{ template "shared/_nav_tabs" "Releases" }}
+<main class="md-main">
+  <div class="md-main__inner md-grid" data-md-component="container">
+    {{ template "shared/_nav_primary" .Release.NavPrimary }}
+    {{ template "jobs/_nav_secondary" . }}
+    <div class="md-content">
+      <article class="md-content__inner md-typeset">
+        <div class="bosh-schema">
+          <h1>{{ .Name }} job <small>from {{ .Release.Name }}/{{ .Release.Version }}</small></h1>
 
-  <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
-    <div class="md-sidebar__scrollwrap">
-      <div class="md-sidebar__inner">
-        <nav class="md-nav md-nav--secondary">
-          <label class="md-nav__title" for="toc">Table of contents</label>
-          <ul class="md-nav__list" data-md-scrollfix="">
-            <li class="md-nav__item">
-              <a href="#overview" title="Overview" class="md-nav__link">Overview</a>
-            </li>
-            <li class="md-nav__item">
-              <a href="#properties" title="Properties" class="md-nav__link">Properties</a>
-              {{ if .PropertyItems }}
-                <nav class="md-nav">
-                  <ul class="md-nav__list">
-                    {{ template "jobs/_nav_properties" .PropertyItems }}
-                  </ul>
-                </nav>
-              {{ end }}
-            </li>
-            {{ if .Templates }}
-              <li class="md-nav__item">
-                <a href="#templates" title="Templates" class="md-nav__link">Templates</a>
-              </li>
-            {{ end }}
-            {{ if .Packages }}
-              <li class="md-nav__item">
-                <a href="#packages" title="Packages" class="md-nav__link">Packages</a>
-              </li>
-            {{ end }}
-          </ul>
-        </nav>
-      </div>
-    </div>
-  </div>
-  <div class="md-content">
-    <article class="md-content__inner md-typeset">
-      <div class="bosh-schema">
-        <h1>{{ .Name }} job <br><small>from {{ .Release.Name }}/{{ .Release.Version }}</small></h1>
+          {{ if .Description }}
+            <p>{{ .Description }}</p>
+          {{ end }}
 
-        {{ if .Description }}
-          <p>{{ .Description }}</p>
-        {{ end }}
+          {{ if .HasGithubURL }}
+            <p>
+              Github source:
+              <a href="{{ .GithubURL }}"><code>{{ .Release.CommitHash }}</code></a> or
+              <a href="{{ .GithubURLOnMaster }}">master</a> branch
+            </p>
+          {{ end }}
 
-        {{ if .HasGithubURL }}
+          <h2 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">&para;</a></h2>
+
+          {{ template "jobs/_properties" .PropertyItems }}
+
+          <h2 id="templates">Templates<a class="headerlink" href="#templates" title="Permanent link">&para;</a></h2>
+
           <p>
-            Github source:
-            <a href="{{ .GithubURL }}"><code>{{ .Release.CommitHash }}</code></a> or
-            <a href="{{ .GithubURLOnMaster }}">master</a> branch
+            Templates are rendered and placed onto corresponding
+            instances during the deployment process. This job's templates
+            will be placed into <code>/var/vcap/jobs/{{ .Name }}/</code> directory
+            (<a href="/docs/jobs/#templates">learn more</a>).
           </p>
-        {{ end }}
 
-        <h2 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">&para;</a></h2>
+          {{ if .Templates }}
+            <ul>
+              {{ range .BinTemplates }}
+                <li><code>{{ .DstPathEnd }}</code> (from <code>{{ .SrcPathEnd }}</code>)</li>
+              {{ end }}
+              {{ range .ConfigTemplates }}
+                <li><code>{{ .DstPathEnd }}</code> (from <code>{{ .SrcPathEnd }}</code>)</li>
+              {{ end }}
+              {{ range .OtherTemplates }}
+                <li><code>{{ .DstPathEnd }}</code> (from <code>{{ .SrcPathEnd }}</code>)</li>
+              {{ end }}
+            </ul>
+          {{ else }}
+            <p><em>This job has no templates.</em></p>
+          {{ end }}
 
-        {{ template "jobs/_properties" .PropertyItems }}
+          <h2 id="packages">Packages<a class="headerlink" href="#packages" title="Permanent link">&para;</a></h2>
 
-        {{ template "jobs/_templates_and_pkgs" . }}
+          <p>
+            Packages are compiled and placed onto corresponding
+            instances during the deployment process. Packages will be
+            placed into <code>/var/vcap/packages/</code> directory.
+          </p>
+
+          {{ if .Packages }}
+            <ul>
+              {{ range .Packages }}
+                <li><a href="{{ .URL }}">{{ .Name }}</a></li>
+              {{ end }}
+            </ul>
+          {{ else }}
+            <p><em>This job relies on no runtime packages.</em></p>
+          {{ end }}
+        </article>
       </article>
-    </article>
+    </div>
   </div>
 </main>

@@ -1,89 +1,81 @@
-<div class="md-main__inner md-grid" data-md-component="container">
-  {{ template "releases/_nav_version" . }}
-  <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
-    <div class="md-sidebar__scrollwrap">
-      <div class="md-sidebar__inner">
-        <nav class="md-nav md-nav--secondary">
-          <label class="md-nav__title" for="toc">Table of contents</label>
-          <ul class="md-nav__list" data-md-scrollfix="">
-            <li class="md-nav__item">
-              <a href="#overview" title="Overview" class="md-nav__link">Overview</a>
-            </li>
-            <li class="md-nav__item">
-              <a href="#usage" title="Usage" class="md-nav__link">Usage</a>
-            </li>
-            {{ if .NotesInMarkdown }}
+{{ template "shared/_nav_tabs" "Releases" }}
+<main class="md-main">
+  <div class="md-main__inner md-grid" data-md-component="container">
+    {{ template "shared/_nav_primary" .NavPrimary }}
+    <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner">
+          <nav class="md-nav md-nav--secondary">
+            <label class="md-nav__title" for="toc">Table of contents</label>
+            <ul class="md-nav__list" data-md-scrollfix>
               <li class="md-nav__item">
-                <a href="#release-notes" title="Release Notes" class="md-nav__link">Release Notes</a>
+                <a href="#overview" title="Overview" class="md-nav__link">Overview</a>
               </li>
-            {{ end }}
-            {{ if .Jobs }}
               <li class="md-nav__item">
-                <a href="#jobs" title="Jobs" class="md-nav__link">Jobs</a>
+                <a href="#usage" title="Usage" class="md-nav__link">Usage</a>
               </li>
-            {{ end }}
-            {{ if .Packages }}
-              <li class="md-nav__item">
-                <a href="#packages" title="Packages" class="md-nav__link">Packages</a>
-              </li>
-            {{ end }}
-          </ul>
-        </nav>
+              {{ if .NotesInMarkdown }}
+                <li class="md-nav__item">
+                  <a href="#release-notes" title="Release Notes" class="md-nav__link">Release Notes</a>
+                </li>
+              {{ end }}
+              {{ if .Jobs }}
+                <li class="md-nav__item">
+                  <a href="#jobs" title="Jobs" class="md-nav__link">Jobs</a>
+                </li>
+              {{ end }}
+              {{ if .Packages }}
+                <li class="md-nav__item">
+                  <a href="#packages" title="Packages" class="md-nav__link">Packages</a>
+                </li>
+              {{ end }}
+            </ul>
+          </nav>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="md-content">
-    <article class="md-content__inner md-typeset">
-      <h1>{{ .Name }}/{{ .Version }}</h1>
+    <div class="md-content">
+      <article class="md-content__inner md-typeset">
+        <h1>{{ .Name }}/{{ .Version }}</h1>
 
-      {{ if .HasGithubURL }}
-        <p>
-          You can find the source of this version on GitHub at <a href="{{ .GithubURL }}">TODO</a>. It was created based on the commit <code>{{ .CommitHash }}</code>.
-        </p>
-      {{ end }}
-
-
-      {{ if .NotesInMarkdown }}
-        <h2 id="release-notes">Release Notes<a class="headerlink" href="#release-notes" title="Permanent link">&para;</a></h2>
-
-        <div class="release-notes">{{ .NotesInMarkdown }}</div>
-      {{ end }}
+        {{ if .HasGithubURL }}
+          <p>
+            You can find the source of this version on GitHub at <a href="{{ .GithubURL }}">{{ .Source.Short }}</a>. It was created based on the commit <code>{{ .CommitHash }}</code>.
+          </p>
+        {{ end }}
 
 
-      <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
+        {{ if .NotesInMarkdown }}
+          <h2 id="release-notes">Release Notes<a class="headerlink" href="#release-notes" title="Permanent link">&para;</a></h2>
 
-      <p>You can upload this version to your director with the <code>upload-release</code> command:</p>
-
-      <div class="codehilite"><pre>bosh upload-release --sha1 {{ .TarballSHA1 }} \
-  <a href="{{ .UserVisibleDownloadURL }}" style="color:inherit;">{{ .UserVisibleDownloadURL }}</a></pre></div>
-
-      <p>Or reference it in your deployment manifest with:</p>
-
-<div class="codehilite"><pre>releases:
-- name: {{ .Name }}
-  url: <a href="{{ .UserVisibleDownloadURL }}" style="color:inherit;">{{ .UserVisibleDownloadURL }}</a>
-  sha1: {{ .TarballSHA1 }}</pre></div>
+          <div class="release-notes">{{ .NotesInMarkdown }}</div>
+        {{ end }}
 
 
-      {{ if .Jobs }}
-        <h2 id="jobs">Jobs<a class="headerlink" href="#jobs" title="Permanent link">&para;</a></h2>
+        <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
 
-        <ul>
-          {{ range .Jobs }}
-            <li><a href="{{ .URL }}">{{ .Name }}</a></li>
-          {{ end }}
-        </ul>
-      {{ end }}
+        {{ template "releases/_usage" . }}
 
-      {{ if .Packages }}
-        <h2 id="packages">Packages<a class="headerlink" href="#packages" title="Permanent link">&para;</a></h2>
+        {{ if .Jobs }}
+          <h2 id="jobs">Jobs<a class="headerlink" href="#jobs" title="Permanent link">&para;</a></h2>
 
-        <ul>
-          {{ range .Packages }}
-            <li><a href="{{ .URL }}">{{ .Name }}</a></li>
-          {{ end }}
-        </ul>
-      {{ end }}
-    </article>
+          <ul>
+            {{ range .Jobs }}
+              <li><a href="{{ .URL }}">{{ .Name }}</a></li>
+            {{ end }}
+          </ul>
+        {{ end }}
+
+        {{ if .Packages }}
+          <h2 id="packages">Packages<a class="headerlink" href="#packages" title="Permanent link">&para;</a></h2>
+
+          <ul>
+            {{ range .Packages }}
+              <li><a href="{{ .URL }}">{{ .Name }}</a></li>
+            {{ end }}
+          </ul>
+        {{ end }}
+      </article>
+    </div>
   </div>
 </main>

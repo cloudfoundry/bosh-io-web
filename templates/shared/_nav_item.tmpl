@@ -1,0 +1,25 @@
+{{ if .Children }}
+  <li class="md-nav__item{{ if .Active }} md-nav__item--active{{ end }} md-nav__item--nested">
+    <input class="md-toggle md-nav__toggle" data-md-toggle="{{ .Ref }}" type="checkbox" id="{{ .Ref }}"{{ if .Active }} checked{{ end }} />
+    <label class="md-nav__link" for="{{ .Ref }}">
+      {{ .Title }}
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="{{ .Depth }}">
+      <label class="md-nav__title" for="{{ .Ref }}">
+        {{ if gt .Index 0 }}<br>{{ end }}
+        {{ .Title }}
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        {{ range .Children }}
+          {{ template "shared/_nav_item" . }}
+        {{ end }}
+      </ul>
+    </nav>
+  </li>
+{{ else }}
+  <li class="md-nav__item{{ if .Active }} md-nav__item--active{{ end }}">
+    <a href="{{ .URL }}" title="{{ .Title }}" class="md-nav__link{{ if .Active }} md-nav__link--active{{ end }}">
+      {{ .Title }}
+    </a>
+  </li>
+{{ end }}

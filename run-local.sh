@@ -15,4 +15,4 @@ if [ ! -f $config ]; then
   exit 1
 fi
 
-exec ./run.sh $config "dev" -debug
+exec ./run.sh $config -debug

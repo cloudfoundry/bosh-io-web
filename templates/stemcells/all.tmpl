@@ -1,51 +1,69 @@
-<article class="md-content__inner md-typeset">
-  <h1>Stemcells</h1>
-
-  <p>
-    A stemcell is a versioned Operating System image with minor differences for IaaS-specific configurations (<a href="/docs/stemcell.html">learn more</a>).
-  </p>
-
-  {{ range .DistroGroups }}
-    <h2 id="{{ .Distro.Name }}">{{ .Distro.Name }}</h2>
-
-    {{ $os := ( index .Distro.OSMatches 0 ).OSName }}
-    {{ if (eq $os "windows") }}
-      <div class="admonition info">
-        <p class="admonition-title">Licensing Requirements</p>
-        <p>Windows instance types will have additional costs associated with Microsoft licensing. Windows stemcell do not include actual Windows OS.</p>
+{{ template "shared/_nav_tabs" "Stemcells" }}
+<main class="md-main">
+  <div class="md-main__inner md-grid" data-md-component="container">
+    {{ template "shared/_nav_primary" .NavPrimary }}
+    <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner">
+          <nav class="md-nav md-nav--secondary">
+            <label class="md-nav__title" for="toc">Table of contents</label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              <li class="md-nav__item">
+                <a href="#ubuntu-trusty" title="Ubuntu Trusty" class="md-nav__link">Ubuntu Trusty</a>
+                <a href="#windows2016" title="Windows 2016" class="md-nav__link">Windows 2016</a>
+                <a href="#windows2012R2" title="Windows 2012R2" class="md-nav__link">Windows 2012R2</a>
+                <a href="#centos-7" title="CentOS 7" class="md-nav__link">CentOS 7</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
       </div>
-    {{ end }}
+    </div>
+    <div class="md-content">
+      <article class="md-content__inner md-typeset">
+        <h1>Stemcells</h1>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Infrastructure</th>
-          <th>Version</th>
-          <th>Download (SHA1)</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{ range .ByName }}
-          {{ range $j, $a := .ByVersion }}
-            {{ range $i, $s := .Stemcells }}
-              {{ range $x, $ss := .Sources }}
-                <tr>
-                  <td>{{ .InfrastructureName }}</td>
-                  <td><a href="{{ $s.AllVersionsURL }}#v{{ $a.Version }}">{{ $a.Version }}</a></td>
-                  <td>
-                    <a href="{{ .UserVisibleDownloadURL }}">{{ .LinkName }}</a>
-                    {{ if .SHA1 }}
-                      (<code>{{ .SHA1 }}</code>)
-                    {{ else }}
-                      (<code>{{ .MD5 }} (MD5)</code>)
-                    {{ end }}
-                  </td>
-                </tr>
-              {{ end }}
-            {{ end }}
+        {{ template "stemcells/_defined" . }}
+
+        {{ range .DistroGroups }}
+          <h2 id="{{ .Distro.NameName }}">{{ .Distro.Name }}<a class="headerlink" href="#{{ .Distro.NameName }}" title="Permanent link">&para;</a></h2>
+
+          {{ $os := ( index .Distro.OSMatches 0 ).OSName }}
+          {{ if (eq $os "windows") }}
+            {{ template "stemcells/_windows_notice" . }}
           {{ end }}
+
+          <table>
+            <thead>
+              <tr>
+                <th>Infrastructure</th>
+                <th>Version</th>
+                <th>Download (SHA1)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{ range .ByName }}
+                {{ range $j, $a := .ByVersion }}
+                  {{ range $i, $s := .Stemcells }}
+                    {{ range $x, $ss := .Sources }}{{ if eq .Ignored false }}
+                      <tr>
+                        <td><a href="{{ $s.AllVersionsURL }}">{{ .InfrastructureName }}</a></td>
+                        <td><a href="{{ $s.AllVersionsURL }}#v{{ $a.Version }}">{{ $a.Version }}</a></td>
+                        <td>
+                          <a href="{{ .UserVisibleDownloadURL }}">{{ .LinkName }}</a>
+                          {{ if .SHA1 }}
+                            <code>({{ .SHA1 }})</code>
+                          {{ end }}
+                        </td>
+                      </tr>
+                    {{ end }}{{ end }}
+                  {{ end }}
+                {{ end }}
+              {{ end }}
+            </tbody>
+          </table>
         {{ end }}
-      </tbody>
-    </table>
-  {{ end }}
-</article>
+      </article>
+    </div>
+  </div>
+</main>

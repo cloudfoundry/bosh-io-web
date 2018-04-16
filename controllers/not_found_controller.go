@@ -19,5 +19,6 @@ func (NotFoundController) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.WriteHeader(404)
 	http.ServeContent(w, r, "templates/docs/404.html", fi.ModTime(), f)
 }

@@ -1,61 +1,58 @@
-{{ $s := .DistroGroups.FirstStemcell }}
-<article class="md-content__inner md-typeset">
-  <h1>{{ .Filter.Name }}</h1>
+{{ template "shared/_nav_tabs" "Stemcells" }}
+<main class="md-main">
+  <div class="md-main__inner md-grid" data-md-component="container">
+    {{ template "shared/_nav_primary" .NavPrimary }}
+    <div class="md-sidebar md-sidebar--secondary" data-md-component="toc"></div>
+    <div class="md-content">{{ $s := .DistroGroups.FirstStemcell }}
+      <article class="md-content__inner md-typeset">
+        <h1>{{ .Filter.Name }}</h1>
 
-  <p>
-    A stemcell is a versioned Operating System image with minor differences for IaaS-specific configurations (<a href="/docs/stemcell.html">learn more</a>).
-  </p>
+        {{ template "stemcells/_defined" . }}
 
-  <p>You can upload the latest version to your director with the <code>upload-stemcell</code> command:</p>
+        <p>You can upload the latest version to your director with the <code>upload-stemcell</code> command:</p>
 
-  <div class="codehilite"><pre>bosh upload-stemcell --sha1 {{ $s.SHA1 }} \
-  <a href="{{ $s.UserVisibleDownloadURL }}">{{ $s.UserVisibleDownloadURL }}</a></pre></div>
+        <div class="codehilite"><pre>bosh upload-stemcell --sha1 {{ $s.SHA1 }} \
+  <a href="{{ $s.UserVisibleDownloadURL }}" style="color:inherit;">{{ $s.UserVisibleDownloadURL }}</a></pre></div>
 
+        <p>And reference this stemcell in your deployment manifest from the <code>stemcells</code> section:</p>
 
-  {{ if (eq $s.OSName "windows") }}
-    <div class="admonition info">
-      <p class="admonition-title">Licensing Requirements</p>
-      <p>Windows instance types will have additional costs associated with Microsoft licensing. Windows stemcell do not include actual Windows OS.</p>
-    </div>
-  {{ end }}
+        <div class="codehilite"><pre>- alias: "default"
+  os: "{{ $s.OSName }}{{ if ( ne $s.OSName "windows" ) }}-{{ end }}{{ $s.OSVersion }}"
+  version: "{{ $s.Version }}"
+</pre></div>
 
-  {{ range .DistroGroups }}
-    <h2 id="version-history">Version History<a class="headerlink" href="#version-history" title="Permanent link">&para;</a></h2>
-
-    {{ range .ByName }}
-      {{ range $j, $a := .ByVersion }}
-        <h3 id="v{{ $a.Version }}">v{{ $a.Version }}<a class="headerlink" href="#v{{ $a.Version }}" title="Permanent link">&para;</a></h3>
-
-        {{ range $i, $s := .Stemcells }}
-          {{ if $s.NotesInMarkdown }}
-            <div class="release-notes">{{ $s.NotesInMarkdown }}</div>
-          {{ end }}
-
-          <table>
-              <tr>
-                <th>Download</th>
-                <th>File Size</th>
-                <th>Checksum (SHA1)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {{ range $x, $ss := .Sources }}
-                <tr>
-                  <td><a href="{{ .UserVisibleDownloadURL }}">{{ .LinkName }}</a></td>
-                  <td>{{ .FormattedSize }}</td>
-                  <td>
-                    {{ if .SHA1 }}
-                      <code class="codehilite">{{ .SHA1 }}</code>
-                    {{ else }}
-                      n/a
-                    {{ end }}
-                  </td>
-                </tr>
-              {{ end }}
-            </tbody>
-          </table>
+        {{ if (eq $s.OSName "windows") }}
+          {{ template "stemcells/_windows_notice" . }}
         {{ end }}
-      {{ end }}
-    {{ end }}
-  {{ end }}
-</article>
+
+        {{ range .DistroGroups }}
+          <h2 id="version-history">Version History<a class="headerlink" href="#version-history" title="Permanent link">&para;</a></h2>
+
+          {{ range .ByName }}
+            {{ range $j, $a := .ByVersion }}
+              <h3 id="v{{ $a.Version }}">v{{ $a.Version }}<a class="headerlink" href="#v{{ $a.Version }}" title="Permanent link">&para;</a></h3>
+
+              {{ range $i, $s := .Stemcells }}
+                {{ if $s.NotesInMarkdown }}
+                  <blockquote class="release-notes">{{ $s.NotesInMarkdown }}</blockquote>
+                {{ end }}
+
+                <ul>
+                  {{ range $x, $ss := .Sources }}
+                    <li>
+                      <a href="{{ .UserVisibleDownloadURL }}" title="{{ .FormattedSize }}">{{ .LinkName }}</a>
+                      {{ if .SHA1 }}
+                        &ndash;
+                        <code class="codehilite">sha1:{{ .SHA1 }}</code>
+                      {{ end }}
+                    </li>
+                  {{ end }}
+                </ul>
+              {{ end }}
+            {{ end }}
+          {{ end }}
+        {{ end }}
+      </article>
+    </div>
+  </div>
+</main>

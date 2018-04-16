@@ -1,21 +1,34 @@
 package stemcell
 
 import (
+	"fmt"
+
 	bhstemsrepo "github.com/bosh-io/web/stemcell/stemsrepo"
 )
 
 type Distro struct {
-	Name string // e.g. 'Ubuntu Trusty'
-	Sort uint8  // smaller == more important
+	NameName string // e.g. 'ubuntu-trusty' TODO rename this to Name, Name to Title/Label
+	Name     string // e.g. 'Ubuntu Trusty'
+	Sort     uint8  // smaller == more important
 
 	Deprecated bool
 
-	OSMatches []StemcellOSMatch
+	OSMatches                []StemcellOSMatch
+	SupportedInfrastructures Infrastructures
 }
 
 type StemcellOSMatch struct {
 	OSName    string // e.g. ubuntu
 	OSVersion string // e.g. trusty, ''
+}
+
+func (m StemcellOSMatch) Name() string {
+	format := "%s-%s"
+	if m.OSName == "windows" {
+		format = "%s%s"
+	}
+
+	return fmt.Sprintf(format, m.OSName, m.OSVersion)
 }
 
 func (d Distro) IsVisible(includeDeprecated bool) bool {
