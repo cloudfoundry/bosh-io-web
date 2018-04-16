@@ -1,29 +1,73 @@
-{{ template "jobs/_header" . }}
+{{ template "shared/_nav_tabs" "Releases" }}
+<main class="md-main">
+  <div class="md-main__inner md-grid" data-md-component="container">
+    {{ template "shared/_nav_primary" .Release.NavPrimary }}
+    {{ template "jobs/_nav_secondary" . }}
+    <div class="md-content">
+      <article class="md-content__inner md-typeset">
+        <div class="bosh-schema">
+          <h1>{{ .Name }} job <small>from {{ .Release.Name }}/{{ .Release.Version }}</small></h1>
 
-<main>
-  <div class="container page-sep">
-    <h3 class="page-header">Job <span>'{{ .Name }}'</span></h3>
+          {{ if .Description }}
+            <p>{{ .Description }}</p>
+          {{ end }}
 
-    {{ if .Description }}
-      <p>{{ .Description }}</p>
-    {{ end }}
+          {{ if .HasGithubURL }}
+            <p>
+              Github source:
+              <a href="{{ .GithubURL }}"><code>{{ .Release.CommitHash }}</code></a> or
+              <a href="{{ .GithubURLOnMaster }}">master</a> branch
+            </p>
+          {{ end }}
 
-    {{ if .IsErrand }}
-      <p>With default configuration (see below) to run this errand job use</p>
-      <pre class="terminal">
-$ bosh run errand {{ .Name }}</pre>
-    {{ end }}
+          <h2 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">&para;</a></h2>
 
-    {{ if .HasGithubURL }}
-      <p>
-        Github source:
-        <a href="{{ .GithubURL }}"><code>{{ .Release.CommitHash }}</code></a> or
-        <a href="{{ .GithubURLOnMaster }}">master</a> branch
-      </p>
-    {{ end }}
+          {{ template "jobs/_properties" .PropertyItems }}
 
-    {{ template "jobs/_properties" . }}
+          <h2 id="templates">Templates<a class="headerlink" href="#templates" title="Permanent link">&para;</a></h2>
 
-    {{ template "jobs/_templates_and_pkgs" . }}
+          <p>
+            Templates are rendered and placed onto corresponding
+            instances during the deployment process. This job's templates
+            will be placed into <code>/var/vcap/jobs/{{ .Name }}/</code> directory
+            (<a href="/docs/jobs/#templates">learn more</a>).
+          </p>
+
+          {{ if .Templates }}
+            <ul>
+              {{ range .BinTemplates }}
+                <li><code>{{ .DstPathEnd }}</code> (from <code>{{ .SrcPathEnd }}</code>)</li>
+              {{ end }}
+              {{ range .ConfigTemplates }}
+                <li><code>{{ .DstPathEnd }}</code> (from <code>{{ .SrcPathEnd }}</code>)</li>
+              {{ end }}
+              {{ range .OtherTemplates }}
+                <li><code>{{ .DstPathEnd }}</code> (from <code>{{ .SrcPathEnd }}</code>)</li>
+              {{ end }}
+            </ul>
+          {{ else }}
+            <p><em>This job has no templates.</em></p>
+          {{ end }}
+
+          <h2 id="packages">Packages<a class="headerlink" href="#packages" title="Permanent link">&para;</a></h2>
+
+          <p>
+            Packages are compiled and placed onto corresponding
+            instances during the deployment process. Packages will be
+            placed into <code>/var/vcap/packages/</code> directory.
+          </p>
+
+          {{ if .Packages }}
+            <ul>
+              {{ range .Packages }}
+                <li><a href="{{ .URL }}">{{ .Name }}</a></li>
+              {{ end }}
+            </ul>
+          {{ else }}
+            <p><em>This job relies on no runtime packages.</em></p>
+          {{ end }}
+        </article>
+      </article>
+    </div>
   </div>
 </main>

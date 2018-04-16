@@ -81,6 +81,8 @@ func (c PackagesController) Show(req *http.Request, r martrend.Render, params ma
 
 	for _, viewPkg := range viewRel.Packages {
 		if viewPkg.Name == pkgName {
+			viewPkg.Release.NavPrimary = viewRel.BuildNavigation(viewPkg.URL())
+
 			r.HTML(200, c.showTmpl, viewPkg)
 			return
 		}

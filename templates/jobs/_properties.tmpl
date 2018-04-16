@@ -1,54 +1,31 @@
-<h3 class="page-header">Configuration Properties</h3>
+{{ range . }}
+  <h{{ add .Indent 3 }} id="{{ .Anchor }}"><code>{{ .Key }}</code><a class="headerlink" href="#{{ .Anchor }}" title="Permanent link">&para;</a></h{{ add .Indent 3 }}>
 
-<p>
-  Replace <code>???</code>s with appropriate values.
-  Following example does not account for release job
-  collocation or for optional/conflicting properties.
-</p>
+  {{ if .Property }}
+    {{ if .Property.Description }}
+      {{ .Property.DescriptionInMarkdown }}
+    {{ end }}
 
-<p>
-  <a href="#" class="hide-properties-with-defaults btn btn-info btn-xs">
-    <span class="h">Hide</span><span class="s">Show</span> properties with defaults
-  </a>
-  <a href="#" class="hide-property-descriptions btn btn-info btn-xs">
-    <span class="h">Hide</span><span class="s">Show</span> property descriptions
-  </a>
-</p>
-
-<ul class="property-items">
-  {{ range .PropertyItems }}
-    <li class="{{ if not .MissingValues }}all-values-present{{ end }} indent-{{ .Indent }}
-        {{ if .Property }}
-          {{ if .Property.Examples }}with-example{{ end }}
-          {{ if .HasLongKey }}with-long-key{{ end }}
-        {{ end }}">
-
-      <div class="key">
-        {{ if .Property }}
-          {{ if .Property.HasDefault }}
-            <a id="{{ .Anchor }}" {{ href .PoundAnchor }}>{{ .Key }}: {{ .DefaultAsYAML }}</a>
-          {{ else }}
-            <a id="{{ .Anchor }}" {{ href .PoundAnchor }}>{{ .Key }}: <span class="placeholder">???</span></a>
-          {{ end }}
-        {{ else }}
-          <a id="{{ .Anchor }}" {{ href .PoundAnchor }}>{{ .Key }}:</a>
-        {{ end }}
-        <br/>
-      </div>
-
-      {{ if .Property }}
-        <div class="description">
-          {{ if .Property.Description }}{{ .Property.DescriptionInMarkdown }}{{ end }}
-
-          {{ if .Property.Examples }}
-            <h4>Example{{ if gt (len .Property.Examples) 1 }}s{{ end }}</h4>
-            {{ range .Property.Examples }}
-              {{ if .Description }}{{ .DescriptionInMarkdown }}{{ end }}
-              <pre class="example prettyprint">{{ .ValueAsYAML }}</pre>
-            {{ end }}
-          {{ end }}
-        </div>
+    <dl>
+      {{ if .Property.HasDefault }}
+        <dt>Default</dt>
+        <dd><div class="codehilite"><pre>{{ .DefaultAsYAML }}</pre></div></dd>
       {{ end }}
-    </li>
+      {{ if .Property.Examples }}
+        <dt>Example</dt>
+        {{ range .Property.Examples }}
+          <dd>
+            {{ if .Description }}{{ .DescriptionInMarkdown }}{{ end }}
+            <div class="codehilite"><pre>{{ .ValueAsYAML }}</pre></div>
+          </dd>
+        {{ end }}
+      {{ end }}
+    </dl>
   {{ end }}
-</ul>
+
+  {{ if .Children }}
+    <blockquote>
+      {{ template "jobs/_properties" .Children }}
+    </blockquote>
+  {{ end }}
+{{ end }}

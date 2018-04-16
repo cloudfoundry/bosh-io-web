@@ -9,6 +9,7 @@ import (
 	semiver "github.com/cppforlife/go-semi-semantic/version"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/russross/blackfriday"
+	"github.com/bosh-io/web/ui/nav"
 
 	bhrelsrepo "github.com/bosh-io/web/release/releasesrepo"
 )
@@ -30,6 +31,7 @@ type Release struct {
 	Packages []Package
 
 	Graph Graph
+	NavPrimary nav.Link
 
 	// memoized notes
 	notesInMarkdown *[]byte
@@ -78,6 +80,22 @@ func NewIncompleteRelease(relVerRec bhrelsrepo.ReleaseVersionRec, name string) R
 		Name:    name,
 		Version: relVerRec.Version(),
 	}
+}
+
+func (r Release) BuildNavigation(active string) nav.Link {
+	root := Navigation()
+
+	relnav := nav.Link{Title: r.Name}
+	relnav.Add(nav.Link{
+		Title: "All Versions",
+		URL: r.AllVersionsURL(),
+	})
+	relnav.Add(r.Navigation())
+	root.Add(relnav)
+
+	root.Activate(active)
+
+	return root
 }
 
 func (r Release) AllURL() string { return "/releases" }
@@ -187,6 +205,46 @@ func (r Release) MarshalJSON() ([]byte, error) {
 	}
 
 	return json.Marshal(record)
+}
+
+func (r Release) Navigation() nav.Link {
+	releaseNav := nav.Link{
+		Title: fmt.Sprintf("%s", r.Version),
+		URL: r.URL(),
+	}
+
+	releaseNav.Add(nav.Link{
+		Title: "Overview",
+		URL: r.URL(),
+	})
+
+	{
+		jobsNav := nav.Link{Title: "Jobs"}
+
+		for _, job := range r.Jobs {
+			jobsNav.Add(nav.Link{
+				Title: job.Name,
+				URL: job.URL(),
+			})
+		}
+
+		releaseNav.Add(jobsNav)
+	}
+
+	{
+		pkgsNav := nav.Link{Title: "Packages"}
+
+		for _, pkg := range r.Packages {
+			pkgsNav.Add(nav.Link{
+				Title: pkg.Name,
+				URL: pkg.URL(),
+			})
+		}
+
+		releaseNav.Add(pkgsNav)
+	}
+
+	return releaseNav
 }
 
 func (s ReleaseSorting) Len() int           { return len(s) }

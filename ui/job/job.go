@@ -18,7 +18,7 @@ type Job struct {
 	Templates []Template
 	Packages  []Package
 
-	PropertyItems []PropertyItem
+	PropertyItems map[string]*PropertyItem
 }
 
 func NewJob(j bpreljob.Job, rel bhrelui.Release) Job {

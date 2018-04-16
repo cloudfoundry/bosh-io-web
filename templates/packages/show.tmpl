@@ -1,10 +1,11 @@
-{{ template "packages/header" . }}
-
-<main>
-  <div class="container page-sep">
-    <div class="row">
-      <div class="col-md-6">
-        <h3 class="page-header">Package <span>'{{ .Name }}'</span></h3>
+{{ template "shared/_nav_tabs" "Releases" }}
+<main class="md-main">
+  <div class="md-main__inner md-grid" data-md-component="container">
+    {{ template "shared/_nav_primary" .Release.NavPrimary }}
+    {{ template "packages/_nav_secondary" . }}
+    <div class="md-content">
+      <article class="md-content__inner md-typeset">
+        <h1>{{ .Name }} package <small>from {{ .Release.Name }}/{{ .Release.Version }}</small></h1>
 
         {{ if .HasGithubURL }}
           <p>
@@ -14,7 +15,7 @@
           </p>
         {{ end }}
 
-        <h3 class="page-header">Compilation dependencies</h3>
+        <h2 id="dependencies">Dependencies<a class="headerlink" href="#dependencies" title="Permanent link">&para;</a></h2>
 
         <p>
           Packages are compiled and placed onto corresponding
@@ -31,7 +32,7 @@
         {{ else }}
           <p class="empty">No package depedencies</p>
         {{ end }}
-      </div>
+      </article>
     </div>
   </div>
 </main>

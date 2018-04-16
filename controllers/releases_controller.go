@@ -14,8 +14,8 @@ import (
 	bhstemsrepo "github.com/bosh-io/web/stemcell/stemsrepo"
 	bhjobui "github.com/bosh-io/web/ui/job"
 	bhmiscui "github.com/bosh-io/web/ui/misc"
+	"github.com/bosh-io/web/ui/nav"
 	bhrelui "github.com/bosh-io/web/ui/release"
-	bhstemui "github.com/bosh-io/web/ui/stemcell"
 )
 
 type ReleasesController struct {
@@ -65,13 +65,9 @@ func NewReleasesController(
 	}
 }
 
-type releasesControllerHomePage struct {
-	UniqueSourceReleases   bhrelui.UniqueSourceReleases
-	LatestVersionStemcells *bhstemui.SameVersionStemcells
-}
-
 type releasesControllerIndexPage struct {
 	UniqueSources bhrelui.UniqueSources
+	NavPrimary    nav.Link
 }
 
 func (c ReleasesController) Index(r martrend.Render) {
@@ -83,6 +79,7 @@ func (c ReleasesController) Index(r martrend.Render) {
 
 	page := releasesControllerIndexPage{
 		UniqueSources: bhrelui.NewUniqueSources(sources),
+		NavPrimary:    bhrelui.Navigation(),
 	}
 
 	r.HTML(200, c.indexTmpl, page)
@@ -194,6 +191,7 @@ func (c ReleasesController) showSingleRelease(r martrend.Render, relSource, relV
 	}
 
 	viewRel.Graph = bhmiscui.NewReleaseGraph(viewRel.Packages, viewJobs, c.runner, c.logger)
+	viewRel.NavPrimary = viewRel.BuildNavigation(viewRel.URL())
 
 	r.HTML(200, tmpl, &viewRel)
 }

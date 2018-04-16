@@ -16,10 +16,9 @@ if [ ! -f prod-conf/web.json ]; then
   exit 1
 fi
 
-./build.sh
+export GOOGLE_ANALYTICS_KEY=$( jq .Analytics.GoogleAnalyticsID prod-conf/web.json )
 
-echo "Generating new assets ID"
-echo `date|md5` > ./prod-conf/assets-id
+./build.sh
 
 echo "Generate new private token outside of ./public"
 echo $(LC_CTYPE=C tr -dc A-Za-z0-9 < /dev/urandom | fold -w ${1:-32} | head -n 1) > ./prod-conf/private-token

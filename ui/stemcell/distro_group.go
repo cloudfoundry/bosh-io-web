@@ -59,6 +59,28 @@ func (g DistroGroup) HasAnyStemcells() bool {
 	return g.ByName.HasAnyStemcells()
 }
 
+func (g DistroGroup) Infrastructures() []string {
+	var infrastructures map[string]struct{}
+
+	for _, n := range g.ByName {
+		for _, v := range n.ByVersion {
+			for _, s := range v.Stemcells {
+				for _, ss := range s.Sources() {
+					infrastructures[ss.InfrastructureName()] = struct{}{}
+				}
+			}
+		}
+	}
+
+	var result []string
+
+	for infrastructureName, _ := range infrastructures {
+		result = append(result, infrastructureName)
+	}
+
+	return result
+}
+
 func (g DistroGroups) AllURL() string { return "/stemcells" }
 
 func (g DistroGroups) FirstStemcell() *Stemcell {

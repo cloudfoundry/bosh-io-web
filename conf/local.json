@@ -2,14 +2,14 @@
   "Description": "Configuration used by local server for testing.",
 
   "Repos": {
-    "ReleasesDir": "/Users/pivotal/workspace/bosh-io/releases",
-    "ReleasesIndexDir": "/Users/pivotal/workspace/bosh-io/releases-index",
-    "StemcellsLegacyIndexDir": "/Users/pivotal/workspace/bosh-io/stemcells-legacy-index",
+    "ReleasesDir": "../releases",
+    "ReleasesIndexDir": "../releases-index",
+    "StemcellsLegacyIndexDir": "../stemcells-legacy-index",
     "StemcellsIndexDirs": [
-      "/Users/pivotal/workspace/bosh-io/stemcells-core-index",
-      "/Users/pivotal/workspace/bosh-io/stemcells-cpi-index",
-      "/Users/pivotal/workspace/bosh-io/stemcells-windows-index",
-      "/Users/pivotal/workspace/bosh-io/stemcells-softlayer-index"
+      "../stemcells-core-index",
+      "../stemcells-cpi-index",
+      "../stemcells-windows-index",
+      "../stemcells-softlayer-index"
     ],
 
     "ReleaseTarballLinker": {

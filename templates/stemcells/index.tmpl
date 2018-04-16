@@ -1,19 +1,5 @@
-<header>
-  <div class="container">
-    <h2>
-      {{ template "shared/logo" }}
-    </h2>
-
-    {{ template "shared/_header_menu" }}
-  </div>
-</header>
-
-<main>
-  <div class="container page-sep">
-    <div class="row">
-      {{ template "stemcells/_about" }}
-
-      {{ template "stemcells/_distro_groups" . }}
-    </div>
-  </div>
-</main>
+{{ if and .Filter.ShowingAllVersions ($s := .DistroGroups.FirstStemcell) }}
+  {{ template "stemcells/single" . }}
+{{ else }}
+  {{ template "stemcells/all" . }}
+{{ end }}

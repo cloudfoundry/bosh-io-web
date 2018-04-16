@@ -1,0 +1,11 @@
+<p>You can reference this release in your deployment manifest from the <code>releases</code> section:</p>
+
+<div class="codehilite"><pre>- name: "{{ .Name }}"
+  version: "{{ .Version }}"
+  url: "<a href="{{ .UserVisibleDownloadURL }}" style="color:inherit;">{{ .UserVisibleDownloadURL }}</a>"
+  sha1: "{{ .TarballSHA1 }}"</pre></div>
+
+<p>Or upload it to your director with the <code>upload-release</code> command:</p>
+
+<div class="codehilite"><pre>bosh upload-release --sha1 {{ .TarballSHA1 }} \
+  <a href="{{ .UserVisibleDownloadURL }}" style="color:inherit;">{{ .UserVisibleDownloadURL }}</a></pre></div>

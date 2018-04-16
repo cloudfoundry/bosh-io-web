@@ -1,0 +1,31 @@
+<div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+  <div class="md-sidebar__scrollwrap">
+    <div class="md-sidebar__inner">
+      <nav class="md-nav md-nav--primary" data-md-level="0">
+        <label class="md-nav__title md-nav__title--site" for="drawer">
+          <span class="md-nav__button md-logo">
+            <img src="{{ themeImageLogo }}" width="48" height="48">
+          </span>
+          Cloud Foundry BOSH
+        </label>
+        <div class="md-nav__source">
+          <a href="https://github.com/cloudfoundry/docs-bosh/" title="Go to repository" class="md-source" data-md-source="github" data-md-state="done">
+            <div class="md-source__icon">
+              <svg viewBox="0 0 24 24" width="24" height="24">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#github" width="24" height="24"></use>
+              </svg>
+            </div>
+            <div class="md-source__repository">
+              cloudfoundry/docs-bosh
+            <ul class="md-source__facts"><li class="md-source__fact">28 Stars</li><li class="md-source__fact">202 Forks</li></ul></div>
+          </a>
+        </div>
+        <ul class="md-nav__list" data-md-scrollfix>
+          {{ range .Children }}
+            {{ template "shared/_nav_item" . }}
+          {{ end }}
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>

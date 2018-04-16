@@ -1,0 +1,34 @@
+<div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+  <div class="md-sidebar__scrollwrap">
+    <div class="md-sidebar__inner">
+      <nav class="md-nav md-nav--secondary">
+        <label class="md-nav__title" for="toc">Table of contents</label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          <li class="md-nav__item">
+            <a href="#overview" title="Overview" class="md-nav__link">Overview</a>
+          </li>
+          <li class="md-nav__item">
+            <a href="#properties" title="Properties" class="md-nav__link">Properties</a>
+            {{ if .PropertyItems }}
+              <nav class="md-nav">
+                <ul class="md-nav__list">
+                  {{ template "jobs/_nav_properties" .PropertyItems }}
+                </ul>
+              </nav>
+            {{ end }}
+          </li>
+          {{ if .Templates }}
+            <li class="md-nav__item">
+              <a href="#templates" title="Templates" class="md-nav__link">Templates</a>
+            </li>
+          {{ end }}
+          {{ if .Packages }}
+            <li class="md-nav__item">
+              <a href="#packages" title="Packages" class="md-nav__link">Packages</a>
+            </li>
+          {{ end }}
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>

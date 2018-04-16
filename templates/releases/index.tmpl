@@ -1,19 +1,53 @@
-<header>
-  <div class="container">
-    <h2>
-      {{ template "shared/logo" }}
-    </h2>
+{{ template "shared/_nav_tabs" "Releases" }}
+<main class="md-main">
+  <div class="md-main__inner md-grid" data-md-component="container">
+    {{ template "shared/_nav_primary" .NavPrimary }}
+    <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner">
+          <nav class="md-nav md-nav--secondary">
+            <label class="md-nav__title" for="toc">Table of contents</label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              <li class="md-nav__item">
+                <a href="#community-releases" title="Community Releases" class="md-nav__link">Community Releases</a>
+              </li>
+              <li class="md-nav__item">
+                <a href="#submit-a-release" title="Submit a Release" class="md-nav__link">Submit a Release</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+    <div class="md-content">
+      <article class="md-content__inner md-typeset">
+        <h1>Releases</h1>
 
-    {{ template "shared/_header_menu" }}
-  </div>
-</header>
+        <p>A release is a versioned collection of configuration properties, configuration templates, start up scripts, source code, binary artifacts, and anything else required to build and deploy software in a reproducible way (<a href="/docs/release.html">learn more</a>).</p>
 
-<main>
-  <div class="container page-sep">
-    <div class="row">
-      {{ template "releases/_about" }}
+        <h2 id="community-releases">Community Releases<a class="headerlink" href="#community-releases" title="Permanent link">&para;</a></h2>
 
-      {{ template "releases/_unique_sources" . }}
+        {{ if .UniqueSources }}
+          <ul>
+            {{ range .UniqueSources }}
+              <li class="list-group-item">
+                <a href="{{ .URL }}">
+                  {{ if .AvatarURL }}
+                    <img src="{{ .AvatarURL }}" style="width:18px;vertical-align:text-bottom;">
+                  {{ end }}
+                  {{ .Short }}
+                </a>
+              </li>
+            {{ end }}
+          </ul>
+        {{ else }}
+          <p>No releases found</p>
+        {{ end }}
+
+        <h2 id="submit-a-release">Submit a Release<a class="headerlink" href="#submit-a-release" title="Permanent link">&para;</a></h2>
+
+        <p>Are you the maintainer of a community release and interested in seeing it listed here? Take a look at our <a href="https://github.com/bosh-io/releases">bosh-io/releases</a> repository for details and to send us a pull request with your release.</p>
+      </article>
     </div>
   </div>
-</main>
+</div>

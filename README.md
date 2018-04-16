@@ -6,20 +6,15 @@
 
 ##### Prerequisites
 
-* latest version of ruby 2.0.0 
 * golang environment setup
+* docker (if rebuilding docs-bosh)
 
 ##### Setup
 
 ```
 go get github.com/bosh-io/web
 cd $GOPATH/src/github.com/bosh-io/web
-git clone https://github.com/cloudfoundry/docs-bosh.git
-cd docs-bosh-io
-bundle install 
-#`bundle update <gem>` can help in case `bundle install` has issues with installing dependencies  
-cd ..
-./build-docs.sh # bookbinder errors on missing links... but they end up working?
+./build.sh
 ./run-local.sh
 
 ```

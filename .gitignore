@@ -19,7 +19,3 @@ prod-conf/
 
 # Ignore generated docs
 templates/docs
-docs-bosh-io/output
-docs-bosh-io/final_app
-docs-bosh-io/.bundle
-docs-bosh-io/cached_shas.yml

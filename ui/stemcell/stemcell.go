@@ -14,28 +14,6 @@ import (
 	bhstemsrepo "github.com/bosh-io/web/stemcell/stemsrepo"
 )
 
-var (
-	prettyInfNames = map[string]string{
-		"aws":       "AWS",
-		"openstack": "OpenStack",
-		"vsphere":   "vSphere",
-		"vcloud":    "vCloud",
-		"azure":     "Azure",
-		"google":    "Google",
-		"softlayer": "SoftLayer",
-		"warden":    "BOSH Lite", // todo warden and boshlite are flipped
-	}
-
-	prettyHvNames = map[string]string{
-		"xen":      "Xen",
-		"xen-hvm":  "Xen-HVM",
-		"esxi":     "ESXi",
-		"kvm":      "KVM",
-		"hyperv":   "Hyper-V",
-		"boshlite": "Warden",
-	}
-)
-
 type Stemcell struct {
 	stemRec bhstemsrepo.Stemcell
 
@@ -56,7 +34,10 @@ type Stemcell struct {
 }
 
 type StemcellSource struct {
-	friendlyName string
+	friendlyName       string
+	infrastructureName string
+	hypervisorName     string
+	linkName           string
 
 	isLight    bool
 	isForChina bool
@@ -102,32 +83,47 @@ func NewStemcell(s bhstemsrepo.Stemcell) Stemcell {
 }
 
 func (s *Stemcell) AddAsSource(s_ bhstemsrepo.Stemcell) {
-	infName, ok := prettyInfNames[s_.InfName()]
-	if !ok {
+	var infName, infNameFull, hvName string
+
+	inf, err := allInfrastructures.ByName(s_.InfName())
+	if err != nil {
 		infName = s_.InfName()
+		infNameFull = s_.InfName()
+	} else {
+		infName = inf.Name
+		infNameFull = inf.Title
 	}
 
-	hvName, ok := prettyHvNames[s_.HvName()]
-	if !ok {
+	hyper, err := allHypervisors.ByName(s_.HvName())
+	if err != nil {
 		hvName = s_.HvName()
+	} else {
+		hvName = hyper.Title
+	}
+
+	linkName := "Full Stemcell"
+	optionalLight := ""
+	if s_.IsLight() {
+		if s_.IsForChina() {
+			optionalLight = " Light China"
+			linkName = "Light China Stemcell"
+		} else {
+			optionalLight = " Light"
+			linkName = "Light Stemcell"
+		}
 	}
 
 	optionalDiskFormat := ""
 	if len(s_.DiskFormat()) > 0 {
 		optionalDiskFormat = fmt.Sprintf(" (%s)", s_.DiskFormat())
-	}
-
-	optionalLight := ""
-	if s_.IsLight() {
-		if s_.IsForChina() {
-			optionalLight = " Light China"
-		} else {
-			optionalLight = " Light"
-		}
+		linkName = fmt.Sprintf("%s (%s)", linkName, s_.DiskFormat())
 	}
 
 	source := &StemcellSource{
-		friendlyName: fmt.Sprintf("%s %s%s%s", infName, hvName, optionalDiskFormat, optionalLight),
+		friendlyName:       fmt.Sprintf("%s %s%s%s", infName, hvName, optionalDiskFormat, optionalLight),
+		infrastructureName: infNameFull,
+		hypervisorName:     hvName,
+		linkName:           linkName,
 
 		URL:  s_.URL(),
 		Size: s_.Size(),
@@ -237,7 +233,11 @@ func (s Stemcell) AllVersionsURL() string { return fmt.Sprintf("/stemcells/%s", 
 
 func (s StemcellSource) UserVisibleDownloadURL() string { return s.URL }
 func (s StemcellSource) FriendlyName() string           { return s.friendlyName }
+func (s StemcellSource) InfrastructureName() string     { return s.infrastructureName }
+func (s StemcellSource) HypervisorName() string         { return s.hypervisorName }
 func (s StemcellSource) FormattedSize() string          { return humanize.Bytes(s.Size) }
+func (s StemcellSource) LinkName() string               { return s.linkName }
+func (s StemcellSource) Ignored() bool                  { return s.infrastructureName == "Amazon Web Services" && s.hypervisorName == "Xen" }
 
 func (s StemcellManifestNameSorting) Len() int           { return len(s) }
 func (s StemcellManifestNameSorting) Less(i, j int) bool { return s[i].ManifestName < s[j].ManifestName }

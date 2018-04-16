@@ -10,6 +10,7 @@ import (
 	martrend "github.com/martini-contrib/render"
 
 	bhstemsrepo "github.com/bosh-io/web/stemcell/stemsrepo"
+	"github.com/bosh-io/web/ui/nav"
 	bhstemui "github.com/bosh-io/web/ui/stemcell"
 )
 
@@ -41,6 +42,7 @@ func NewStemcellsController(
 type stemcellsControllerIndexPage struct {
 	DistroGroups bhstemui.DistroGroups
 	Filter       bhstemui.StemcellFilter
+	NavPrimary   nav.Link
 }
 
 func (c StemcellsController) Index(req *http.Request, r martrend.Render, params mart.Params) {
@@ -59,7 +61,10 @@ func (c StemcellsController) Index(req *http.Request, r martrend.Render, params 
 	// Show either groups of stemcells by OS or for a specific stemcell name
 	distroGroups := bhstemui.NewDistroGroups(stemcells, filter)
 
-	r.HTML(200, c.indexTmpl, stemcellsControllerIndexPage{distroGroups, filter})
+	navPrimary := bhstemui.Navigation()
+	navPrimary.Activate(req.URL.Path)
+
+	r.HTML(200, c.indexTmpl, stemcellsControllerIndexPage{distroGroups, filter, navPrimary})
 }
 
 // Show uses '_1' param as stemcell name and 'v' param as release version

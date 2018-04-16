@@ -86,7 +86,10 @@ func (c JobsController) Show(req *http.Request, r martrend.Render, params mart.P
 
 	for _, relJob := range relJobs {
 		if relJob.Name == jobName {
-			r.HTML(200, c.showTmpl, bhjobui.NewJob(relJob, viewRel))
+			viewJob := bhjobui.NewJob(relJob, viewRel)
+			viewJob.Release.NavPrimary = viewJob.Release.BuildNavigation(viewJob.URL())
+
+			r.HTML(200, c.showTmpl, viewJob)
 			return
 		}
 	}

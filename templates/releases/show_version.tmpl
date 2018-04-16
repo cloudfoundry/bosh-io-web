@@ -1,139 +1,81 @@
-<header>
-  <div class="container">
-    <h2>
-      {{ template "shared/logo" }}
-
-      <span>release:</span>
-      <a href="{{ .AllVersionsURL }}">{{ .Source }}</a>
-
-      <span>/</span>
-      {{ .Version }}
-    </h2>
-  </div>
-</header>
-
-<main>
-  <div class="container page-sep">
-    <div class="row">
-      <div class="col-md-6">
-        <h3 class="page-header">Release <span>'{{ .Name }} {{ .Version }}'</span></h3>
-
-        {{ if .IsCPI }}
-          <p>This is a CPI release. It's meant to be colocated with the Director job.</p>
-        {{ end }}
+{{ template "shared/_nav_tabs" "Releases" }}
+<main class="md-main">
+  <div class="md-main__inner md-grid" data-md-component="container">
+    {{ template "shared/_nav_primary" .NavPrimary }}
+    <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner">
+          <nav class="md-nav md-nav--secondary">
+            <label class="md-nav__title" for="toc">Table of contents</label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              <li class="md-nav__item">
+                <a href="#overview" title="Overview" class="md-nav__link">Overview</a>
+              </li>
+              <li class="md-nav__item">
+                <a href="#usage" title="Usage" class="md-nav__link">Usage</a>
+              </li>
+              {{ if .NotesInMarkdown }}
+                <li class="md-nav__item">
+                  <a href="#release-notes" title="Release Notes" class="md-nav__link">Release Notes</a>
+                </li>
+              {{ end }}
+              {{ if .Jobs }}
+                <li class="md-nav__item">
+                  <a href="#jobs" title="Jobs" class="md-nav__link">Jobs</a>
+                </li>
+              {{ end }}
+              {{ if .Packages }}
+                <li class="md-nav__item">
+                  <a href="#packages" title="Packages" class="md-nav__link">Packages</a>
+                </li>
+              {{ end }}
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+    <div class="md-content">
+      <article class="md-content__inner md-typeset">
+        <h1>{{ .Name }}/{{ .Version }}</h1>
 
         {{ if .HasGithubURL }}
           <p>
-            Github source:
-            <a href="{{ .GithubURL }}"><code>{{ .CommitHash }}</code></a> or
-            <a href="{{ .GithubURLOnMaster }}">master</a> branch
+            You can find the source of this version on GitHub at <a href="{{ .GithubURL }}">{{ .Source.Short }}</a>. It was created based on the commit <code>{{ .CommitHash }}</code>.
           </p>
         {{ end }}
-      </div>
 
-      {{ if .NotesInMarkdown }}
-        <div class="col-md-6">
-          <h3 class="page-header">Notes</h3>
+
+        {{ if .NotesInMarkdown }}
+          <h2 id="release-notes">Release Notes<a class="headerlink" href="#release-notes" title="Permanent link">&para;</a></h2>
+
           <div class="release-notes">{{ .NotesInMarkdown }}</div>
-        </div>
-      {{ end }}
-    </div>
-
-    <div class="row">
-      <div class="col-md-12">
-        <h3 class="page-header">Usage</h3>
-
-        {{ if .IsCPI }}
-          <p>Reference CPI release in the deployment manifest used with <code>bosh-init</code>:</p>
-
-          <pre>
-releases:
-- name: {{ .Name }}
-  version: "{{ .Version }}"
-  url: {{ .UserVisibleDownloadURL }}
-  sha1: {{ .TarballSHA1 }}
-</pre>
-
-          <p>Finally add needed deployment jobs and specify values for required properties.</p>
-
-          {{ $v := .CPIDocsLink }}
-
-          {{ if $v }}<p>See {{ $v }} for a step by step tutorial.</p>{{ end }}
-        {{ else if .IsBOSH }}
-          <p>Reference BOSH release in the deployment manifest used with <code>bosh-init</code>:</p>
-
-          <pre>
-releases:
-- name: {{ .Name }}
-  version: "{{ .Version }}"
-  url: {{ .UserVisibleDownloadURL }}
-  sha1: {{ .TarballSHA1 }}
-</pre>
-
-          <p>Finally add needed deployment jobs and specify values for required properties.</p>
-        {{ else }}
-          <p>Upload this release version to the Director:</p>
-
-          <pre class="terminal">
-$ bosh upload-release {{ .UserVisibleDownloadURL }} --sha1 {{ .TarballSHA1 }}</pre>
-
-          <p>Modify deployment manifest to use this release in addition to any other used releases:</p>
-
-          <pre class="prettyprint">
-releases:
-- name: {{ .Name }}
-  version: "{{ .Version }}"
-</pre>
-
-          <p>Finally add needed deployment jobs and specify values for required properties.</p>
         {{ end }}
 
-        <h3 class="page-header">Download</h3>
 
-        <p>
-          Optionally <a href="{{ .DownloadURL }}">download</a>
-          <span class="sha1">sha1: {{ .TarballSHA1 }}</span>
-          release tarball locally:
-        </p>
+        <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
 
-        <pre class="terminal">
-# ...or download it directly using curl
-$ curl -L -J -O {{ .UserVisibleDownloadURL }}
-
-# or with wget...
-$ wget --content-disposition {{ .UserVisibleDownloadURL }}
-</pre>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-3">
-        <h3 class="page-header">Jobs</h3>
+        {{ template "releases/_usage" . }}
 
         {{ if .Jobs }}
-          <ul class="list-group list-group-condensed">
+          <h2 id="jobs">Jobs<a class="headerlink" href="#jobs" title="Permanent link">&para;</a></h2>
+
+          <ul>
             {{ range .Jobs }}
-              <li class="list-group-item"><a href="{{ .URL }}">{{ .Name }}</a></li>
+              <li><a href="{{ .URL }}">{{ .Name }}</a></li>
             {{ end }}
           </ul>
-        {{ else }}
-          <p class="empty">No templates</p>
         {{ end }}
-      </div>
-
-      <div class="col-md-3">
-        <h3 class="page-header">Packages</h3>
 
         {{ if .Packages }}
-          <ul class="list-group list-group-condensed">
+          <h2 id="packages">Packages<a class="headerlink" href="#packages" title="Permanent link">&para;</a></h2>
+
+          <ul>
             {{ range .Packages }}
-              <li class="list-group-item"><a href="{{ .URL }}">{{ .Name }}</a></li>
+              <li><a href="{{ .URL }}">{{ .Name }}</a></li>
             {{ end }}
           </ul>
-        {{ else }}
-          <p class="empty">No packages</p>
         {{ end }}
-      </div>
+      </article>
     </div>
   </div>
 </main>

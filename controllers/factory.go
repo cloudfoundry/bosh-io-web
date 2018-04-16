@@ -19,8 +19,7 @@ type FactoryRepos interface {
 }
 
 type Factory struct {
-	HomeController HomeController
-	DocsController DocsController
+	RedirectsController RedirectsController
 
 	ReleasesController        ReleasesController
 	ReleaseTarballsController ReleaseTarballsController
@@ -29,18 +28,13 @@ type Factory struct {
 
 	JobsController     JobsController
 	PackagesController PackagesController
+
+	NotFoundController NotFoundController
 }
 
-func NewFactory(r FactoryRepos, runner boshsys.CmdRunner, logger boshlog.Logger) (Factory, error) {
+func NewFactory(redirects RedirectsConfig, r FactoryRepos, runner boshsys.CmdRunner, logger boshlog.Logger) (Factory, error) {
 	factory := Factory{
-		HomeController: NewHomeController(r.ReleasesRepo(), r.StemcellsRepo(), logger),
-
-		DocsController: NewDocsController(
-			r.ReleasesRepo(),
-			r.ReleaseVersionsRepo(),
-			r.StemcellsRepo(),
-			logger,
-		),
+		RedirectsController: NewRedirectsController(redirects),
 
 		ReleasesController: NewReleasesController(
 			r.ReleasesRepo(),
@@ -57,6 +51,8 @@ func NewFactory(r FactoryRepos, runner boshsys.CmdRunner, logger boshlog.Logger)
 
 		JobsController:     NewJobsController(r.ReleasesRepo(), r.ReleaseVersionsRepo(), r.JobsRepo(), logger),
 		PackagesController: NewPackagesController(r.ReleasesRepo(), r.ReleaseVersionsRepo(), runner, logger),
+
+		NotFoundController: NotFoundController{},
 	}
 
 	return factory, nil

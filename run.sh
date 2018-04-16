@@ -6,16 +6,11 @@ set -e
 # (https://github.com/shageman/buildpack-binary)
 
 configPath=$1
-assetsID=$2
-debug=$3
+debug=$2
 
 if [ -z "$configPath" ]; then
   configPath=prod-conf/web.json
   ./git-init-clone.sh
-fi
-
-if [ -z "$assetsID" ]; then
-  assetsID=$(cat prod-conf/assets-id)
 fi
 
 export PATH=/usr/local/bin:/usr/bin:/bin:/app/bin:$PATH
@@ -27,4 +22,4 @@ fi
 
 chmod +x ./bosh-hub
 
-exec ./bosh-hub -configPath $configPath -assetsID "$assetsID" $debug
+exec ./bosh-hub -configPath $configPath $debug
