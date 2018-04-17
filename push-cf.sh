@@ -16,7 +16,7 @@ if [ ! -f prod-conf/web.json ]; then
   exit 1
 fi
 
-export GOOGLE_ANALYTICS_KEY=$( jq .Analytics.GoogleAnalyticsID prod-conf/web.json )
+export GOOGLE_ANALYTICS_KEY=$( jq -r .Analytics.GoogleAnalyticsID prod-conf/web.json )
 
 ./build.sh
 
