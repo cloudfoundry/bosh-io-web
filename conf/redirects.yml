@@ -18,7 +18,9 @@
 /docs/build-cpi.html: /docs/build-cpi/
 /docs/build-stemcell.html: /docs/build-stemcell/
 /docs/cck.html: /docs/cck/
-/docs/cli-env-deps.html: /docs/cli-env-deps/
+/docs/cli-env-deps.html: &cli-env-deps /docs/cli-v2-install/#additional-dependencies
+/docs/cli-env-deps/: *cli-env-deps
+/docs/cli-env-deps: *cli-env-deps
 /docs/cli-envs.html: /docs/cli-envs/
 /docs/cli-global-flags.html: /docs/cli-global-flags/
 /docs/cli-help.html: /docs/cli-help/
