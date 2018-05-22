@@ -237,7 +237,9 @@ func (s StemcellSource) InfrastructureName() string     { return s.infrastructur
 func (s StemcellSource) HypervisorName() string         { return s.hypervisorName }
 func (s StemcellSource) FormattedSize() string          { return humanize.Bytes(s.Size) }
 func (s StemcellSource) LinkName() string               { return s.linkName }
-func (s StemcellSource) Ignored() bool                  { return s.infrastructureName == "Amazon Web Services" && s.hypervisorName == "Xen" }
+func (s StemcellSource) Ignored() bool {
+	return s.infrastructureName == "Amazon Web Services" && s.hypervisorName == "Xen"
+}
 
 func (s StemcellManifestNameSorting) Len() int           { return len(s) }
 func (s StemcellManifestNameSorting) Less(i, j int) bool { return s[i].ManifestName < s[j].ManifestName }

@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"html/template"
 
+	"github.com/bosh-io/web/ui/nav"
 	bprel "github.com/cppforlife/bosh-provisioner/release"
 	semiver "github.com/cppforlife/go-semi-semantic/version"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/russross/blackfriday"
-	"github.com/bosh-io/web/ui/nav"
 
 	bhrelsrepo "github.com/bosh-io/web/release/releasesrepo"
 )
@@ -30,7 +30,7 @@ type Release struct {
 
 	Packages []Package
 
-	Graph Graph
+	Graph      Graph
 	NavPrimary nav.Link
 
 	// memoized notes
@@ -88,7 +88,7 @@ func (r Release) BuildNavigation(active string) nav.Link {
 	relnav := nav.Link{Title: r.Name}
 	relnav.Add(nav.Link{
 		Title: "All Versions",
-		URL: r.AllVersionsURL(),
+		URL:   r.AllVersionsURL(),
 	})
 	relnav.Add(r.Navigation())
 	root.Add(relnav)
@@ -210,12 +210,12 @@ func (r Release) MarshalJSON() ([]byte, error) {
 func (r Release) Navigation() nav.Link {
 	releaseNav := nav.Link{
 		Title: fmt.Sprintf("%s", r.Version),
-		URL: r.URL(),
+		URL:   r.URL(),
 	}
 
 	releaseNav.Add(nav.Link{
 		Title: "Overview",
-		URL: r.URL(),
+		URL:   r.URL(),
 	})
 
 	{
@@ -224,7 +224,7 @@ func (r Release) Navigation() nav.Link {
 		for _, job := range r.Jobs {
 			jobsNav.Add(nav.Link{
 				Title: job.Name,
-				URL: job.URL(),
+				URL:   job.URL(),
 			})
 		}
 
@@ -237,7 +237,7 @@ func (r Release) Navigation() nav.Link {
 		for _, pkg := range r.Packages {
 			pkgsNav.Add(nav.Link{
 				Title: pkg.Name,
-				URL: pkg.URL(),
+				URL:   pkg.URL(),
 			})
 		}
 
