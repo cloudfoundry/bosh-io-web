@@ -13,6 +13,18 @@ var (
 
 		Sort: 1,
 	}
+	ubuntuXenialDistro = Distro{
+		NameName: "ubuntu-xenial",
+		Name:     "Ubuntu Xenial",
+
+		OSMatches: []StemcellOSMatch{
+			{OSName: "ubuntu", OSVersion: "xenial"},
+		},
+
+		SupportedInfrastructures: allInfrastructures,
+
+		Sort: 2,
+	}
 	windows2016Distro = Distro{
 		NameName: "windows2016",
 		Name:     "Windows 2016",
@@ -26,7 +38,7 @@ var (
 			azureInfrastructure,
 		},
 
-		Sort: 2,
+		Sort: 3,
 	}
 	windows2012R2Distro = Distro{
 		NameName: "windows2012R2",
@@ -42,7 +54,7 @@ var (
 			azureInfrastructure,
 		},
 
-		Sort: 3,
+		Sort: 4,
 	}
 	centos7Distro = Distro{
 		NameName: "centos-7",
@@ -61,13 +73,14 @@ var (
 			wardenInfrastructure,
 		},
 
-		Sort: 4,
+		Sort: 5,
 	}
 )
 
 var (
 	allDistros = []Distro{
 		ubuntuTrustyDistro,
+		ubuntuXenialDistro,
 		windows2016Distro,
 		windows2012R2Distro,
 		centos7Distro,
