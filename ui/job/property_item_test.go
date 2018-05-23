@@ -28,33 +28,42 @@ var _ = Describe("NewPropertyItems", func() {
 
 		items := NewPropertyItems(props)
 
-		expectedItems := []PropertyItem{
-			PropertyItem{
+		expectedItems := map[string]*PropertyItem{
+			"key1": &PropertyItem{
+				FullPath:      "key1",
 				Indent:        0,
 				Key:           "key1",
 				Anchor:        "p=key1",
 				MissingValues: false,
 				Property:      &props[0],
+				Children:      map[string]*PropertyItem{},
 			},
-			PropertyItem{
+			"key2": &PropertyItem{
+				FullPath:      "key2",
 				Indent:        0,
 				Key:           "key2",
 				Anchor:        "p=key2",
-				MissingValues: true,
-			},
-			PropertyItem{
-				Indent:        1,
-				Key:           "key1",
-				Anchor:        "p=key2.key1",
-				MissingValues: true,
-				Property:      &props[1],
-			},
-			PropertyItem{
-				Indent:        1,
-				Key:           "key2",
-				Anchor:        "p=key2.key2",
 				MissingValues: false,
-				Property:      &props[2],
+				Children: map[string]*PropertyItem{
+					"key1": &PropertyItem{
+						FullPath:      "key2.key1",
+						Indent:        1,
+						Key:           "key1",
+						Anchor:        "p=key2.key1",
+						MissingValues: true,
+						Property:      &props[1],
+						Children:      map[string]*PropertyItem{},
+					},
+					"key2": &PropertyItem{
+						FullPath:      "key2.key2",
+						Indent:        1,
+						Key:           "key2",
+						Anchor:        "p=key2.key2",
+						MissingValues: false,
+						Property:      &props[2],
+						Children:      map[string]*PropertyItem{},
+					},
+				},
 			},
 		}
 
