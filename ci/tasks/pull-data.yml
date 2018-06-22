@@ -1,0 +1,19 @@
+---
+platform: linux
+image_resource:
+  type: docker-image
+  source:
+    repository: bosh/bosh-io-web
+    tag: default
+inputs:
+- name: web
+run:
+  path: ci/tasks/pull-data.sh
+  dir: web
+params:
+  CF_CONFIG: ~
+  CF_API: ~
+  CF_USERNAME: ~
+  CF_PASSWORD: ~
+  CF_ORGANIZATION: ~
+  CF_SPACE: ~

@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -eu
+
+if [ -n "${CF_CONFIG:-}" ]; then
+  mkdir -p ${CF_HOME:-~}/.cf
+  echo "$CF_CONFIG" > "$CF_HOME/.cf/config.json"
+  cf target
+elif [ -n "${CF_API:-}" ]; then
+  cf api "$CF_API"
+  cf auth
+  cf target -o "$CF_ORGANIZATION" -s "$CF_SPACE"
+else
+  # assume it was externally configured
+  cf target
+fi
