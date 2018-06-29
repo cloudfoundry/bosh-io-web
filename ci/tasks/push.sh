@@ -30,6 +30,9 @@ rm prod-conf/web.json
 echo "Testing new version"
 ./bin/test-server "https://$new.cfapps.io"
 
+echo "failing because you're supposed to be testing"
+exit 1
+
 echo "Mapping routes to new version"
 cf unmap-route $new cfapps.io -n $new
 cf map-route $new cfapps.io -n $curr

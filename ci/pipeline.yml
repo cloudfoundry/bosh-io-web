@@ -65,6 +65,7 @@ resources:
   type: git
   source:
     uri: https://github.com/bosh-io/web.git
+    branch: ci-concourse-testing
 - name: docs
   type: git
   source:
