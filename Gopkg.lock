@@ -135,6 +135,12 @@
   revision = "576b6af77ae4f3ccef356902fb3b9a9ae22e0b11"
 
 [[projects]]
+  name = "github.com/dpb587/metalink"
+  packages = ["."]
+  revision = "482927015674c714e3759d7cd91566dd099a0ac3"
+  version = "v0.2.0"
+
+[[projects]]
   branch = "master"
   name = "github.com/dustin/go-humanize"
   packages = ["."]
@@ -310,6 +316,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "5a5258efdeba991d3bd66122939714fbd665b7aa2ae4e72f4c380228d339b970"
+  inputs-digest = "bdb180d825460793e364f693f910f2f28021243fced71f820d38923814ccdc25"
   solver-name = "gps-cdcl"
   solver-version = 1

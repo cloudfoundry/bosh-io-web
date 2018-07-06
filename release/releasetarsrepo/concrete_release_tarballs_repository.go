@@ -10,6 +10,8 @@ import (
 
 	bhrelver "github.com/bosh-io/web/release/relver"
 	bhs3 "github.com/bosh-io/web/s3"
+
+	"github.com/dpb587/metalink"
 )
 
 type ReleaseTarballsRepository interface {
@@ -51,7 +53,7 @@ func (r CRTRepository) Find(source, version string) (ReleaseTarballRec, error) {
 	relTarRec.source = source
 	relTarRec.versionRaw = version
 
-	var meta4 Metalink
+	var meta4 metalink.Metalink
 
 	err = xml.Unmarshal(contents, &meta4)
 	if err != nil {

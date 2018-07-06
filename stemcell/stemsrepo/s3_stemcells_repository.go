@@ -11,6 +11,8 @@ import (
 	boshsys "github.com/cloudfoundry/bosh-utils/system"
 
 	bhnotesrepo "github.com/bosh-io/web/stemcell/notesrepo"
+
+	"github.com/dpb587/metalink"
 )
 
 type S3StemcellsRepository struct {
@@ -127,7 +129,7 @@ func (r S3StemcellsRepository) loadIndex(dir string) ([]s3StemcellRec, error) {
 			return nil, bosherr.WrapError(err, "Reading release version")
 		}
 
-		var meta4 Metalink
+		var meta4 metalink.Metalink
 
 		err = xml.Unmarshal(contents, &meta4)
 		if err != nil {

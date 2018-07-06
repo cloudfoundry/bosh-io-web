@@ -1,4 +1,4 @@
-package releasetarsrepo
+package metalink
 
 import (
 	"encoding/xml"
