@@ -57,7 +57,7 @@ echo "Testing current version"
 ./bin/test-server "https://bosh.io"
 
 echo "Deleting old version"
-cf delete $old
+cf delete -f $old
 
 rm -fr ./prod-conf
 rm -fr "$CF_HOME"
