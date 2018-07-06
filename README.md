@@ -7,7 +7,7 @@
 ### Prerequisites
 
 * golang environment setup
-* docker (to build docs-bosh)
+* docker (if you want to build [docs-bosh](https://github.com/cloudfoundry/docs-bosh))
 
 ### Setup
 
