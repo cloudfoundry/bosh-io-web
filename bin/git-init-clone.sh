@@ -16,7 +16,8 @@ git clone https://github.com/bosh-io/stemcells-softlayer-index prod-conf/stemcel
   sleep 1
 
   echo "Warm up"
-	time curl -I -q http://localhost:8080
+	time curl -I -q http://localhost:8080/releases
+	time curl -I -q http://localhost:8080/stemcells
 ) &
 
 disown

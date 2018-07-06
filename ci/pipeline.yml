@@ -1,0 +1,99 @@
+---
+jobs:
+- name: deploy
+  serial: true
+  plan:
+  - aggregate:
+    - get: docs
+      trigger: true
+    - get: web
+      trigger: true
+  - task: build-docs
+    file: docs/ci/tasks/build.yml
+    params:
+      GOOGLE_ANALYTICS_KEY: ((google_analytics_key))
+  - task: push
+    file: web/ci/tasks/push.yml
+    params:
+      CF_API: ((cf_api))
+      CF_USERNAME: ((cf_username))
+      CF_PASSWORD: ((cf_password))
+      CF_ORGANIZATION: ((cf_organization))
+      CF_SPACE: ((cf_space))
+      WEB_CONFIG: ((web_config))
+- name: pull-data
+  serial: true
+  plan:
+  - aggregate:
+    - get: web
+    - get: data-reload-interval
+      trigger: true
+    - get: releases-index
+      trigger: true
+      params:
+        depth: 1
+    - get: stemcells-core-index
+      trigger: true
+      params:
+        depth: 1
+    - get: stemcells-cpi-index
+      trigger: true
+      params:
+        depth: 1
+    - get: stemcells-legacy-index
+      trigger: true
+      params:
+        depth: 1
+    - get: stemcells-softlayer-index
+      trigger: true
+      params:
+        depth: 1
+    - get: stemcells-windows-index
+      trigger: true
+      params:
+        depth: 1
+  - task: pull-data
+    file: web/ci/tasks/pull-data.yml
+    params:
+      CF_API: ((cf_api))
+      CF_USERNAME: ((cf_username))
+      CF_PASSWORD: ((cf_password))
+      CF_ORGANIZATION: ((cf_organization))
+      CF_SPACE: ((cf_space))
+resources:
+- name: web
+  type: git
+  source:
+    uri: https://github.com/bosh-io/web.git
+- name: docs
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry/docs-bosh.git
+- name: data-reload-interval
+  type: time
+  source:
+    interval: 1h
+- name: releases-index
+  type: git
+  source:
+    uri: https://github.com/bosh-io/releases-index.git
+- name: stemcells-core-index
+  type: git
+  source:
+    uri: https://github.com/bosh-io/stemcells-core-index.git
+- name: stemcells-cpi-index
+  type: git
+  source:
+    uri: https://github.com/bosh-io/stemcells-cpi-index.git
+- name: stemcells-legacy-index
+  type: git
+  source:
+    uri: https://github.com/bosh-io/stemcells-legacy-index.git
+- name: stemcells-softlayer-index
+  type: git
+  source:
+    uri: https://github.com/bosh-io/stemcells-softlayer-index.git
+- name: stemcells-windows-index
+  type: git
+  source:
+    uri: https://github.com/bosh-io/stemcells-windows-index.git

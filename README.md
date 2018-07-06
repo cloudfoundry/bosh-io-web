@@ -1,22 +1,21 @@
-## `bosh-hub`
+# `bosh-io/web`
 
 * [Publishing stemcells](docs/publishing-stemcells.md)
 
-#### Run Documentation Locally
+## Run Documentation Locally
 
-##### Prerequisites
+### Prerequisites
 
 * golang environment setup
-* docker (if rebuilding docs-bosh)
+* docker (to build docs-bosh)
 
-##### Setup
+### Setup
 
 ```
 go get github.com/bosh-io/web
 cd $GOPATH/src/github.com/bosh-io/web
-./build.sh
-./run-local.sh
-
+./bin/build-docs.sh
+./bin/run-local.sh
 ```
 
-Open [http://localhost:3000/docs](http://localhost:3000/docs)
+Open [localhost:3000](http://localhost:3000/)

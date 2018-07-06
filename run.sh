@@ -10,7 +10,7 @@ debug=$2
 
 if [ -z "$configPath" ]; then
   configPath=prod-conf/web.json
-  ./git-init-clone.sh
+  ./bin/git-init-clone.sh
 fi
 
 export PATH=/usr/local/bin:/usr/bin:/bin:/app/bin:$PATH

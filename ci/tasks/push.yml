@@ -1,0 +1,21 @@
+---
+platform: linux
+image_resource:
+  type: docker-image
+  source:
+    repository: bosh/bosh-io-web
+    tag: default
+inputs:
+- name: web
+  path: src/github.com/bosh-io/web
+- name: docroot
+run:
+  path: src/github.com/bosh-io/web/ci/tasks/push.sh
+params:
+  CF_CONFIG: ~
+  CF_API: ~
+  CF_USERNAME: ~
+  CF_PASSWORD: ~
+  CF_ORGANIZATION: ~
+  CF_SPACE: ~
+  WEB_CONFIG: ~
