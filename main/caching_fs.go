@@ -120,6 +120,10 @@ func (f *CachingFileSystem) ReadFile(path string) ([]byte, error) {
 	return content, err
 }
 
+func (f *CachingFileSystem) ReadFileWithOpts(path string, opts boshsys.ReadOpts) (content []byte, err error) {
+	return f.fs.ReadFileWithOpts(path, opts)
+}
+
 func (f *CachingFileSystem) FileExists(path string) bool {
 	return f.fs.FileExists(path)
 }
@@ -162,6 +166,10 @@ func (f *CachingFileSystem) Lstat(path string) (os.FileInfo, error) {
 
 func (f *CachingFileSystem) Stat(path string) (os.FileInfo, error) {
 	return f.fs.Stat(path)
+}
+
+func (f *CachingFileSystem) StatWithOpts(path string, opts boshsys.StatOpts) (os.FileInfo, error) {
+	return f.fs.StatWithOpts(path, opts)
 }
 
 func (f *CachingFileSystem) RecursiveGlob(pattern string) (matches []string, err error) {

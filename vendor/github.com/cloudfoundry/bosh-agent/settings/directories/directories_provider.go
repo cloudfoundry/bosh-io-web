@@ -58,12 +58,24 @@ func (p Provider) JobsDir() string {
 	return filepath.Join(p.BaseDir(), "jobs")
 }
 
-func (p Provider) JobBinDir(jobName string) string {
-	return filepath.Join(p.JobsDir(), jobName, "bin")
+func (p Provider) DataJobsDir() string {
+	return filepath.Join(p.DataDir(), "jobs")
 }
 
-func (p Provider) MicroStore() string {
-	return filepath.Join(p.BaseDir(), "micro_bosh", "data", "cache")
+func (p Provider) JobLogDir(jobName string) string {
+	return filepath.Join(p.DataDir(), "sys", "log", jobName)
+}
+
+func (p Provider) JobRunDir(jobName string) string {
+	return filepath.Join(p.DataDir(), "sys", "run", jobName)
+}
+
+func (p Provider) JobDir(jobName string) string {
+	return filepath.Join(p.DataDir(), jobName)
+}
+
+func (p Provider) JobBinDir(jobName string) string {
+	return filepath.Join(p.JobsDir(), jobName, "bin")
 }
 
 func (p Provider) SettingsDir() string {

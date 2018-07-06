@@ -21,8 +21,9 @@ import (
 )
 
 type mount struct {
-	MountDir string
-	DiskCid  string
+	MountDir     string
+	MountOptions []string
+	DiskCid      string
 }
 
 type formattedDisk struct {
@@ -215,6 +216,10 @@ func (p dummyPlatform) SetupLogDir() error {
 	return nil
 }
 
+func (p dummyPlatform) SetupSharedMemory() error {
+	return nil
+}
+
 func (p dummyPlatform) SetupBlobsDir() error {
 
 	blobsDir := p.dirProvider.BlobsDir()
@@ -263,7 +268,11 @@ func (p dummyPlatform) MountPersistentDisk(diskSettings boshsettings.DiskSetting
 
 	p.fs.WriteFile(filepath.Join(p.dirProvider.BoshDir(), "formatted_disks.json"), diskJSON)
 
-	mounts = append(mounts, mount{MountDir: mountPoint, DiskCid: diskSettings.ID})
+	mounts = append(mounts, mount{
+		MountDir:     mountPoint,
+		MountOptions: diskSettings.MountOptions,
+		DiskCid:      diskSettings.ID,
+	})
 	mountsJSON, err := json.Marshal(mounts)
 	if err != nil {
 		return err
@@ -489,5 +498,9 @@ func (p dummyPlatform) existingMounts() ([]mount, error) {
 }
 
 func (p dummyPlatform) SetupRecordsJSONPermission(path string) error {
+	return nil
+}
+
+func (p dummyPlatform) Shutdown() error {
 	return nil
 }

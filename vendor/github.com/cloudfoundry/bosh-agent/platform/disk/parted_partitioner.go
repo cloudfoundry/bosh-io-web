@@ -13,7 +13,10 @@ import (
 	boshsys "github.com/cloudfoundry/bosh-utils/system"
 )
 
-const partitionNamePrefix = "bosh-partition"
+const (
+	partitionNamePrefix = "bosh-partition"
+	deltaSize           = 100
+)
 
 type partedPartitioner struct {
 	logger      boshlog.Logger
@@ -87,7 +90,7 @@ func (p partedPartitioner) partitionsMatch(existingPartitions []existingPartitio
 		existingPartition := existingPartitions[index]
 		if existingPartition.Type != partition.Type {
 			return false
-		} else if !withinDelta(partition.SizeInBytes, existingPartition.SizeInBytes, p.convertFromMbToBytes(20)) {
+		} else if !withinDelta(partition.SizeInBytes, existingPartition.SizeInBytes, p.convertFromMbToBytes(deltaSize)) {
 			return false
 		}
 
@@ -275,6 +278,15 @@ func (p partedPartitioner) createEachPartition(partitions []Partition, deviceFul
 				//TODO: double check the output here. Does it make sense?
 				return true, bosherr.WrapError(err, "Creating partition using parted")
 			}
+
+			_, _, _, err = p.cmdRunner.RunCommand("partprobe", devicePath)
+			if err != nil {
+				p.logger.Error(p.logTag, "Failed to probe for newly created parition: %s", err)
+				return true, bosherr.WrapError(err, "Creating partition using parted")
+			}
+
+			p.cmdRunner.RunCommand("udevadm", "settle")
+
 			p.logger.Info(p.logTag, "Successfully created partition %d on %s", index, devicePath)
 			return false, nil
 		})
@@ -295,6 +307,11 @@ func (p partedPartitioner) createMapperPartition(devicePath string) error {
 	_, _, _, err := p.cmdRunner.RunCommand("/etc/init.d/open-iscsi", "restart")
 	if err != nil {
 		return bosherr.WrapError(err, "Shelling out to restart open-iscsi")
+	}
+
+	_, _, _, err = p.cmdRunner.RunCommand("/etc/init.d/multipath-tools", "restart")
+	if err != nil {
+		return bosherr.WrapError(err, "Restarting multipath after restarting open-iscsi")
 	}
 
 	detectPartitionRetryable := boshretry.NewRetryable(func() (bool, error) {

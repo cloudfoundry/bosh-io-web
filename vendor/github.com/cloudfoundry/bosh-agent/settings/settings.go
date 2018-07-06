@@ -6,9 +6,7 @@ import (
 	"github.com/cloudfoundry/bosh-agent/platform/disk"
 )
 
-type DiskAssociations struct {
-	Associations []DiskAssociation `json:"disk_associations"`
-}
+type DiskAssociations []DiskAssociation
 
 type DiskAssociation struct {
 	Name    string `json:"name"`
@@ -30,14 +28,14 @@ type Settings struct {
 	Disks     Disks     `json:"disks"`
 	Env       Env       `json:"env"`
 	Networks  Networks  `json:"networks"`
-	Ntp       []string  `json:"ntp"`
+	NTP       []string  `json:"ntp"`
 	Mbus      string    `json:"mbus"`
 	VM        VM        `json:"vm"`
 }
 
 type UpdateSettings struct {
-	DiskAssociations []DiskAssociation `json:"disk_associations"`
-	TrustedCerts     string            `json:"trusted_certs"`
+	DiskAssociations DiskAssociations `json:"disk_associations"`
+	TrustedCerts     string           `json:"trusted_certs"`
 }
 
 type Source interface {
@@ -74,13 +72,27 @@ type Disks struct {
 }
 
 type DiskSettings struct {
-	ID             string
-	DeviceID       string
-	VolumeID       string
-	Lun            string
-	HostDeviceID   string
-	Path           string
+	ID           string
+	DeviceID     string
+	VolumeID     string
+	Lun          string
+	HostDeviceID string
+	Path         string
+
+	// iscsi related
+	ISCSISettings ISCSISettings
+
 	FileSystemType disk.FileSystemType
+	MountOptions   []string
+
+	Partitioner string
+}
+
+type ISCSISettings struct {
+	InitiatorName string
+	Username      string
+	Target        string
+	Password      string
 }
 
 type VM struct {
@@ -110,6 +122,24 @@ func (s Settings) PersistentDiskSettings(diskID string) (DiskSettings, bool) {
 				if hostDeviceID, ok := hashSettings["host_device_id"]; ok {
 					diskSettings.HostDeviceID = hostDeviceID.(string)
 				}
+
+				if iSCSISettings, ok := hashSettings["iscsi_settings"]; ok {
+					if hashISCSISettings, ok := iSCSISettings.(map[string]interface{}); ok {
+						if username, ok := hashISCSISettings["username"]; ok {
+							diskSettings.ISCSISettings.Username = username.(string)
+						}
+						if password, ok := hashISCSISettings["password"]; ok {
+							diskSettings.ISCSISettings.Password = password.(string)
+						}
+						if initiator, ok := hashISCSISettings["initiator_name"]; ok {
+							diskSettings.ISCSISettings.InitiatorName = initiator.(string)
+						}
+						if target, ok := hashISCSISettings["target"]; ok {
+							diskSettings.ISCSISettings.Target = target.(string)
+						}
+					}
+				}
+
 			} else {
 				// Old CPIs return disk path (string) or volume id (string) as disk settings
 				diskSettings.Path = settings.(string)
@@ -117,6 +147,9 @@ func (s Settings) PersistentDiskSettings(diskID string) (DiskSettings, bool) {
 			}
 
 			diskSettings.FileSystemType = s.Env.PersistentDiskFS
+			diskSettings.MountOptions = s.Env.PersistentDiskMountOptions
+			diskSettings.Partitioner = s.Env.PersistentDiskPartitioner
+
 			return diskSettings, true
 		}
 	}
@@ -158,9 +191,33 @@ func (s Settings) RawEphemeralDiskSettings() (devices []DiskSettings) {
 	return s.Disks.RawEphemeral
 }
 
+func (s Settings) GetMbusURL() string {
+	if len(s.Env.Bosh.Mbus.URLs) > 0 {
+		return s.Env.Bosh.Mbus.URLs[0]
+	}
+
+	return s.Mbus
+}
+
+func (s Settings) GetBlobstore() Blobstore {
+	if len(s.Env.Bosh.Blobstores) > 0 {
+		return s.Env.Bosh.Blobstores[0]
+	}
+	return s.Blobstore
+}
+
+func (s Settings) GetNtpServers() []string {
+	if len(s.Env.Bosh.NTP) > 0 {
+		return s.Env.Bosh.NTP
+	}
+	return s.NTP
+}
+
 type Env struct {
-	Bosh             BoshEnv             `json:"bosh"`
-	PersistentDiskFS disk.FileSystemType `json:"persistent_disk_fs"`
+	Bosh                       BoshEnv             `json:"bosh"`
+	PersistentDiskFS           disk.FileSystemType `json:"persistent_disk_fs"`
+	PersistentDiskMountOptions []string            `json:"persistent_disk_mount_options"`
+	PersistentDiskPartitioner  string              `json:"persistent_disk_partitioner"`
 }
 
 func (e Env) GetPassword() string {
@@ -192,21 +249,39 @@ func (e Env) GetSwapSizeInBytes() *uint64 {
 	return &result
 }
 
-type BoshEnv struct {
-	Password              string   `json:"password"`
-	KeepRootPassword      bool     `json:"keep_root_password"`
-	RemoveDevTools        bool     `json:"remove_dev_tools"`
-	RemoveStaticLibraries bool     `json:"remove_static_libraries"`
-	AuthorizedKeys        []string `json:"authorized_keys"`
-	SwapSizeInMB          *uint64  `json:"swap_size"`
-	Mbus                  struct {
-		Cert CertKeyPair `json:"cert"`
-	} `json:"mbus"`
+func (e Env) GetParallel() *int {
+	result := 5
+	if e.Bosh.Parallel != nil {
+		result = int(*e.Bosh.Parallel)
+	}
+	return &result
+}
 
-	IPv6 IPv6 `json:"ipv6"`
+func (e Env) IsNATSMutualTLSEnabled() bool {
+	return len(e.Bosh.Mbus.Cert.Certificate) > 0 && len(e.Bosh.Mbus.Cert.PrivateKey) > 0
+}
+
+type BoshEnv struct {
+	Password              string      `json:"password"`
+	KeepRootPassword      bool        `json:"keep_root_password"`
+	RemoveDevTools        bool        `json:"remove_dev_tools"`
+	RemoveStaticLibraries bool        `json:"remove_static_libraries"`
+	AuthorizedKeys        []string    `json:"authorized_keys"`
+	SwapSizeInMB          *uint64     `json:"swap_size"`
+	Mbus                  MBus        `json:"mbus"`
+	IPv6                  IPv6        `json:"ipv6"`
+	Blobstores            []Blobstore `json:"blobstores"`
+	NTP                   []string    `json:"ntp"`
+	Parallel              *int        `json:"parallel"`
+}
+
+type MBus struct {
+	Cert CertKeyPair `json:"cert"`
+	URLs []string    `json:"urls"`
 }
 
 type CertKeyPair struct {
+	CA          string `json:"ca"`
 	PrivateKey  string `json:"private_key"`
 	Certificate string `json:"certificate"`
 }
@@ -227,6 +302,14 @@ const (
 	NetworkTypeVIP     NetworkType = "vip"
 )
 
+type Route struct {
+	Destination string
+	Gateway     string
+	Netmask     string
+}
+
+type Routes []Route
+
 type Network struct {
 	Type NetworkType `json:"type"`
 
@@ -241,7 +324,10 @@ type Network struct {
 
 	Mac string `json:"mac"`
 
-	Preconfigured bool `json:"preconfigured"`
+	Preconfigured bool   `json:"preconfigured"`
+	Routes        Routes `json:"routes,omitempty"`
+
+	Alias string `json:"alias,omitempty"`
 }
 
 type Networks map[string]Network
@@ -308,6 +394,21 @@ func (n Networks) IPs() (ips []string) {
 		}
 	}
 	return
+}
+
+func (n Networks) HasInterfaceAlias() bool {
+	for _, network := range n {
+		if network.IsVIP() {
+			// Skip VIP networks since we do not configure interfaces for them
+			continue
+		}
+
+		if network.Alias != "" {
+			return true
+		}
+	}
+
+	return false
 }
 
 func (n Networks) IsPreconfigured() bool {
@@ -378,6 +479,10 @@ func (n Network) IsVIP() bool {
 //	"env": {
 //		"bosh": {
 //			"password": null
+//			"mbus": {
+//				"url": "nats://localhost:ddd",
+//				"ca": "....."
+//			}
 //      },
 //      "persistent_disk_fs": "xfs"
 //	},
