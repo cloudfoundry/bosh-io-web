@@ -1,6 +1,7 @@
 package relver
 
 import (
+	"fmt"
 	"path/filepath"
 
 	bosherr "github.com/cloudfoundry/bosh-utils/errors"
@@ -21,8 +22,8 @@ func (r RelVer) Read(fileName string) ([]byte, error) {
 		return nil, bosherr.WrapError(err, "Globbing release versions")
 	}
 
-	if len(foundPaths) != 1 {
-		return nil, bosherr.WrapError(err, "Finding release version")
+	if l := len(foundPaths); l != 1 {
+		return nil, fmt.Errorf("expected 1 glob match, but found %d", l)
 	}
 
 	contents, err := r.fs.ReadFile(foundPaths[0])
