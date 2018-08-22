@@ -34,6 +34,7 @@ var (
 		},
 
 		SupportedInfrastructures: Infrastructures{
+			awsInfrastructure,
 			googleInfrastructure,
 			azureInfrastructure,
 		},
