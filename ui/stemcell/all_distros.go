@@ -25,6 +25,22 @@ var (
 
 		Sort: 2,
 	}
+	windows1803Distro = Distro{
+		NameName: "windows1803",
+		Name:     "Windows 1803",
+
+		OSMatches: []StemcellOSMatch{
+			{OSName: "windows", OSVersion: "1803"},
+		},
+
+		SupportedInfrastructures: Infrastructures{
+			awsInfrastructure,
+			googleInfrastructure,
+			azureInfrastructure,
+		},
+
+		Sort: 4,
+	}
 	windows2016Distro = Distro{
 		NameName: "windows2016",
 		Name:     "Windows 2016",
@@ -55,7 +71,7 @@ var (
 			azureInfrastructure,
 		},
 
-		Sort: 4,
+		Sort: 5,
 	}
 	centos7Distro = Distro{
 		NameName: "centos-7",
@@ -74,7 +90,7 @@ var (
 			wardenInfrastructure,
 		},
 
-		Sort: 5,
+		Sort: 6,
 	}
 )
 
@@ -82,6 +98,7 @@ var (
 	allDistros = []Distro{
 		ubuntuTrustyDistro,
 		ubuntuXenialDistro,
+		windows1803Distro,
 		windows2016Distro,
 		windows2012R2Distro,
 		centos7Distro,
