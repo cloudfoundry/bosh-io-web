@@ -39,7 +39,7 @@ var (
 			azureInfrastructure,
 		},
 
-		Sort: 4,
+		Sort: 3,
 	}
 	windows2016Distro = Distro{
 		NameName: "windows2016",
@@ -55,7 +55,7 @@ var (
 			azureInfrastructure,
 		},
 
-		Sort: 3,
+		Sort: 4,
 	}
 	windows2012R2Distro = Distro{
 		NameName: "windows2012R2",
