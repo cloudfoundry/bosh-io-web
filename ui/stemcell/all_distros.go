@@ -1,24 +1,24 @@
 package stemcell
 
 var (
-	ubuntuTrustyDistro = Distro{
-		NameName: "ubuntu-trusty",
-		Name:     "Ubuntu Trusty",
-
-		OSMatches: []StemcellOSMatch{
-			{OSName: "ubuntu", OSVersion: "trusty"},
-		},
-
-		SupportedInfrastructures: allInfrastructures,
-
-		Sort: 1,
-	}
 	ubuntuXenialDistro = Distro{
 		NameName: "ubuntu-xenial",
 		Name:     "Ubuntu Xenial",
 
 		OSMatches: []StemcellOSMatch{
 			{OSName: "ubuntu", OSVersion: "xenial"},
+		},
+
+		SupportedInfrastructures: allInfrastructures,
+
+		Sort: 1,
+	}
+	ubuntuTrustyDistro = Distro{
+		NameName: "ubuntu-trusty",
+		Name:     "Ubuntu Trusty",
+
+		OSMatches: []StemcellOSMatch{
+			{OSName: "ubuntu", OSVersion: "trusty"},
 		},
 
 		SupportedInfrastructures: allInfrastructures,
