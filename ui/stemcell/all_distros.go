@@ -21,7 +21,7 @@ var (
 			{OSName: "ubuntu", OSVersion: "trusty"},
 		},
 
-		SupportedInfrastructures: allInfrastructures,
+		SupportedInfrastructures: trustyInfrastructures,
 
 		Sort: 2,
 	}

@@ -85,13 +85,34 @@ var (
 			},
 		},
 	}
+	alicloudInfrastructure = Infrastructure{
+		Name:             "alicloud",
+		Title:            "Alibaba Cloud",
+		DocumentationURL: "/docs/alicloud-cpi/",
+		SupportedHypervisors: InfrastructureHypervisors{
+			{
+				Hypervisor: kvmHypervisor,
+			},
+		},
+	}
 )
 
 var (
+	trustyInfrastructures = Infrastructures{
+		awsInfrastructure,
+		googleInfrastructure,
+		azureInfrastructure,
+		openstackInfrastructure,
+		softlayerInfrastructure,
+		vcloudInfrastructure,
+		vsphereInfrastructure,
+		wardenInfrastructure,
+	}
 	allInfrastructures = Infrastructures{
 		awsInfrastructure,
 		googleInfrastructure,
 		azureInfrastructure,
+		alicloudInfrastructure,
 		openstackInfrastructure,
 		softlayerInfrastructure,
 		vcloudInfrastructure,
