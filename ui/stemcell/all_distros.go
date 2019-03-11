@@ -25,6 +25,22 @@ var (
 
 		Sort: 2,
 	}
+	windows2019Distro = Distro{
+		NameName: "windows2019",
+		Name:     "Windows 2019",
+
+		OSMatches: []StemcellOSMatch{
+			{OSName: "windows", OSVersion: "2019"},
+		},
+
+		SupportedInfrastructures: Infrastructures{
+			awsInfrastructure,
+			googleInfrastructure,
+			azureInfrastructure,
+		},
+
+		Sort: 3,
+	}
 	windows1803Distro = Distro{
 		NameName: "windows1803",
 		Name:     "Windows 1803",
@@ -39,7 +55,7 @@ var (
 			azureInfrastructure,
 		},
 
-		Sort: 3,
+		Sort: 4,
 	}
 	windows2016Distro = Distro{
 		NameName: "windows2016",
@@ -55,7 +71,7 @@ var (
 			azureInfrastructure,
 		},
 
-		Sort: 4,
+		Sort: 5,
 	}
 	windows2012R2Distro = Distro{
 		NameName: "windows2012R2",
@@ -71,7 +87,7 @@ var (
 			azureInfrastructure,
 		},
 
-		Sort: 5,
+		Sort: 6,
 	}
 	centos7Distro = Distro{
 		NameName: "centos-7",
@@ -90,7 +106,7 @@ var (
 			wardenInfrastructure,
 		},
 
-		Sort: 6,
+		Sort: 7,
 	}
 )
 
@@ -98,6 +114,7 @@ var (
 	allDistros = []Distro{
 		ubuntuTrustyDistro,
 		ubuntuXenialDistro,
+		windows2019Distro,
 		windows1803Distro,
 		windows2016Distro,
 		windows2012R2Distro,
