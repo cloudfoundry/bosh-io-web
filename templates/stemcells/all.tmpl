@@ -31,8 +31,12 @@
         {{ range .DistroGroups }}
           <h2 id="{{ .Distro.NameName }}">{{ .Distro.Name }}<a class="headerlink" href="#{{ .Distro.NameName }}" title="Permanent link">&para;</a></h2>
 
-          {{ $os := ( index .Distro.OSMatches 0 ).OSName }}
-          {{ if (eq $os "windows") }}
+          {{ $osVersion := ( index .Distro.OSMatches 0 ).OSVersion }}
+          {{ if (eq $osVersion "trusty") }}
+            {{ template "stemcells/_trusty_notice" . }}
+          {{ end }}
+          {{ $osName := ( index .Distro.OSMatches 0 ).OSName }}
+          {{if (eq $osName "windows") }}
             {{ template "stemcells/_windows_notice" . }}
           {{ end }}
 
