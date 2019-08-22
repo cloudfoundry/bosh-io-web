@@ -2,7 +2,7 @@
 
 cd "$( dirname "${BASH_SOURCE[0]}" )/.."
 
-fly --target production \
+fly --target bosh-io \
   set-pipeline \
   --pipeline web \
   --config ci/pipeline.yml \

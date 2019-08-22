@@ -1,6 +1,5 @@
 {
   "Description": "Configuration used by local server for testing.",
-
   "Repos": {
     "ReleasesDir": "../releases",
     "ReleasesIndexDir": "../releases-index",
@@ -9,9 +8,9 @@
       "../stemcells-core-index",
       "../stemcells-cpi-index",
       "../stemcells-windows-index",
-      "../stemcells-softlayer-index"
+      "../stemcells-softlayer-index",
+      "../stemcells-alicloud-index"
     ],
-
     "ReleaseTarballLinker": {
       "Type": "S3",
       "BaseURL": "https://s3.amazonaws.com/bosh-hub-release-tarballs"

@@ -12,6 +12,7 @@ git clone https://github.com/bosh-io/stemcells-core-index      $clone_dir/stemce
 git clone https://github.com/bosh-io/stemcells-cpi-index       $clone_dir/stemcells-cpi-index
 git clone https://github.com/bosh-io/stemcells-windows-index   $clone_dir/stemcells-windows-index
 git clone https://github.com/bosh-io/stemcells-softlayer-index $clone_dir/stemcells-softlayer-index
+git clone https://github.com/bosh-io/stemcells-alicloud-index $clone_dir/stemcells-alicloud-index
 
 (
   echo "In 1s"

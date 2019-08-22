@@ -11,7 +11,8 @@ for dir in \
   prod-conf/stemcells-core-index \
   prod-conf/stemcells-cpi-index \
   prod-conf/stemcells-windows-index \
-  prod-conf/stemcells-softlayer-index
+  prod-conf/stemcells-softlayer-index \
+  prod-conf/stemcells-alicloud-index
 do
   pushd "$dir"
   git pull
