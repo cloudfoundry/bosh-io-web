@@ -100,7 +100,7 @@ resources:
 - name: stemcells-alicloud-index
   type: git
   source:
-    uri: https://github.com/cloudfundry-incubator/stemcells-alicloud-index.git
+    uri: https://github.com/cloudfoundry-incubator/stemcells-alicloud-index.git
 - name: stemcells-windows-index
   type: git
   source:
