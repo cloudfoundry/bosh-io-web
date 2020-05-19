@@ -24,7 +24,7 @@ if cf app $new; then echo "$new must not exist"; exit 1; fi
 if cf app $old; then echo "$old must not exist"; exit 1; fi
 
 echo "Pushing new version"
-cf push $new -i 5 -k 2G -m 2G -b https://github.com/shageman/buildpack-binary
+cf push $new -i 10 -k 2G -m 2G -b https://github.com/shageman/buildpack-binary
 rm prod-conf/web.json
 
 echo "Testing new version"
