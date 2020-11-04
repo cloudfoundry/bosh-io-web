@@ -1,6 +1,18 @@
 package stemcell
 
 var (
+	ubuntuBionicDistro = Distro{
+		NameName: "ubuntu-bionic",
+		Name:     "Ubuntu Bionic",
+
+		OSMatches: []StemcellOSMatch{
+			{OSName: "ubuntu", OSVersion: "bionic"},
+		},
+
+		SupportedInfrastructures: allInfrastructures,
+
+		Sort: 1,
+	}
 	ubuntuXenialDistro = Distro{
 		NameName: "ubuntu-xenial",
 		Name:     "Ubuntu Xenial",
@@ -114,6 +126,7 @@ var (
 	allDistros = []Distro{
 		ubuntuTrustyDistro,
 		ubuntuXenialDistro,
+		ubuntuBionicDistro,
 		windows2019Distro,
 		windows1803Distro,
 		windows2016Distro,

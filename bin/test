@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export GO111MODULE=off
+
 result=0
 
 bin=$(dirname $0)
