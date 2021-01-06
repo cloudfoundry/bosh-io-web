@@ -5,6 +5,8 @@ image_resource:
   source:
     repository: bosh/bosh-io-web
     tag: default
+    username: ((docker.username))
+    password: ((docker.password))
 inputs:
 - name: web
 run:

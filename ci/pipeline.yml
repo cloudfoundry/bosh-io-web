@@ -3,7 +3,7 @@ jobs:
 - name: deploy
   serial: true
   plan:
-  - aggregate:
+  - in_parallel:
     - get: docs
       trigger: true
     - get: web
@@ -13,18 +13,19 @@ jobs:
     params:
       GOOGLE_ANALYTICS_KEY: ((google_analytics_key))
   - task: push
+    tags: [nimbus]
     file: web/ci/tasks/push.yml
     params:
       CF_API: ((cf_api))
-      CF_USERNAME: ((cf_username))
-      CF_PASSWORD: ((cf_password))
+      CF_USERNAME: ((cf_user.username))
+      CF_PASSWORD: ((cf_user.password))
       CF_ORGANIZATION: ((cf_organization))
       CF_SPACE: ((cf_space))
       WEB_CONFIG: ((web_config))
 - name: pull-data
   serial: true
   plan:
-  - aggregate:
+  - in_parallel:
     - get: web
     - get: data-reload-interval
       trigger: true
@@ -57,11 +58,12 @@ jobs:
       params:
         depth: 1
   - task: pull-data
+    tags: [nimbus]
     file: web/ci/tasks/pull-data.yml
     params:
       CF_API: ((cf_api))
-      CF_USERNAME: ((cf_username))
-      CF_PASSWORD: ((cf_password))
+      CF_USERNAME: ((cf_user.username))
+      CF_PASSWORD: ((cf_user.password))
       CF_ORGANIZATION: ((cf_organization))
       CF_SPACE: ((cf_space))
 resources:
