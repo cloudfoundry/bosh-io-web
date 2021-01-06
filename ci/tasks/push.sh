@@ -28,33 +28,36 @@ cf push $new -i 10 -k 2G -m 1G -b https://github.com/shageman/buildpack-binary
 rm prod-conf/web.json
 
 echo "Testing new version"
-./bin/test-server "https://$new.cfapps.io"
+./bin/test-server "https://$new.sc2-04-pcf1-apps.oc.vmware.com"
 
 echo "Mapping routes to new version"
-cf unmap-route $new cfapps.io -n $new
-cf map-route $new cfapps.io -n $curr
-cf map-route $new cfapps.io -n bosh
-cf map-route $new cloudfoundry.org -n bosh
-cf map-route $new bosh.io -n www
-cf map-route $new bosh.io
+cf unmap-route $new sc2-04-pcf1-apps.oc.vmware.com -n $new
+cf map-route $new sc2-04-pcf1-apps.oc.vmware.com -n $curr
+cf map-route $new sc2-04-pcf1-apps.oc.vmware.com -n bosh
+cf map-route $new bosh.io -n test               #TODO: remove after migration
+# TODO
+#cf map-route $new cloudfoundry.org -n bosh
+#cf map-route $new bosh.io -n www               #www.bosh.io
+#cf map-route $new bosh.io                      #bosh.io
 
 echo "Swapping version: current->old"
 
 cf rename $curr $old
 
 echo "Unmapping routes from old version"
-cf map-route $old cfapps.io -n $old
-cf unmap-route $old cfapps.io -n $curr
-cf unmap-route $old cfapps.io -n bosh
-cf unmap-route $old cloudfoundry.org -n bosh
-cf unmap-route $old bosh.io -n www
-cf unmap-route $old bosh.io
+cf map-route $old sc2-04-pcf1-apps.oc.vmware.com -n $old
+cf unmap-route $old sc2-04-pcf1-apps.oc.vmware.com -n $curr
+cf unmap-route $old sc2-04-pcf1-apps.oc.vmware.com -n bosh
+cf unmap-route $old bosh.io -n test   #TODO: remove after migration
+#cf unmap-route $old cloudfoundry.org -n bosh
+#cf unmap-route $old bosh.io -n www
+#cf unmap-route $old bosh.io
 
 echo "Swapping version: current->old, new->current"
 cf rename $new $curr
 
 echo "Testing current version"
-./bin/test-server "https://bosh.io"
+./bin/test-server "https://test.bosh.io"  #TODO: change to bosh.io after migration
 
 echo "Deleting old version"
 cf delete -f $old
