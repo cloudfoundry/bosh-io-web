@@ -59,7 +59,10 @@ jobs:
       trigger: true
       params:
         depth: 1
+    - get: bosh-io-web
   - task: pull-data
+    tags: [nimbus]
+    image: bosh-io-web
     file: web/ci/tasks/pull-data.yml
     params:
       CF_API: ((cf_api))
