@@ -13,6 +13,8 @@ curr=bosh-hub
 
 mkdir -p prod-conf
 echo "$WEB_CONFIG" > prod-conf/web.json
+cat prod-conf/web.json
+exit 0
 
 export CF_HOME=/tmp/bosh-io-web-push-$$
 ./bin/configure-cf
