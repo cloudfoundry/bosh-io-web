@@ -17,8 +17,8 @@ jobs:
     file: web/ci/tasks/push.yml
     params:
       CF_API: ((cf_api))
-      CF_USERNAME: ((cf_username))
-      CF_PASSWORD: ((cf_password))
+      CF_USERNAME: ((cf_user.username))
+      CF_PASSWORD: ((cf_user.password))
       CF_ORGANIZATION: ((cf_organization))
       CF_SPACE: ((cf_space))
       WEB_CONFIG: ((web_config))
@@ -62,8 +62,8 @@ jobs:
     file: web/ci/tasks/pull-data.yml
     params:
       CF_API: ((cf_api))
-      CF_USERNAME: ((cf_username))
-      CF_PASSWORD: ((cf_password))
+      CF_USERNAME: ((cf_user.username))
+      CF_PASSWORD: ((cf_user.password))
       CF_ORGANIZATION: ((cf_organization))
       CF_SPACE: ((cf_space))
 resources:
