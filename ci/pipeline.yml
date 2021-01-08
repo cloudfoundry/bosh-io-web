@@ -8,14 +8,12 @@ jobs:
       trigger: true
     - get: web
       trigger: true
-    - get: bosh-io-web
   - task: build-docs
     file: docs/ci/tasks/build.yml
     params:
       GOOGLE_ANALYTICS_KEY: ((google_analytics_key))
   - task: push
     tags: [nimbus]
-    image: bosh-io-web
     file: web/ci/tasks/push.yml
     params:
       CF_API: ((cf_api))
@@ -59,10 +57,8 @@ jobs:
       trigger: true
       params:
         depth: 1
-    - get: bosh-io-web
   - task: pull-data
     tags: [nimbus]
-    image: bosh-io-web
     file: web/ci/tasks/pull-data.yml
     params:
       CF_API: ((cf_api))
@@ -71,13 +67,6 @@ jobs:
       CF_ORGANIZATION: ((cf_organization))
       CF_SPACE: ((cf_space))
 resources:
-- name: bosh-io-web
-  type: docker-image
-  source:
-    repository: bosh/bosh-io-web
-    tag: default
-    username: ((docker_username))
-    password: ((docker_password))
 - name: web
   type: git
   source:
