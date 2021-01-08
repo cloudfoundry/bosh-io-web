@@ -35,7 +35,6 @@ cf unmap-route $new sc2-04-pcf1-apps.oc.vmware.com -n $new
 cf map-route $new sc2-04-pcf1-apps.oc.vmware.com -n $curr
 cf map-route $new sc2-04-pcf1-apps.oc.vmware.com -n bosh
 cf map-route $new cloudfoundry.org -n bosh
-cf map-route $new bosh.io -n test               #TODO: remove after migration
 cf map-route $new bosh.io -n www
 cf map-route $new bosh.io
 
@@ -48,7 +47,6 @@ cf map-route $old sc2-04-pcf1-apps.oc.vmware.com -n $old
 cf unmap-route $old sc2-04-pcf1-apps.oc.vmware.com -n $curr
 cf unmap-route $old sc2-04-pcf1-apps.oc.vmware.com -n bosh
 cf unmap-route $old cloudfoundry.org -n bosh
-cf unmap-route $old bosh.io -n test   #TODO: remove after migration
 cf unmap-route $old bosh.io -n www
 cf unmap-route $old bosh.io
 
@@ -56,7 +54,7 @@ echo "Swapping version: current->old, new->current"
 cf rename $new $curr
 
 echo "Testing current version"
-./bin/test-server "https://test.bosh.io"  #TODO: change to bosh.io after migration
+./bin/test-server "https://bosh.io"
 
 echo "Deleting old version"
 cf delete -f $old
