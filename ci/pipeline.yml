@@ -57,9 +57,11 @@ jobs:
       trigger: true
       params:
         depth: 1
+    - get: bosh-io-web-docker-image
   - task: pull-data
     tags: [nimbus]
     file: web/ci/tasks/pull-data.yml
+    image: bosh-io-web-docker-image
     params:
       CF_API: ((cf_api))
       CF_USERNAME: ((cf_user.username))
@@ -75,6 +77,13 @@ resources:
   type: git
   source:
     uri: https://github.com/cloudfoundry/docs-bosh.git
+- name: bosh-io-web-docker-image
+  type: registry-image
+  source:
+    repository: bosh/bosh-io-web
+    tag: default
+    username: ((docker.username))
+    password: ((docker.password))
 - name: data-reload-interval
   type: time
   source:
