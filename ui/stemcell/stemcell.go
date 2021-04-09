@@ -42,10 +42,11 @@ type StemcellSource struct {
 	isLight    bool
 	isForChina bool
 
-	URL  string `json:"url"`
-	Size uint64 `json:"size"`
-	MD5  string `json:"md5"`
-	SHA1 string `json:"sha1,omitempty"`
+	URL    string `json:"url"`
+	Size   uint64 `json:"size"`
+	MD5    string `json:"md5"`
+	SHA1   string `json:"sha1,omitempty"`
+	SHA256 string `json:"sha256,omitempty"`
 
 	UpdatedAt string `json:"-"`
 }
@@ -125,10 +126,11 @@ func (s *Stemcell) AddAsSource(s_ bhstemsrepo.Stemcell) {
 		hypervisorName:     hvName,
 		linkName:           linkName,
 
-		URL:  s_.URL(),
-		Size: s_.Size(),
-		MD5:  s_.MD5(),
-		SHA1: s_.SHA1(),
+		URL:    s_.URL(),
+		Size:   s_.Size(),
+		MD5:    s_.MD5(),
+		SHA1:   s_.SHA1(),
+		SHA256: s_.SHA256(),
 
 		UpdatedAt: s_.UpdatedAt(),
 	}
@@ -199,6 +201,13 @@ func (s Stemcell) SHA1() string {
 	return s.RegularSource.SHA1
 }
 
+func (s Stemcell) SHA256() string {
+	if s.LightSource != nil {
+		return s.LightSource.SHA256
+	}
+	return s.RegularSource.SHA256
+}
+
 func (s *Stemcell) NotesInMarkdown() (template.HTML, error) {
 	if s.notesInMarkdown == nil {
 		// Do not care about found -> no UI indicator
@@ -241,9 +250,11 @@ func (s StemcellSource) Ignored() bool {
 	return s.infrastructureName == "Amazon Web Services" && s.hypervisorName == "Xen"
 }
 
-func (s StemcellManifestNameSorting) Len() int           { return len(s) }
-func (s StemcellManifestNameSorting) Less(i, j int) bool { return s[i].ManifestName < s[j].ManifestName }
-func (s StemcellManifestNameSorting) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
+func (s StemcellManifestNameSorting) Len() int { return len(s) }
+func (s StemcellManifestNameSorting) Less(i, j int) bool {
+	return s[i].ManifestName < s[j].ManifestName
+}
+func (s StemcellManifestNameSorting) Swap(i, j int) { s[i], s[j] = s[j], s[i] }
 
 func (s StemcellVersionSorting) Len() int           { return len(s) }
 func (s StemcellVersionSorting) Less(i, j int) bool { return s[i].Version.IsLt(s[j].Version) }

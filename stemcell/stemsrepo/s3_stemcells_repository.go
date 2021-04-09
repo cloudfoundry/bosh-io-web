@@ -25,9 +25,10 @@ type S3StemcellsRepository struct {
 }
 
 type s3StemcellRec struct {
-	Key  string
-	ETag string
-	SHA1 string
+	Key    string
+	ETag   string
+	SHA1   string
+	SHA256 string
 
 	Size         uint64
 	LastModified string
@@ -80,6 +81,7 @@ func (r S3StemcellsRepository) FindAll(name string) ([]Stemcell, error) {
 			rec.Key,
 			rec.ETag,
 			rec.SHA1,
+			rec.SHA256,
 			rec.Size,
 			rec.LastModified,
 			rec.URL,
@@ -151,7 +153,9 @@ func (r S3StemcellsRepository) loadIndex(dir string) ([]s3StemcellRec, error) {
 			for _, hash := range file.Hashes {
 				if hash.Type == "sha-1" {
 					rec.SHA1 = hash.Hash
-					break
+				}
+				if hash.Type == "sha-256" {
+					rec.SHA256 = hash.Hash
 				}
 			}
 
