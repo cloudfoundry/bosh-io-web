@@ -27,9 +27,10 @@ type S3Stemcell struct {
 	version   semiver.Version
 	updatedAt string
 
-	size uint64
-	etag string
-	sha1 string
+	size   uint64
+	etag   string
+	sha1   string
+	sha256 string
 
 	infName    string // e.g. aws
 	hvName     string // e.g. kvm
@@ -43,7 +44,7 @@ type S3Stemcell struct {
 	url string
 }
 
-func NewS3Stemcell(key, etag, sha1 string, size uint64, lastModified, url string) *S3Stemcell {
+func NewS3Stemcell(key, etag, sha1 string, sha256 string, size uint64, lastModified, url string) *S3Stemcell {
 	m := matchS3FileKey(key)
 
 	if len(m) == 0 {
@@ -92,9 +93,10 @@ func NewS3Stemcell(key, etag, sha1 string, size uint64, lastModified, url string
 		version:   version,
 		updatedAt: lastModified,
 
-		size: size,
-		etag: strings.Trim(etag, "\""),
-		sha1: sha1,
+		size:   size,
+		etag:   strings.Trim(etag, "\""),
+		sha1:   sha1,
+		sha256: sha256,
 
 		infName:    m["inf_name"],
 		hvName:     m["hv_name"],
@@ -116,9 +118,10 @@ func (f S3Stemcell) Name() string { return f.name }
 func (f S3Stemcell) Version() semiver.Version { return f.version }
 func (f S3Stemcell) UpdatedAt() string        { return f.updatedAt }
 
-func (f S3Stemcell) Size() uint64 { return f.size }
-func (f S3Stemcell) MD5() string  { return f.etag }
-func (f S3Stemcell) SHA1() string { return f.sha1 }
+func (f S3Stemcell) Size() uint64   { return f.size }
+func (f S3Stemcell) MD5() string    { return f.etag }
+func (f S3Stemcell) SHA1() string   { return f.sha1 }
+func (f S3Stemcell) SHA256() string { return f.sha256 }
 
 func (f S3Stemcell) InfName() string    { return f.infName }
 func (f S3Stemcell) HvName() string     { return f.hvName }

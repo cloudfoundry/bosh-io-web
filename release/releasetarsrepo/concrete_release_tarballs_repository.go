@@ -65,9 +65,15 @@ func (r CRTRepository) Find(source, version string) (ReleaseTarballRec, error) {
 	for _, hash := range meta4.Files[0].Hashes {
 		if hash.Type == "sha-1" {
 			relTarRec.SHA1 = hash.Hash
-			return relTarRec, nil
+		}
+		if hash.Type == "sha-256" {
+			relTarRec.SHA256 = hash.Hash
 		}
 	}
 
-	return relTarRec, errors.New("Missing SHA1")
+	if relTarRec.SHA1 == "" {
+		return relTarRec, errors.New("Missing SHA1")
+	}
+
+	return relTarRec, nil
 }

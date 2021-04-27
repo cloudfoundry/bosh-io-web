@@ -15,6 +15,7 @@ type Stemcell interface {
 	Size() uint64
 	MD5() string
 	SHA1() string // could be empty
+	SHA256() string
 
 	InfName() string    // e.g. aws
 	HvName() string     // e.g. kvm

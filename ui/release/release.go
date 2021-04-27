@@ -45,8 +45,9 @@ type releaseAPIRecord struct {
 	Name    string `json:"name"`
 	Version string `json:"version"`
 
-	URL  string `json:"url"`
-	SHA1 string `json:"sha1"`
+	URL    string `json:"url"`
+	SHA1   string `json:"sha1"`
+	SHA256 string `json:"sha256,omitempty"`
 }
 
 type ReleaseSorting []Release
@@ -172,6 +173,15 @@ func (r Release) TarballSHA1() (string, error) {
 	return relTarRec.SHA1, nil
 }
 
+func (r Release) TarballSHA256() (string, error) {
+	relTarRec, err := r.relVerRec.Tarball()
+	if err != nil {
+		return "", err
+	}
+
+	return relTarRec.SHA256, nil
+}
+
 func (r *Release) NotesInMarkdown() (template.HTML, error) {
 	if r.notesInMarkdown == nil {
 		// Do not care about found -> no UI indicator
@@ -195,13 +205,18 @@ func (r Release) MarshalJSON() ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+	sha256, err := r.TarballSHA256()
+	if err != nil {
+		return nil, err
+	}
 
 	record := releaseAPIRecord{
 		Name:    r.Source.Full(),
 		Version: r.Version.AsString(),
 
-		URL:  r.UserVisibleDownloadURL(),
-		SHA1: sha1,
+		URL:    r.UserVisibleDownloadURL(),
+		SHA1:   sha1,
+		SHA256: sha256,
 	}
 
 	return json.Marshal(record)
