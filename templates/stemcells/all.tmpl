@@ -9,9 +9,9 @@
             <label class="md-nav__title" for="toc">Table of contents</label>
             <ul class="md-nav__list" data-md-scrollfix>
               <li class="md-nav__item">
-                <a href="#ubuntu-trusty" title="Ubuntu Trusty" class="md-nav__link">Ubuntu Trusty</a>
-                <a href="#ubuntu-xenial" title="Ubuntu Xenial" class="md-nav__link">Ubuntu Xenial</a>
                 <a href="#ubuntu-bionic" title="Ubuntu Bionic" class="md-nav__link">Ubuntu Bionic</a>
+                <a href="#ubuntu-xenial" title="Ubuntu Xenial" class="md-nav__link">Ubuntu Xenial</a>
+                <a href="#ubuntu-trusty" title="Ubuntu Trusty" class="md-nav__link">Ubuntu Trusty</a>
                 <a href="#windows2019" title="Windows 2019" class="md-nav__link">Windows 2019</a>
                 <a href="#windows1803" title="Windows 1803" class="md-nav__link">Windows 1803</a>
                 <a href="#windows2016" title="Windows 2016" class="md-nav__link">Windows 2016</a>
@@ -36,8 +36,8 @@
           {{ if (eq $osVersion "trusty") }}
             {{ template "stemcells/_trusty_notice" . }}
           {{ end }}
-          {{ if (eq $osVersion "bionic") }}
-            {{ template "stemcells/_bionic_notice" . }}
+          {{ if (eq $osVersion "xenial") }}
+            {{ template "stemcells/_xenial_notice" . }}
           {{ end }}
           {{ $osName := ( index .Distro.OSMatches 0 ).OSName }}
           {{if (eq $osName "windows") }}

@@ -23,7 +23,7 @@ var (
 
 		SupportedInfrastructures: allInfrastructures,
 
-		Sort: 1,
+		Sort: 2,
 	}
 	ubuntuTrustyDistro = Distro{
 		NameName: "ubuntu-trusty",
@@ -35,7 +35,7 @@ var (
 
 		SupportedInfrastructures: trustyInfrastructures,
 
-		Sort: 2,
+		Sort: 3,
 	}
 	windows2019Distro = Distro{
 		NameName: "windows2019",
@@ -51,7 +51,7 @@ var (
 			azureInfrastructure,
 		},
 
-		Sort: 3,
+		Sort: 4,
 	}
 	windows1803Distro = Distro{
 		NameName: "windows1803",
@@ -67,7 +67,7 @@ var (
 			azureInfrastructure,
 		},
 
-		Sort: 4,
+		Sort: 5,
 	}
 	windows2016Distro = Distro{
 		NameName: "windows2016",
@@ -83,7 +83,7 @@ var (
 			azureInfrastructure,
 		},
 
-		Sort: 5,
+		Sort: 6,
 	}
 	windows2012R2Distro = Distro{
 		NameName: "windows2012R2",
@@ -99,7 +99,7 @@ var (
 			azureInfrastructure,
 		},
 
-		Sort: 6,
+		Sort: 7,
 	}
 	centos7Distro = Distro{
 		NameName: "centos-7",
@@ -118,15 +118,15 @@ var (
 			wardenInfrastructure,
 		},
 
-		Sort: 7,
+		Sort: 8,
 	}
 )
 
 var (
 	allDistros = []Distro{
-		ubuntuTrustyDistro,
-		ubuntuXenialDistro,
 		ubuntuBionicDistro,
+		ubuntuXenialDistro,
+		ubuntuTrustyDistro,
 		windows2019Distro,
 		windows1803Distro,
 		windows2016Distro,
