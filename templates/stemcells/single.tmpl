@@ -10,8 +10,8 @@
           {{ if (eq $s.OSVersion "trusty") }}
             {{ template "stemcells/_trusty_notice" . }}
           {{ end }}
-          {{ if (eq $s.OSVersion "bionic") }}
-            {{ template "stemcells/_bionic_notice" . }}
+          {{ if (eq $s.OSVersion "xenial") }}
+            {{ template "stemcells/_xenial_notice" . }}
           {{ end }}
 
         {{ template "stemcells/_defined" . }}
