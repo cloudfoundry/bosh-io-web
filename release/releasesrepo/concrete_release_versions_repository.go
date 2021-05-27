@@ -6,8 +6,8 @@ import (
 	bosherr "github.com/cloudfoundry/bosh-utils/errors"
 	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 
+	bprel "github.com/bosh-dep-forks/bosh-provisioner/release"
 	bhrelver "github.com/bosh-io/web/release/relver"
-	bprel "github.com/cppforlife/bosh-provisioner/release"
 )
 
 type CRVRepository struct {

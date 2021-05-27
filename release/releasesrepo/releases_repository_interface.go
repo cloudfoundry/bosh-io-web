@@ -1,7 +1,7 @@
 package releasesrepo
 
 import (
-	bprel "github.com/cppforlife/bosh-provisioner/release"
+	bprel "github.com/bosh-dep-forks/bosh-provisioner/release"
 )
 
 type ReleasesRepository interface {

@@ -148,6 +148,24 @@ func (p dummyPlatform) SaveDNSRecords(dnsRecords boshsettings.DNSRecords, hostna
 	return p.fs.WriteFileString(etcHostsPath, dnsRecordsContents.String())
 }
 
+func (p dummyPlatform) SetupBoshSettingsDisk() error {
+	return p.fs.MkdirAll(filepath.Dir(p.GetAgentSettingsPath(true)), 0700)
+}
+
+func (p dummyPlatform) GetAgentSettingsPath(tmpfs bool) string {
+	if tmpfs {
+		return filepath.Join(p.dirProvider.BoshSettingsDir(), "settings.json")
+	}
+	return filepath.Join(p.dirProvider.BoshDir(), "settings.json")
+}
+
+func (p dummyPlatform) GetPersistentDiskSettingsPath(tmpfs bool) string {
+	if tmpfs {
+		return filepath.Join(p.dirProvider.BoshSettingsDir(), "persistent_disk_hints.json")
+	}
+	return filepath.Join(p.dirProvider.BoshDir(), "persistent_disk_hints.json")
+}
+
 func (p dummyPlatform) SetupIPv6(config boshsettings.IPv6) error {
 	return nil
 }
@@ -176,7 +194,7 @@ func (p dummyPlatform) SetTimeWithNtpServers(servers []string) (err error) {
 	return
 }
 
-func (p dummyPlatform) SetupEphemeralDiskWithPath(devicePath string, desiredSwapSizeInBytes *uint64) (err error) {
+func (p dummyPlatform) SetupEphemeralDiskWithPath(devicePath string, desiredSwapSizeInBytes *uint64, labelPrefix string) (err error) {
 	return
 }
 
@@ -184,7 +202,7 @@ func (p dummyPlatform) SetupRawEphemeralDisks(devices []boshsettings.DiskSetting
 	return
 }
 
-func (p dummyPlatform) SetupDataDir() error {
+func (p dummyPlatform) SetupDataDir(_ boshsettings.JobDir, _ boshsettings.RunDir) error {
 	dataDir := p.dirProvider.DataDir()
 
 	sysDataDir := filepath.Join(dataDir, "sys")
@@ -201,6 +219,10 @@ func (p dummyPlatform) SetupDataDir() error {
 		return bosherr.WrapErrorf(err, "Symlinking '%s' to '%s'", sysDir, sysDataDir)
 	}
 
+	return nil
+}
+
+func (p dummyPlatform) SetupCanRestartDir() error {
 	return nil
 }
 

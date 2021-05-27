@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"html/template"
 
+	bprel "github.com/bosh-dep-forks/bosh-provisioner/release"
 	"github.com/bosh-io/web/ui/nav"
-	bprel "github.com/cppforlife/bosh-provisioner/release"
 	semiver "github.com/cppforlife/go-semi-semantic/version"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/russross/blackfriday"

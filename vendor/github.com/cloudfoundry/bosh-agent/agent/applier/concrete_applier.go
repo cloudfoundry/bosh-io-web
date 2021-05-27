@@ -71,10 +71,15 @@ func (a *concreteApplier) Prepare(desiredApplySpec as.ApplySpec) error {
 		return err
 	}
 
+	err = a.jobApplier.DeleteSourceBlobs(desiredApplySpec.Jobs())
+	if err != nil {
+		return bosherr.WrapError(err, "Failed removing job source blobs")
+	}
+
 	return nil
 }
 
-func (a *concreteApplier) Apply(currentApplySpec, desiredApplySpec as.ApplySpec) error {
+func (a *concreteApplier) Apply(desiredApplySpec as.ApplySpec) error {
 	err := a.jobSupervisor.RemoveAllJobs()
 	if err != nil {
 		return bosherr.WrapError(err, "Removing all jobs")
@@ -88,7 +93,12 @@ func (a *concreteApplier) Apply(currentApplySpec, desiredApplySpec as.ApplySpec)
 		}
 	}
 
-	err = a.jobApplier.KeepOnly(append(currentApplySpec.Jobs(), desiredApplySpec.Jobs()...))
+	err = a.jobApplier.DeleteSourceBlobs(desiredApplySpec.Jobs())
+	if err != nil {
+		return bosherr.WrapError(err, "Failed removing job source blobs")
+	}
+
+	err = a.jobApplier.KeepOnly(desiredApplySpec.Jobs())
 	if err != nil {
 		return bosherr.WrapError(err, "Keeping only needed jobs")
 	}
@@ -100,7 +110,7 @@ func (a *concreteApplier) Apply(currentApplySpec, desiredApplySpec as.ApplySpec)
 		}
 	}
 
-	err = a.packageApplier.KeepOnly(append(currentApplySpec.Packages(), desiredApplySpec.Packages()...))
+	err = a.packageApplier.KeepOnly(desiredApplySpec.Packages())
 	if err != nil {
 		return bosherr.WrapError(err, "Keeping only needed packages")
 	}
@@ -114,7 +124,6 @@ func (a *concreteApplier) Apply(currentApplySpec, desiredApplySpec as.ApplySpec)
 }
 
 func (a *concreteApplier) ConfigureJobs(desiredApplySpec as.ApplySpec) error {
-
 	jobs := desiredApplySpec.Jobs()
 	for i := 0; i < len(jobs); i++ {
 		job := jobs[len(jobs)-1-i]

@@ -2,13 +2,17 @@ package net
 
 import (
 	"net"
-	"strconv"
 
 	boshsettings "github.com/cloudfoundry/bosh-agent/settings"
 	bosherr "github.com/cloudfoundry/bosh-utils/errors"
 	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 	boshsys "github.com/cloudfoundry/bosh-utils/system"
 )
+
+type VirtualInterface struct {
+	Label   string
+	Address string
+}
 
 type StaticInterfaceConfiguration struct {
 	Name                string
@@ -20,6 +24,7 @@ type StaticInterfaceConfiguration struct {
 	Mac                 string
 	Gateway             string
 	PostUpRoutes        boshsettings.Routes
+	VirtualInterfaces   []VirtualInterface
 }
 
 func (c StaticInterfaceConfiguration) Version6() string {
@@ -33,12 +38,8 @@ func (c StaticInterfaceConfiguration) IsVersion6() bool {
 	return len(c.Network) == 0 && len(c.Broadcast) == 0
 }
 
-func (c StaticInterfaceConfiguration) NetmaskOrLen() string {
-	if c.IsVersion6() {
-		ones, _ := net.IPMask(net.ParseIP(c.Netmask)).Size()
-		return strconv.Itoa(ones)
-	}
-	return c.Netmask
+func (c StaticInterfaceConfiguration) CIDR() (string, error) {
+	return boshsettings.NetmaskToCIDR(c.Netmask, c.IsVersion6())
 }
 
 type StaticInterfaceConfigurations []StaticInterfaceConfiguration
@@ -124,40 +125,11 @@ func NewInterfaceConfigurationCreator(logger boshlog.Logger) InterfaceConfigurat
 	}
 }
 
-func (creator interfaceConfigurationCreator) createInterfaceConfiguration(staticConfigs []StaticInterfaceConfiguration, dhcpConfigs []DHCPInterfaceConfiguration, ifaceName string, networkSettings boshsettings.Network) ([]StaticInterfaceConfiguration, []DHCPInterfaceConfiguration, error) {
-	creator.logger.Debug(creator.logTag, "Creating network configuration with settings: %s", networkSettings)
-
-	if (networkSettings.IsDHCP() || networkSettings.Mac == "") && networkSettings.Alias == "" {
-		creator.logger.Debug(creator.logTag, "Using dhcp networking")
-		dhcpConfigs = append(dhcpConfigs, DHCPInterfaceConfiguration{
-			Name:         ifaceName,
-			PostUpRoutes: networkSettings.Routes,
-			Address:      networkSettings.IP,
-		})
-	} else {
-		creator.logger.Debug(creator.logTag, "Using static networking")
-		networkAddress, broadcastAddress, err := boshsys.CalculateNetworkAndBroadcast(networkSettings.IP, networkSettings.Netmask)
-		if err != nil {
-			return nil, nil, bosherr.WrapError(err, "Calculating Network and Broadcast")
-		}
-
-		conf := StaticInterfaceConfiguration{
-			Name:                ifaceName,
-			Address:             networkSettings.IP,
-			Netmask:             networkSettings.Netmask,
-			Network:             networkAddress,
-			IsDefaultForGateway: networkSettings.IsDefaultFor("gateway"),
-			Broadcast:           broadcastAddress,
-			Mac:                 networkSettings.Mac,
-			Gateway:             networkSettings.Gateway,
-			PostUpRoutes:        networkSettings.Routes,
-		}
-		staticConfigs = append(staticConfigs, conf)
-	}
-	return staticConfigs, dhcpConfigs, nil
-}
-
 func (creator interfaceConfigurationCreator) CreateInterfaceConfigurations(networks boshsettings.Networks, interfacesByMAC map[string]string) ([]StaticInterfaceConfiguration, []DHCPInterfaceConfiguration, error) {
+	if !networks.HasInterfaceAlias() && len(interfacesByMAC) < len(networks) {
+		return nil, nil, bosherr.Errorf("Number of network settings '%d' is greater than the number of network devices '%d'", len(networks), len(interfacesByMAC))
+	}
+
 	// In cases where we only have one network and it has no MAC address (either because the IAAS doesn't give us one or
 	// it's an old CPI), if we only have one interface, we should map them
 	if len(networks) == 1 && len(interfacesByMAC) == 1 {
@@ -173,10 +145,7 @@ func (creator interfaceConfigurationCreator) CreateInterfaceConfigurations(netwo
 }
 
 func (creator interfaceConfigurationCreator) createMultipleInterfaceConfigurations(networks boshsettings.Networks, interfacesByMAC map[string]string) ([]StaticInterfaceConfiguration, []DHCPInterfaceConfiguration, error) {
-	if !networks.HasInterfaceAlias() && len(interfacesByMAC) < len(networks) {
-		return nil, nil, bosherr.Errorf("Number of network settings '%d' is greater than the number of network devices '%d'", len(networks), len(interfacesByMAC))
-	}
-
+	// Validate potential MAC values on networks exist on host
 	for name := range networks {
 		if mac := networks[name].Mac; mac != "" {
 			if _, ok := interfacesByMAC[mac]; !ok {
@@ -192,6 +161,7 @@ func (creator interfaceConfigurationCreator) createMultipleInterfaceConfiguratio
 	staticConfigs := []StaticInterfaceConfiguration{}
 	dhcpConfigs := []DHCPInterfaceConfiguration{}
 
+	// create interface configuration for networks that have a MAC specified
 	for mac, ifaceName := range interfacesByMAC {
 		networkSettings, _ = networks.NetworkForMac(mac)
 		staticConfigs, dhcpConfigs, err = creator.createInterfaceConfiguration(staticConfigs, dhcpConfigs, ifaceName, networkSettings)
@@ -200,18 +170,50 @@ func (creator interfaceConfigurationCreator) createMultipleInterfaceConfiguratio
 		}
 	}
 
+	// create interface configuration for networks that do not have a MAC or have an alias
 	for _, networkSettings = range networks {
-		if networkSettings.Mac != "" {
+		if networkSettings.Mac != "" || networkSettings.Alias == "" {
 			continue
 		}
-		if networkSettings.Alias != "" {
-			staticConfigs, dhcpConfigs, err = creator.createInterfaceConfiguration(staticConfigs, dhcpConfigs, networkSettings.Alias, networkSettings)
-			if err != nil {
-				return nil, nil, bosherr.WrapError(err, "Creating interface configuration using alias")
-			}
+
+		staticConfigs, dhcpConfigs, err = creator.createInterfaceConfiguration(staticConfigs, dhcpConfigs, networkSettings.Alias, networkSettings)
+		if err != nil {
+			return nil, nil, bosherr.WrapError(err, "Creating interface configuration using alias")
 		}
 	}
 
+	return staticConfigs, dhcpConfigs, nil
+}
+
+func (creator interfaceConfigurationCreator) createInterfaceConfiguration(staticConfigs []StaticInterfaceConfiguration, dhcpConfigs []DHCPInterfaceConfiguration, ifaceName string, networkSettings boshsettings.Network) ([]StaticInterfaceConfiguration, []DHCPInterfaceConfiguration, error) {
+	creator.logger.Debug(creator.logTag, "Creating network configuration with settings: %s", networkSettings)
+
+	if (networkSettings.IsDHCP() || networkSettings.Mac == "") && networkSettings.Alias == "" {
+		creator.logger.Debug(creator.logTag, "Using dhcp networking")
+		dhcpConfigs = append(dhcpConfigs, DHCPInterfaceConfiguration{
+			Name:         ifaceName,
+			PostUpRoutes: networkSettings.Routes,
+			Address:      networkSettings.IP,
+		})
+	} else {
+		creator.logger.Debug(creator.logTag, "Using static networking")
+		networkAddress, broadcastAddress, _, err := boshsys.CalculateNetworkAndBroadcast(networkSettings.IP, networkSettings.Netmask)
+		if err != nil {
+			return nil, nil, bosherr.WrapError(err, "Calculating Network and Broadcast")
+		}
+
+		staticConfigs = append(staticConfigs, StaticInterfaceConfiguration{
+			Name:                ifaceName,
+			Address:             networkSettings.IP,
+			Netmask:             networkSettings.Netmask,
+			Network:             networkAddress,
+			IsDefaultForGateway: networkSettings.IsDefaultFor("gateway"),
+			Broadcast:           broadcastAddress,
+			Mac:                 networkSettings.Mac,
+			Gateway:             networkSettings.Gateway,
+			PostUpRoutes:        networkSettings.Routes,
+		})
+	}
 	return staticConfigs, dhcpConfigs, nil
 }
 

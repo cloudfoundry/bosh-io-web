@@ -1,0 +1,15 @@
+#!/bin/bash 
+
+bin=$(dirname $0)
+
+errors=$(
+  go run golang.org/x/lint/golint $bin/..                                   \
+    | grep -v    '/vendor/'                                 \
+    | grep -v -e 'should have comment.* or be unexported'   \
+    | grep -v    'error strings should not be capitalized'
+)
+
+if [ "$(echo -n "$errors")" != "" ]; then
+  echo "$errors"
+  exit 1
+fi

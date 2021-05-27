@@ -5,11 +5,13 @@ import (
 	"os"
 	"path"
 
+	"code.cloudfoundry.org/clock"
+
 	boshbc "github.com/cloudfoundry/bosh-agent/agent/applier/bundlecollection"
 	boshmodels "github.com/cloudfoundry/bosh-agent/agent/applier/models"
 	"github.com/cloudfoundry/bosh-agent/agent/applier/packages"
 	boshcmdrunner "github.com/cloudfoundry/bosh-agent/agent/cmdrunner"
-	boshblob "github.com/cloudfoundry/bosh-utils/blobstore"
+	"github.com/cloudfoundry/bosh-agent/agent/httpblobprovider/blobstore_delegator"
 	boshcrypto "github.com/cloudfoundry/bosh-utils/crypto"
 	bosherr "github.com/cloudfoundry/bosh-utils/errors"
 	boshcmd "github.com/cloudfoundry/bosh-utils/fileutil"
@@ -24,22 +26,24 @@ type CompileDirProvider interface {
 
 type concreteCompiler struct {
 	compressor         boshcmd.Compressor
-	blobstore          boshblob.DigestBlobstore
+	blobstore          blobstore_delegator.BlobstoreDelegator
 	fs                 boshsys.FileSystem
 	runner             boshcmdrunner.CmdRunner
 	compileDirProvider CompileDirProvider
 	packageApplier     packages.Applier
 	packagesBc         boshbc.BundleCollection
+	timeProvider       clock.Clock
 }
 
 func NewConcreteCompiler(
 	compressor boshcmd.Compressor,
-	blobstore boshblob.DigestBlobstore,
+	blobstore blobstore_delegator.BlobstoreDelegator,
 	fs boshsys.FileSystem,
 	runner boshcmdrunner.CmdRunner,
 	compileDirProvider CompileDirProvider,
 	packageApplier packages.Applier,
 	packagesBc boshbc.BundleCollection,
+	timeProvider clock.Clock,
 ) Compiler {
 	return concreteCompiler{
 		compressor:         compressor,
@@ -49,6 +53,7 @@ func NewConcreteCompiler(
 		compileDirProvider: compileDirProvider,
 		packageApplier:     packageApplier,
 		packagesBc:         packagesBc,
+		timeProvider:       timeProvider,
 	}
 }
 
@@ -72,8 +77,6 @@ func (c concreteCompiler) Compile(pkg Package, deps []boshmodels.Package) (blobI
 		return "", nil, bosherr.WrapErrorf(err, "Fetching package %s", pkg.Name)
 	}
 
-	defer c.fs.RemoveAll(compilePath)
-
 	defer func() {
 		e := c.fs.RemoveAll(compilePath)
 		if e != nil && err == nil {
@@ -91,12 +94,12 @@ func (c concreteCompiler) Compile(pkg Package, deps []boshmodels.Package) (blobI
 		return "", nil, bosherr.WrapError(err, "Getting bundle for new package")
 	}
 
-	_, installPath, err := compiledPkgBundle.InstallWithoutContents()
+	installPath, err := compiledPkgBundle.InstallWithoutContents()
 	if err != nil {
 		return "", nil, bosherr.WrapError(err, "Setting up new package bundle")
 	}
 
-	_, enablePath, err := compiledPkgBundle.Enable()
+	enablePath, err := compiledPkgBundle.Enable()
 	if err != nil {
 		return "", nil, bosherr.WrapError(err, "Enabling new package bundle")
 	}
@@ -118,18 +121,7 @@ func (c concreteCompiler) Compile(pkg Package, deps []boshmodels.Package) (blobI
 		_ = c.compressor.CleanUp(tmpPackageTar)
 	}()
 
-	file, err := c.fs.OpenFile(tmpPackageTar, os.O_RDONLY, os.ModePerm)
-	if err != nil {
-		return "", nil, bosherr.WrapError(err, "Opening compiled package")
-	}
-
-	// Use SHA256, not the strongest algo from the source blob
-	digest, err = pkg.Sha1.Algorithm().CreateDigest(file)
-	if err != nil {
-		return "", nil, bosherr.WrapError(err, "Calculating compiled package digest")
-	}
-
-	uploadedBlobID, _, err := c.blobstore.Create(tmpPackageTar)
+	uploadedBlobID, digest, err := c.blobstore.Write(pkg.UploadSignedURL, tmpPackageTar, pkg.BlobstoreHeaders)
 	if err != nil {
 		return "", nil, bosherr.WrapError(err, "Uploading compiled package")
 	}
@@ -153,11 +145,11 @@ func (c concreteCompiler) Compile(pkg Package, deps []boshmodels.Package) (blobI
 }
 
 func (c concreteCompiler) fetchAndUncompress(pkg Package, targetDir string) error {
-	if pkg.BlobstoreID == "" {
-		return bosherr.Error(fmt.Sprintf("Blobstore ID for package '%s' is empty", pkg.Name))
+	if pkg.BlobstoreID == "" && pkg.PackageGetSignedURL == "" {
+		return bosherr.Error(fmt.Sprintf("No blobstore reference for package '%s'", pkg.Name))
 	}
 
-	depFilePath, err := c.blobstore.Get(pkg.BlobstoreID, pkg.Sha1)
+	depFilePath, err := c.blobstore.Get(pkg.Sha1, pkg.PackageGetSignedURL, pkg.BlobstoreID, pkg.BlobstoreHeaders)
 	if err != nil {
 		return bosherr.WrapErrorf(err, "Fetching package blob %s", pkg.BlobstoreID)
 	}
@@ -202,10 +194,5 @@ func (c concreteCompiler) atomicDecompress(archivePath string, finalDir string) 
 		return bosherr.WrapErrorf(err, "Decompressing files from %s to %s", archivePath, tmpInstallPath)
 	}
 
-	err = c.fs.Rename(tmpInstallPath, finalDir)
-	if err != nil {
-		return bosherr.WrapErrorf(err, "Moving temporary directory %s to final destination %s", tmpInstallPath, finalDir)
-	}
-
-	return nil
+	return c.moveTmpDir(tmpInstallPath, finalDir)
 }

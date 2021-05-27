@@ -33,7 +33,12 @@ func NewPersistentDevicePartitioner(
 
 func (p *PersistentDevicePartitioner) Partition(devicePath string, partitions []Partition) error {
 	size, err := p.deviceUtil.GetBlockDeviceSize(devicePath)
-	if err == nil && size > MaxFdiskPartitionSize {
+	if err != nil {
+		p.logger.Debug("persistent-disk-partitioner", "Attempting to get block device size")
+		return err
+	}
+
+	if size > MaxFdiskPartitionSize {
 		p.logger.Debug("persistent-disk-partitioner", "Using parted partitioner because disk size is too large: %d", size)
 		return p.partedPartitioner.Partition(devicePath, partitions)
 	}
@@ -50,6 +55,14 @@ func (p *PersistentDevicePartitioner) Partition(devicePath string, partitions []
 
 func (p *PersistentDevicePartitioner) GetDeviceSizeInBytes(devicePath string) (uint64, error) {
 	return p.sfDiskPartitioner.GetDeviceSizeInBytes(devicePath)
+}
+
+func (p *PersistentDevicePartitioner) GetPartitions(devicePath string) (partitions []ExistingPartition, deviceFullSizeInBytes uint64, err error) {
+	return p.partedPartitioner.GetPartitions(devicePath)
+}
+
+func (p *PersistentDevicePartitioner) RemovePartitions(partitions []ExistingPartition, devicePath string) error {
+	panic("unimplemented")
 }
 
 func IsGPTError(err error) bool {

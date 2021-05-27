@@ -4,18 +4,19 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
-	"strconv"
 	"strings"
+	"syscall"
 
 	boshdpresolv "github.com/cloudfoundry/bosh-agent/infrastructure/devicepathresolver"
 	boshcert "github.com/cloudfoundry/bosh-agent/platform/cert"
 	boshnet "github.com/cloudfoundry/bosh-agent/platform/net"
 	boshstats "github.com/cloudfoundry/bosh-agent/platform/stats"
 	boshvitals "github.com/cloudfoundry/bosh-agent/platform/vitals"
+	"github.com/cloudfoundry/bosh-agent/platform/windows/disk"
 	boshsettings "github.com/cloudfoundry/bosh-agent/settings"
 	boshdir "github.com/cloudfoundry/bosh-agent/settings/directories"
 	boshdirs "github.com/cloudfoundry/bosh-agent/settings/directories"
@@ -25,6 +26,15 @@ import (
 	boshsys "github.com/cloudfoundry/bosh-utils/system"
 	boshuuid "github.com/cloudfoundry/bosh-utils/uuid"
 )
+
+//go:generate counterfeiter -o fakes/fake_windows_disk_manager.go . WindowsDiskManager
+
+type WindowsDiskManager interface {
+	GetFormatter() disk.WindowsDiskFormatter
+	GetLinker() disk.WindowsDiskLinker
+	GetPartitioner() disk.WindowsDiskPartitioner
+	GetProtector() disk.WindowsDiskProtector
+}
 
 // Administrator user name, this currently exists for testing, but may be useful
 // if we ever change the Admin user name for security reasons.
@@ -50,6 +60,7 @@ type WindowsPlatform struct {
 	defaultNetworkResolver boshsettings.DefaultNetworkResolver
 	auditLogger            AuditLogger
 	uuidGenerator          boshuuid.Generator
+	diskManager            WindowsDiskManager
 	logger                 boshlog.Logger
 }
 
@@ -66,6 +77,7 @@ func NewWindowsPlatform(
 	defaultNetworkResolver boshsettings.DefaultNetworkResolver,
 	auditLogger AuditLogger,
 	uuidGenerator boshuuid.Generator,
+	diskManager WindowsDiskManager,
 ) Platform {
 	return &WindowsPlatform{
 		fs:                     fs,
@@ -82,6 +94,7 @@ func NewWindowsPlatform(
 		defaultNetworkResolver: defaultNetworkResolver,
 		auditLogger:            auditLogger,
 		uuidGenerator:          uuidGenerator,
+		diskManager:            diskManager,
 		logger:                 logger,
 	}
 }
@@ -154,6 +167,73 @@ func (p WindowsPlatform) findEphemeralUsersMatching(reg *regexp.Regexp) ([]strin
 	return matchingUsers, nil
 }
 
+const (
+	OsErrorFileInUse     = syscall.Errno(0x20)
+	OsErrorFileNotFound2 = syscall.Errno(0x2)
+	OsErrorFileNotFound3 = syscall.Errno(0x3)
+)
+
+func deleteFolderAndContents(path string) error {
+	inf, err := statAndIgnoreFileNotFound(path)
+	if err != nil {
+		return err
+	}
+	if inf == nil {
+		return nil
+	}
+
+	err = os.Chmod(path, 0600)
+	if err != nil {
+		return err
+	}
+
+	if inf.IsDir() {
+		childItems, _ := ioutil.ReadDir(path)
+
+		for _, item := range childItems {
+			err = deleteFolderAndContents(filepath.Join(path, item.Name()))
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	return removeAndIgnoreProcessFileLocks(path)
+}
+
+func removeAndIgnoreProcessFileLocks(path string) error {
+	err := os.RemoveAll(path)
+	if err != nil {
+		pathError, ok := err.(*os.PathError)
+		if !ok {
+			fmt.Printf("in RaI after PE")
+			return err
+		}
+
+		if pathError.Err != OsErrorFileInUse {
+			fmt.Printf("after FiU check")
+			return err
+		}
+	}
+	return nil
+}
+
+func statAndIgnoreFileNotFound(path string) (os.FileInfo, error) {
+	inf, err := os.Stat(path)
+	if err != nil {
+		pathError, ok := err.(*os.PathError)
+		if !ok {
+			return inf, err
+		}
+
+		if pathError.Err != OsErrorFileNotFound2 && pathError.Err != OsErrorFileNotFound3 {
+			return inf, err
+		}
+	}
+
+	return inf, nil
+}
+
 func (p WindowsPlatform) DeleteEphemeralUsersMatching(pattern string) error {
 	reg, err := regexp.Compile(pattern)
 	if err != nil {
@@ -166,7 +246,12 @@ func (p WindowsPlatform) DeleteEphemeralUsersMatching(pattern string) error {
 	}
 
 	for _, user := range users {
-		if err := deleteUserProfile(user); err != nil {
+		err = deleteFolderAndContents(fmt.Sprintf(`C:\Users\%s`, user))
+		if err != nil {
+			return err
+		}
+
+		if err := deleteLocalUser(user); err != nil {
 			return err
 		}
 	}
@@ -177,7 +262,38 @@ func (p WindowsPlatform) SetupRootDisk(ephemeralDiskPath string) (err error) {
 	return
 }
 
+func (p WindowsPlatform) SetupCanRestartDir() error {
+	return nil
+}
+
+func (p WindowsPlatform) SetupBoshSettingsDisk() error {
+	return nil
+}
+
+func (p WindowsPlatform) GetAgentSettingsPath(tmpfs bool) string {
+	if tmpfs {
+		p.logger.Info("WindowsPlatform", "Windows does not support using tmpfs, using default agent settings path")
+	}
+	return filepath.Join(p.dirProvider.BoshDir(), "settings.json")
+}
+
+func (p WindowsPlatform) GetPersistentDiskSettingsPath(tmpfs bool) string {
+	if tmpfs {
+		p.logger.Info("WindowsPlatform", "Windows does not support using tmpfs, using default persistent disk settings path")
+	}
+	return filepath.Join(p.dirProvider.BoshDir(), "persistent_disk_hints.json")
+}
+
 func (p WindowsPlatform) SetupSSH(publicKey []string, username string) error {
+
+	if username == boshsettings.VCAPUsername {
+		if !userExists(username) {
+			err := p.CreateUser(username, "")
+			if err != nil {
+				return bosherr.WrapErrorf(err, "Creating user: %s", username)
+			}
+		}
+	}
 
 	homedir, err := userHomeDirectory(username)
 	if err != nil {
@@ -195,20 +311,6 @@ func (p WindowsPlatform) SetupSSH(publicKey []string, username string) error {
 		return bosherr.WrapErrorf(err, "Creating authorized_keys file: %s", authkeysPath)
 	}
 
-	// Grant sshd service read access to the authorized_keys file.
-	//
-	// Do not use the WindowsPlatform.cmdRunner for this - it passes
-	// every command through PowerShell, which breaks this command.
-	//
-	cmd := exec.Command("icacls.exe", authkeysPath, "/grant", "NT SERVICE\\SSHD:(R)")
-	out, err := cmd.CombinedOutput()
-	if err != nil {
-		// Remove authorized_keys file - don't check the error
-		p.fs.RemoveAll(authkeysPath)
-
-		return bosherr.WrapErrorf(err, "Setting ACL on authorized_keys file (%s): %s",
-			authkeysPath, string(out))
-	}
 	return nil
 }
 
@@ -341,49 +443,54 @@ func (p WindowsPlatform) SetTimeWithNtpServers(servers []string) (err error) {
 	return
 }
 
-func (p WindowsPlatform) SetupEphemeralDiskWithPath(devicePath string, desiredSwapSizeInBytes *uint64) error {
+func (p WindowsPlatform) SetupEphemeralDiskWithPath(devicePath string, desiredSwapSizeInBytes *uint64, labelPrefix string) error {
+	const minimumDiskSizeToPartition = 1024 * 1024
+
 	if devicePath == "" || !p.options.Windows.EnableEphemeralDiskMounting {
+		p.logger.Debug("WindowsPlatform", "Not attempting to mount ephemeral disk with devicePath `%s`", devicePath)
 		return nil
 	}
 
 	dataPath := fmt.Sprintf(`C:%s\`, p.dirProvider.DataDir())
 
-	checkProtectDirCmdlet := &powershellAction{
-		commandArgs: []string{
-			"Get-Command",
-			"Protect-MountedDir",
-		},
-		commandFailureFmt: fmt.Sprintf("Cannot protect %s. Protect-MountedDir cmd does not exist: %%s", dataPath),
-		cmdRunner:         p.cmdRunner,
+	protector := p.diskManager.GetProtector()
+	if !protector.CommandExists() {
+		return fmt.Errorf("cannot protect %s. %s cmd does not exist.", dataPath, disk.ProtectCmdlet)
 	}
 
-	_, err := checkProtectDirCmdlet.run()
+	partitioner := p.diskManager.GetPartitioner()
 
+	if devicePath != "0" {
+		existingPartitionCount, err := partitioner.GetCountOnDisk(devicePath)
+		if err != nil {
+			return err
+		}
+
+		if existingPartitionCount == "0" {
+			err = partitioner.InitializeDisk(devicePath)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	linker := p.diskManager.GetLinker()
+
+	existingTarget, err := linker.LinkTarget(dataPath)
 	if err != nil {
 		return err
 	}
 
-	checkFreeSpaceAction := &powershellAction{
-		commandArgs: []string{
-			"Get-Disk",
-			devicePath,
-			"|",
-			"Select",
-			"-ExpandProperty",
-			"LargestFreeExtent",
-		},
-		commandFailureFmt: fmt.Sprintf("Failed to get free disk space on disk %s: %%s", devicePath),
-		cmdRunner:         p.cmdRunner,
+	if existingTarget != "" {
+		return nil
 	}
 
-	freeSpaceOutput, err := checkFreeSpaceAction.run()
-
+	freeSpace, err := partitioner.GetFreeSpaceOnDisk(devicePath)
 	if err != nil {
 		return err
 	}
 
-	freeSpace, _ := strconv.Atoi(strings.TrimSpace(freeSpaceOutput))
-	if freeSpace < 1024*1024 {
+	if freeSpace < minimumDiskSizeToPartition {
 		p.logger.Warn(
 			"WindowsPlatform",
 			"Unable to create ephemeral partition on disk %s, as there isn't enough free space",
@@ -392,113 +499,29 @@ func (p WindowsPlatform) SetupEphemeralDiskWithPath(devicePath string, desiredSw
 		return nil
 	}
 
-	checkForExistingPartitionCommand := []string{
-		"Get-Partition",
-		"-DiskNumber",
-		devicePath,
-		"|",
-		"where",
-		"AccessPaths",
-		"-Contains",
-		fmt.Sprintf(`"%s"`, dataPath),
-		"|",
-		"Select",
-		"-ExpandProperty",
-		"PartitionNumber",
-	}
-	stdout, _, exitStatus, err := p.cmdRunner.RunCommand(
-		powerShellCmd,
-		checkForExistingPartitionCommand...,
-	)
-
-	if exitStatus == 0 && strings.TrimSpace(stdout) != "" {
-		return nil
-	}
-
-	if err != nil {
-		return fmt.Errorf("Failed to run command \"%s\": %s", strings.Join(
-			append([]string{powerShellCmd}, checkForExistingPartitionCommand...), " "), err)
-	}
-
-	partitionVolumeAction := &powershellAction{
-		commandArgs: []string{
-			"New-Partition",
-			"-DiskNumber",
-			devicePath,
-			"-UseMaximumSize",
-			"|",
-			"Select",
-			"-ExpandProperty",
-			"PartitionNumber",
-		},
-		commandFailureFmt: fmt.Sprintf("Failed to create partition on disk %s: %%s", devicePath),
-		cmdRunner:         p.cmdRunner,
-	}
-
-	partitionNumberOutput, err := partitionVolumeAction.run()
+	partitionNumber, err := partitioner.PartitionDisk(devicePath)
 	if err != nil {
 		return err
 	}
 
-	partitionNumber := strings.TrimSpace(partitionNumberOutput)
+	formatter := p.diskManager.GetFormatter()
 
-	formatVolumeAction := &powershellAction{
-		commandArgs: []string{
-			"Get-Partition",
-			"-DiskNumber",
-			devicePath,
-			"-PartitionNumber",
-			partitionNumber,
-			"|",
-			"Format-Volume",
-			"-FileSystem",
-			"NTFS",
-			"-Confirm:$false",
-		},
-		commandFailureFmt: fmt.Sprintf("Failed to format partition %s on disk %s: %%s", partitionNumber, devicePath),
-		cmdRunner:         p.cmdRunner,
-	}
-
-	_, err = formatVolumeAction.run()
-
+	err = formatter.Format(devicePath, partitionNumber)
 	if err != nil {
 		return err
 	}
 
-	err = p.fs.MkdirAll(dataPath, 0750)
-	if err != nil {
-		return fmt.Errorf(`Failed to create %s: %s`, dataPath, err)
-	}
-
-	mountVolumeAction := &powershellAction{
-		commandArgs: []string{
-			"Add-PartitionAccessPath",
-			"-DiskNumber",
-			devicePath,
-			"-PartitionNumber",
-			partitionNumber,
-			"-AccessPath",
-			dataPath,
-		},
-		commandFailureFmt: fmt.Sprintf("Failed to mount partition %s on disk %s at %s: %%s", partitionNumber, devicePath, dataPath),
-		cmdRunner:         p.cmdRunner,
-	}
-
-	_, err = mountVolumeAction.run()
+	driveLetter, err := partitioner.AssignDriveLetter(devicePath, partitionNumber)
 	if err != nil {
 		return err
 	}
 
-	protectDataDirAction := &powershellAction{
-		commandArgs: []string{
-			"Protect-MountedDir",
-			fmt.Sprintf(`'%s'`, strings.TrimRight(dataPath, "\\")),
-		},
-		commandFailureFmt: fmt.Sprintf("Failed to protect dir %s : %%s", dataPath),
-		cmdRunner:         p.cmdRunner,
+	err = linker.Link(dataPath, fmt.Sprintf("%s:", driveLetter))
+	if err != nil {
+		return err
 	}
 
-	_, err = protectDataDirAction.run()
+	err = protector.ProtectPath(dataPath)
 	if err != nil {
 		return err
 	}
@@ -510,7 +533,7 @@ func (p WindowsPlatform) SetupRawEphemeralDisks(devices []boshsettings.DiskSetti
 	return
 }
 
-func (p WindowsPlatform) SetupDataDir() error {
+func (p WindowsPlatform) SetupDataDir(_ boshsettings.JobDir, _ boshsettings.RunDir) error {
 	dataDir := p.dirProvider.DataDir()
 	sysDataDir := filepath.Join(dataDir, "sys")
 	logDir := filepath.Join(sysDataDir, "log")
@@ -584,9 +607,25 @@ func (p WindowsPlatform) UnmountPersistentDisk(diskSettings boshsettings.DiskSet
 }
 
 func (p WindowsPlatform) GetEphemeralDiskPath(diskSettings boshsettings.DiskSettings) (diskPath string) {
+	p.logger.Debug("WindowsPlatform", "Identifying ephemeral disk path, diskSettings.Path: `%s`", diskSettings.Path)
+
 	if diskSettings.Path == "" && p.options.Linux.CreatePartitionIfNoEphemeralDisk {
 		diskPath = "0"
 	}
+
+	if diskSettings.Path != "" {
+		matchInt, _ := regexp.MatchString(`\d`, diskSettings.Path)
+		if matchInt {
+			diskPath = diskSettings.Path
+		} else {
+			alphs := []byte("abcdefghijklmnopq")
+
+			lastChar := diskSettings.Path[len(diskSettings.Path)-1:]
+			diskPath = fmt.Sprintf("%d", bytes.IndexByte(alphs, byte(lastChar[0])))
+		}
+	}
+
+	p.logger.Debug("WindowsPlatform", "Identified Disk Path as `%s`", diskPath)
 
 	return diskPath
 }
@@ -659,7 +698,7 @@ func (p WindowsPlatform) GetHostPublicKey() (string, error) {
 	}
 	drive += "\\"
 
-	sshdir := filepath.Join(drive, "Program Files", "OpenSSH")
+	sshdir := filepath.Join(drive, "ProgramData", "ssh")
 	keypath := filepath.Join(sshdir, "ssh_host_rsa_key.pub")
 
 	key, err := p.fs.ReadFileString(keypath)
@@ -694,27 +733,4 @@ func (p WindowsPlatform) SetupRecordsJSONPermission(path string) error {
 
 func (p WindowsPlatform) Shutdown() error {
 	return nil
-}
-
-const powerShellCmd = "powershell.exe"
-
-type powershellAction struct {
-	commandArgs       []string
-	commandFailureFmt string
-	cmdRunner         boshsys.CmdRunner
-}
-
-func (a *powershellAction) run() (string, error) {
-	stdout, stderr, exitStatus, err := a.cmdRunner.RunCommand(powerShellCmd, a.commandArgs...)
-
-	if err != nil {
-		return "", fmt.Errorf("Failed to run command \"%s\": %s", strings.Join(
-			append([]string{powerShellCmd}, a.commandArgs...), " "), err)
-	}
-
-	if exitStatus != 0 {
-		return "", fmt.Errorf(a.commandFailureFmt, stderr)
-	}
-
-	return stdout, nil
 }

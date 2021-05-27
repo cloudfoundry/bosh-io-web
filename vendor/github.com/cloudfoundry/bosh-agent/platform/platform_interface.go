@@ -36,6 +36,8 @@ type Platform interface {
 	GetVitalsService() boshvitals.Service
 	GetAuditLogger() AuditLogger
 	GetDevicePathResolver() (devicePathResolver boshdpresolv.DevicePathResolver)
+	GetAgentSettingsPath(tmpfs bool) string
+	GetPersistentDiskSettingsPath(tmpfs bool) string
 
 	// User management
 	CreateUser(username, basePath string) (err error)
@@ -46,16 +48,18 @@ type Platform interface {
 	SetupRootDisk(ephemeralDiskPath string) (err error)
 	SetupSSH(publicKey []string, username string) (err error)
 	SetUserPassword(user, encryptedPwd string) (err error)
+	SetupBoshSettingsDisk() (err error)
 	SetupIPv6(boshsettings.IPv6) error
 	SetupHostname(hostname string) (err error)
 	SetupNetworking(networks boshsettings.Networks) (err error)
 	SetupLogrotate(groupName, basePath, size string) (err error)
 	SetTimeWithNtpServers(servers []string) (err error)
-	SetupEphemeralDiskWithPath(devicePath string, desiredSwapSizeInBytes *uint64) (err error)
+	SetupEphemeralDiskWithPath(devicePath string, desiredSwapSizeInBytes *uint64, labelPrefix string) (err error)
 	SetupRawEphemeralDisks(devices []boshsettings.DiskSettings) (err error)
-	SetupDataDir() (err error)
+	SetupDataDir(boshsettings.JobDir, boshsettings.RunDir) (err error)
 	SetupSharedMemory() (err error)
 	SetupTmpDir() (err error)
+	SetupCanRestartDir() (err error)
 	SetupHomeDir() (err error)
 	SetupBlobsDir() (err error)
 	SetupMonitUser() (err error)

@@ -4,7 +4,7 @@ import (
 	"sort"
 	"strings"
 
-	bpreljob "github.com/cppforlife/bosh-provisioner/release/job"
+	bpreljob "github.com/bosh-dep-forks/bosh-provisioner/release/job"
 )
 
 const (

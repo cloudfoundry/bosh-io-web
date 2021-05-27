@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sort"
 
-	bprel "github.com/cppforlife/bosh-provisioner/release"
+	bprel "github.com/bosh-dep-forks/bosh-provisioner/release"
 )
 
 type Job struct {

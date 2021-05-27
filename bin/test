@@ -1,7 +1,5 @@
 #!/bin/bash
 
-export GO111MODULE=off
-
 result=0
 
 bin=$(dirname $0)
@@ -11,11 +9,15 @@ go fmt github.com/bosh-io/web/...
 let "result+=$?"
 
 echo -e "\n Testing packages..."
-ginkgo -skipPackage vendor -r $bin/..
+go run github.com/onsi/ginkgo/ginkgo -skipPackage vendor -skipPackage docs-bosh -r $bin/..
 let "result+=$?"
 
 echo -e "\n Vetting packages for potential issues..."
 go vet github.com/bosh-io/web/...
+let "result+=$?"
+
+echo -e "\n Checking with golint..."
+$bin/golint
 let "result+=$?"
 
 echo -e "\n Running build script to confirm everything compiles..."

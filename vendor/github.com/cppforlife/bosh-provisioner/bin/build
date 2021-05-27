@@ -1,8 +1,0 @@
-#!/bin/bash
-
-set -e
-
-bin=$(dirname $0)
-base=$(dirname $bin)
-
-$bin/go build -o $base/out/bosh-provisioner github.com/cppforlife/bosh-provisioner/main

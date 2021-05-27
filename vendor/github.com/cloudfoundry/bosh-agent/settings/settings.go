@@ -2,6 +2,8 @@ package settings
 
 import (
 	"fmt"
+	"net"
+	"strconv"
 
 	"github.com/cloudfoundry/bosh-agent/platform/disk"
 )
@@ -99,62 +101,22 @@ type VM struct {
 	Name string `json:"name"`
 }
 
-func (s Settings) PersistentDiskSettings(diskID string) (DiskSettings, bool) {
-	diskSettings := DiskSettings{}
+func (s Settings) TmpFSEnabled() bool {
+	return s.Env.Bosh.Agent.Settings.TmpFS || s.Env.Bosh.JobDir.TmpFS
+}
 
+func (s Settings) PersistentDiskSettings(diskID string) (DiskSettings, bool) {
 	for key, settings := range s.Disks.Persistent {
 		if key == diskID {
-			diskSettings.ID = diskID
-
-			if hashSettings, ok := settings.(map[string]interface{}); ok {
-				if path, ok := hashSettings["path"]; ok {
-					diskSettings.Path = path.(string)
-				}
-				if volumeID, ok := hashSettings["volume_id"]; ok {
-					diskSettings.VolumeID = volumeID.(string)
-				}
-				if deviceID, ok := hashSettings["id"]; ok {
-					diskSettings.DeviceID = deviceID.(string)
-				}
-				if lun, ok := hashSettings["lun"]; ok {
-					diskSettings.Lun = lun.(string)
-				}
-				if hostDeviceID, ok := hashSettings["host_device_id"]; ok {
-					diskSettings.HostDeviceID = hostDeviceID.(string)
-				}
-
-				if iSCSISettings, ok := hashSettings["iscsi_settings"]; ok {
-					if hashISCSISettings, ok := iSCSISettings.(map[string]interface{}); ok {
-						if username, ok := hashISCSISettings["username"]; ok {
-							diskSettings.ISCSISettings.Username = username.(string)
-						}
-						if password, ok := hashISCSISettings["password"]; ok {
-							diskSettings.ISCSISettings.Password = password.(string)
-						}
-						if initiator, ok := hashISCSISettings["initiator_name"]; ok {
-							diskSettings.ISCSISettings.InitiatorName = initiator.(string)
-						}
-						if target, ok := hashISCSISettings["target"]; ok {
-							diskSettings.ISCSISettings.Target = target.(string)
-						}
-					}
-				}
-
-			} else {
-				// Old CPIs return disk path (string) or volume id (string) as disk settings
-				diskSettings.Path = settings.(string)
-				diskSettings.VolumeID = settings.(string)
-			}
-
-			diskSettings.FileSystemType = s.Env.PersistentDiskFS
-			diskSettings.MountOptions = s.Env.PersistentDiskMountOptions
-			diskSettings.Partitioner = s.Env.PersistentDiskPartitioner
-
-			return diskSettings, true
+			return s.populatePersistentDiskSettings(diskID, settings), true
 		}
 	}
 
-	return diskSettings, false
+	return DiskSettings{}, false
+}
+
+func (s Settings) PersistentDiskSettingsFromHint(diskID string, diskHint interface{}) DiskSettings {
+	return s.populatePersistentDiskSettings(diskID, diskHint)
 }
 
 func (s Settings) EphemeralDiskSettings() DiskSettings {
@@ -177,10 +139,10 @@ func (s Settings) EphemeralDiskSettings() DiskSettings {
 			if hostDeviceID, ok := hashSettings["host_device_id"]; ok {
 				diskSettings.HostDeviceID = hostDeviceID.(string)
 			}
-		} else {
+		} else if stringSetting, ok := s.Disks.Ephemeral.(string); ok {
 			// Old CPIs return disk path (string) or volume id (string) as disk settings
-			diskSettings.Path = s.Disks.Ephemeral.(string)
-			diskSettings.VolumeID = s.Disks.Ephemeral.(string)
+			diskSettings.Path = stringSetting
+			diskSettings.VolumeID = stringSetting
 		}
 	}
 
@@ -211,6 +173,56 @@ func (s Settings) GetNtpServers() []string {
 		return s.Env.Bosh.NTP
 	}
 	return s.NTP
+}
+
+func (s Settings) populatePersistentDiskSettings(diskID string, settingsInfo interface{}) DiskSettings {
+	diskSettings := DiskSettings{
+		ID: diskID,
+	}
+
+	if hashSettings, ok := settingsInfo.(map[string]interface{}); ok {
+		if path, ok := hashSettings["path"]; ok {
+			diskSettings.Path = path.(string)
+		}
+		if volumeID, ok := hashSettings["volume_id"]; ok {
+			diskSettings.VolumeID = volumeID.(string)
+		}
+		if deviceID, ok := hashSettings["id"]; ok {
+			diskSettings.DeviceID = deviceID.(string)
+		}
+		if lun, ok := hashSettings["lun"]; ok {
+			diskSettings.Lun = lun.(string)
+		}
+		if hostDeviceID, ok := hashSettings["host_device_id"]; ok {
+			diskSettings.HostDeviceID = hostDeviceID.(string)
+		}
+		if iSCSISettings, ok := hashSettings["iscsi_settings"]; ok {
+			if hashISCSISettings, ok := iSCSISettings.(map[string]interface{}); ok {
+				if username, ok := hashISCSISettings["username"]; ok {
+					diskSettings.ISCSISettings.Username = username.(string)
+				}
+				if password, ok := hashISCSISettings["password"]; ok {
+					diskSettings.ISCSISettings.Password = password.(string)
+				}
+				if initiator, ok := hashISCSISettings["initiator_name"]; ok {
+					diskSettings.ISCSISettings.InitiatorName = initiator.(string)
+				}
+				if target, ok := hashISCSISettings["target"]; ok {
+					diskSettings.ISCSISettings.Target = target.(string)
+				}
+			}
+		}
+	} else if stringSetting, ok := settingsInfo.(string); ok {
+		// Old CPIs return disk path (string) or volume id (string) as disk settings
+		diskSettings.Path = stringSetting
+		diskSettings.VolumeID = stringSetting
+	}
+
+	diskSettings.FileSystemType = s.Env.PersistentDiskFS
+	diskSettings.MountOptions = s.Env.PersistentDiskMountOptions
+	diskSettings.Partitioner = s.Env.PersistentDiskPartitioner
+
+	return diskSettings
 }
 
 type Env struct {
@@ -262,6 +274,7 @@ func (e Env) IsNATSMutualTLSEnabled() bool {
 }
 
 type BoshEnv struct {
+	Agent                 AgentEnv    `json:"agent"`
 	Password              string      `json:"password"`
 	KeepRootPassword      bool        `json:"keep_root_password"`
 	RemoveDevTools        bool        `json:"remove_dev_tools"`
@@ -270,9 +283,19 @@ type BoshEnv struct {
 	SwapSizeInMB          *uint64     `json:"swap_size"`
 	Mbus                  MBus        `json:"mbus"`
 	IPv6                  IPv6        `json:"ipv6"`
+	JobDir                JobDir      `json:"job_dir"`
+	RunDir                RunDir      `json:"run_dir"`
 	Blobstores            []Blobstore `json:"blobstores"`
 	NTP                   []string    `json:"ntp"`
 	Parallel              *int        `json:"parallel"`
+}
+
+type AgentEnv struct {
+	Settings AgentSettings `json:"settings"`
+}
+
+type AgentSettings struct {
+	TmpFS bool `json:"tmpfs"`
 }
 
 type MBus struct {
@@ -288,6 +311,18 @@ type CertKeyPair struct {
 
 type IPv6 struct {
 	Enable bool `json:"enable"`
+}
+
+type JobDir struct {
+	TmpFS bool `json:"tmpfs"`
+
+	// Passed to mount directly
+	TmpFSSize string `json:"tmpfs_size"`
+}
+
+type RunDir struct {
+	// Passed to mount directly
+	TmpFSSize string `json:"tmpfs_size"`
 }
 
 type DNSRecords struct {
@@ -459,6 +494,25 @@ func (n Network) isDynamic() bool {
 
 func (n Network) IsVIP() bool {
 	return n.Type == NetworkTypeVIP
+}
+
+func NetmaskToCIDR(netmask string, ipv6 bool) (string, error) {
+	ip := net.ParseIP(netmask)
+	if ipv6 {
+		ipv6mask := net.IPMask(ip)
+		ones, _ := ipv6mask.Size()
+		if ipv6mask.String() != "00000000000000000000000000000000" && ones == 0 {
+			return "0", fmt.Errorf("netmask cannot be converted to CIDR: %s", netmask)
+		}
+		return strconv.Itoa(ones), nil
+	}
+
+	ipv4mask := net.IPMask(ip.To4())
+	ones, _ := ipv4mask.Size()
+	if ipv4mask.String() != "00000000" && ones == 0 {
+		return "0", fmt.Errorf("netmask cannot be converted to CIDR: %s", netmask)
+	}
+	return strconv.Itoa(ones), nil
 }
 
 //{

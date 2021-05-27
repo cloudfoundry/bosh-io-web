@@ -15,28 +15,6 @@ import (
 	boshsys "github.com/cloudfoundry/bosh-utils/system"
 )
 
-type MACAddressDetector interface {
-	MACAddresses() (map[string]string, error)
-}
-
-func NewMACAddressDetector() MACAddressDetector {
-	return macAddressDetector{}
-}
-
-type macAddressDetector struct{}
-
-func (m macAddressDetector) MACAddresses() (map[string]string, error) {
-	ifs, err := gonet.Interfaces()
-	if err != nil {
-		return nil, bosherr.WrapError(err, "Detecting Mac Addresses")
-	}
-	macs := make(map[string]string, len(ifs))
-	for _, f := range ifs {
-		macs[f.HardwareAddr.String()] = f.Name
-	}
-	return macs, nil
-}
-
 type WindowsNetManager struct {
 	runner                        boshsys.CmdRunner
 	interfaceConfigurationCreator InterfaceConfigurationCreator
@@ -58,7 +36,7 @@ func NewWindowsNetManager(
 	dirProvider boshdirs.Provider,
 ) Manager {
 	return WindowsNetManager{
-		runner: runner,
+		runner:                        runner,
 		interfaceConfigurationCreator: interfaceConfigurationCreator,
 		macAddressDetector:            macAddressDetector,
 		logTag:                        "WindowsNetManager",
@@ -86,8 +64,7 @@ foreach($interface in $interfaces) {
 `
 
 	NicSettingsTemplate = `
-$connectionName=(get-wmiobject win32_networkadapter | where-object {$_.MacAddress -eq '%s'}).netconnectionid
-netsh interface ip set address $connectionName static %s %s %s
+netsh interface ip set address %q static %s %s %s
 `
 )
 
@@ -210,7 +187,7 @@ func (net WindowsNetManager) setupInterfaces(staticConfigs []StaticInterfaceConf
 			gateway = conf.Gateway
 		}
 
-		content := fmt.Sprintf(NicSettingsTemplate, conf.Mac, conf.Address, conf.Netmask, gateway)
+		content := fmt.Sprintf(NicSettingsTemplate, conf.Name, conf.Address, conf.Netmask, gateway)
 
 		_, _, _, err := net.runner.RunCommand("powershell", "-Command", content)
 		if err != nil {
@@ -226,7 +203,7 @@ func (net WindowsNetManager) buildInterfaces(networks boshsettings.Networks) (
 	error,
 ) {
 
-	interfacesByMacAddress, err := net.macAddressDetector.MACAddresses()
+	interfacesByMacAddress, err := net.macAddressDetector.DetectMacAddresses()
 	if err != nil {
 		return nil, nil, bosherr.WrapError(err, "Getting network interfaces")
 	}

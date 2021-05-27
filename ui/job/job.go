@@ -3,7 +3,7 @@ package job
 import (
 	"fmt"
 
-	bpreljob "github.com/cppforlife/bosh-provisioner/release/job"
+	bpreljob "github.com/bosh-dep-forks/bosh-provisioner/release/job"
 
 	bhrelui "github.com/bosh-io/web/ui/release"
 )

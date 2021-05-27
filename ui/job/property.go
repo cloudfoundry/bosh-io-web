@@ -6,9 +6,9 @@ import (
 	"sort"
 	"strings"
 
+	bpreljob "github.com/bosh-dep-forks/bosh-provisioner/release/job"
 	"github.com/cloudfoundry-incubator/candiedyaml"
 	bosherr "github.com/cloudfoundry/bosh-utils/errors"
-	bpreljob "github.com/cppforlife/bosh-provisioner/release/job"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/russross/blackfriday"
 )

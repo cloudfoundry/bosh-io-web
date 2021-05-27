@@ -3,9 +3,9 @@ package jobsrepo
 import (
 	"encoding/json"
 
+	bpreljob "github.com/bosh-dep-forks/bosh-provisioner/release/job"
 	bosherr "github.com/cloudfoundry/bosh-utils/errors"
 	boshlog "github.com/cloudfoundry/bosh-utils/logger"
-	bpreljob "github.com/cppforlife/bosh-provisioner/release/job"
 
 	bhrelsrepo "github.com/bosh-io/web/release/releasesrepo"
 	bhrelver "github.com/bosh-io/web/release/relver"
