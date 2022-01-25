@@ -13,6 +13,18 @@ var (
 
 		Sort: 1,
 	}
+	ubuntuJammyDistro = Distro{
+		NameName: "ubuntu-jammy",
+		Name:     "Ubuntu Jammy",
+
+		OSMatches: []StemcellOSMatch{
+			{OSName: "ubuntu", OSVersion: "jammy"},
+		},
+
+		SupportedInfrastructures: allInfrastructures,
+
+		Sort: 2,
+	}
 	ubuntuXenialDistro = Distro{
 		NameName: "ubuntu-xenial",
 		Name:     "Ubuntu Xenial",
@@ -23,7 +35,7 @@ var (
 
 		SupportedInfrastructures: allInfrastructures,
 
-		Sort: 2,
+		Sort: 3,
 	}
 	ubuntuTrustyDistro = Distro{
 		NameName: "ubuntu-trusty",
@@ -35,7 +47,7 @@ var (
 
 		SupportedInfrastructures: trustyInfrastructures,
 
-		Sort: 3,
+		Sort: 4,
 	}
 	windows2019Distro = Distro{
 		NameName: "windows2019",
@@ -51,7 +63,7 @@ var (
 			azureInfrastructure,
 		},
 
-		Sort: 4,
+		Sort: 5,
 	}
 	windows1803Distro = Distro{
 		NameName: "windows1803",
@@ -67,7 +79,7 @@ var (
 			azureInfrastructure,
 		},
 
-		Sort: 5,
+		Sort: 6,
 	}
 	windows2016Distro = Distro{
 		NameName: "windows2016",
@@ -83,7 +95,7 @@ var (
 			azureInfrastructure,
 		},
 
-		Sort: 6,
+		Sort: 7,
 	}
 	windows2012R2Distro = Distro{
 		NameName: "windows2012R2",
@@ -99,7 +111,7 @@ var (
 			azureInfrastructure,
 		},
 
-		Sort: 7,
+		Sort: 8,
 	}
 	centos7Distro = Distro{
 		NameName: "centos-7",
@@ -118,13 +130,14 @@ var (
 			wardenInfrastructure,
 		},
 
-		Sort: 8,
+		Sort: 9,
 	}
 )
 
 var (
 	allDistros = []Distro{
 		ubuntuBionicDistro,
+		ubuntuJammyDistro,
 		ubuntuXenialDistro,
 		ubuntuTrustyDistro,
 		windows2019Distro,

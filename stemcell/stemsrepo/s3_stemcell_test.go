@@ -320,6 +320,20 @@ var _ = Describe("NewS3Stemcell", func() {
 
 			AgentType: "go",
 		},
+
+		// Ubuntu jammy
+		"azure/bosh-stemcell-40-azure-hyperv-ubuntu-jammy-go_agent.tgz": ExtractedPieces{
+			Name:    "bosh-azure-hyperv-ubuntu-jammy-go_agent",
+			Version: "40",
+
+			InfName: "azure",
+			HvName:  "hyperv",
+
+			OSName:    "ubuntu",
+			OSVersion: "jammy",
+
+			AgentType: "go",
+		},
 	}
 
 	for p, e := range examples {
