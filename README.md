@@ -12,8 +12,6 @@
 ### Setup
 
 ```
-go get github.com/bosh-io/web
-cd $GOPATH/src/github.com/bosh-io/web
 ./bin/build-docs.sh
 ./bin/run-local.sh
 ```
