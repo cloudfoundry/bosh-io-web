@@ -34,7 +34,9 @@
         {{ if (eq $s.OSName "windows") }}
           {{ template "stemcells/_windows_notice" . }}
         {{ end }}
-
+        {{if (eq $s.OSVersion "2019") }}
+          {{ template "stemcells/_windows_2019_notice" . }}
+        {{ end }}
         {{ range .DistroGroups }}
           <h2 id="version-history">Version History<a class="headerlink" href="#version-history" title="Permanent link">&para;</a></h2>
 

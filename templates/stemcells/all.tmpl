@@ -47,6 +47,9 @@
           {{if (eq $osName "windows") }}
             {{ template "stemcells/_windows_notice" . }}
           {{ end }}
+          {{if (eq $osVersion "2019") }}
+            {{ template "stemcells/_windows_2019_notice" . }}
+          {{ end }}
 
           <table>
             <thead>
