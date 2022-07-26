@@ -40,6 +40,9 @@
           {{ if (eq $osVersion "xenial") }}
             {{ template "stemcells/_xenial_notice" . }}
           {{ end }}
+          {{ if (eq $osVersion "jammy") }}
+            {{ template "stemcells/_jammy_notice" . }}
+          {{ end }}
           {{ $osName := ( index .Distro.OSMatches 0 ).OSName }}
           {{if (eq $osName "windows") }}
             {{ template "stemcells/_windows_notice" . }}
