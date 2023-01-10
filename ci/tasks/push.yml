@@ -14,10 +14,10 @@ inputs:
 run:
   path: src/github.com/bosh-io/web/ci/tasks/push.sh
 params:
-  CF_CONFIG: ~
-  CF_API: ~
-  CF_USERNAME: ~
-  CF_PASSWORD: ~
-  CF_ORGANIZATION: ~
-  CF_SPACE: ~
-  WEB_CONFIG: ~
+  CF_API:
+  CF_USERNAME:
+  CF_PASSWORD:
+  CF_ORGANIZATION:
+  CF_SPACE:
+  WEB_CONFIG:
+  PRIVATE_KEY:

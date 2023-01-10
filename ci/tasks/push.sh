@@ -12,7 +12,7 @@ new=bosh-hub-new
 curr=bosh-hub
 
 mkdir -p prod-conf
-echo "$WEB_CONFIG" > prod-conf/web.json
+echo "$WEB_CONFIG" | jq --arg private_key "${PRIVATE_KEY}" '.Repos.ReleaseTarballLinker.PrivateKey = $private_key' > prod-conf/web.json
 
 export CF_HOME=/tmp/bosh-io-web-push-$$
 ./bin/configure-cf

@@ -22,6 +22,7 @@ jobs:
       CF_ORGANIZATION: ((cf_organization))
       CF_SPACE: ((cf_space))
       WEB_CONFIG: ((web_config))
+      PRIVATE_KEY: ((bosh-io-cloudfront-signing-key.private_key))
 - name: pull-data
   serial: true
   plan:
