@@ -2,6 +2,9 @@
 code.cloudfoundry.org/clock
 # code.cloudfoundry.org/tlsconfig v0.0.0-20200131000646-bbe0f8da39b3
 code.cloudfoundry.org/tlsconfig
+# github.com/aymerick/douceur v0.2.0
+github.com/aymerick/douceur/css
+github.com/aymerick/douceur/parser
 # github.com/bmatcuk/doublestar v1.3.4
 github.com/bmatcuk/doublestar
 # github.com/bosh-dep-forks/bosh-provisioner v0.0.0-20210531134906-407b7edf2add
@@ -102,14 +105,17 @@ github.com/fsnotify/fsnotify
 github.com/go-martini/martini
 # github.com/go-task/slim-sprig v0.0.0-20210107165309-348f09dbbbc0
 github.com/go-task/slim-sprig
+# github.com/gorilla/css v1.0.0
+github.com/gorilla/css/scanner
 # github.com/jpillora/backoff v1.0.0
 github.com/jpillora/backoff
 # github.com/martini-contrib/render v0.0.0-20150707142108-ec18f8345a11
 ## explicit
 github.com/martini-contrib/render
-# github.com/microcosm-cc/bluemonday v0.0.0-20180621201946-f0761eb8ed07
+# github.com/microcosm-cc/bluemonday v1.0.20
 ## explicit
 github.com/microcosm-cc/bluemonday
+github.com/microcosm-cc/bluemonday/css
 # github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d
 github.com/nu7hatch/gouuid
 # github.com/nxadm/tail v1.4.8
@@ -189,14 +195,14 @@ golang.org/x/crypto/ssh/internal/bcrypt_pbkdf
 ## explicit
 golang.org/x/lint
 golang.org/x/lint/golint
-# golang.org/x/net v0.0.0-20210525063256-abc453219eb5
+# golang.org/x/net v0.0.0-20220826154423-83b083e8dc8b
 golang.org/x/net/context
 golang.org/x/net/html
 golang.org/x/net/html/atom
 golang.org/x/net/html/charset
 golang.org/x/net/internal/socks
 golang.org/x/net/proxy
-# golang.org/x/sys v0.0.0-20210525143221-35b2ab0089ea
+# golang.org/x/sys v0.0.0-20220728004956-3c1f35247d10
 golang.org/x/sys/cpu
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
@@ -204,7 +210,7 @@ golang.org/x/sys/windows
 golang.org/x/sys/windows/registry
 golang.org/x/sys/windows/svc
 golang.org/x/sys/windows/svc/mgr
-# golang.org/x/text v0.3.6
+# golang.org/x/text v0.3.7
 golang.org/x/text/encoding
 golang.org/x/text/encoding/charmap
 golang.org/x/text/encoding/htmlindex
