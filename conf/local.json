@@ -1,15 +1,15 @@
 {
   "Description": "Configuration used by local server for testing.",
   "Repos": {
-    "ReleasesDir": "../releases",
-    "ReleasesIndexDir": "../releases-index",
-    "StemcellsLegacyIndexDir": "../stemcells-legacy-index",
+    "ReleasesDir": "./prod-conf/releases",
+    "ReleasesIndexDir": "./prod-conf/releases-index",
+    "StemcellsLegacyIndexDir": "./prod-conf/stemcells-legacy-index",
     "StemcellsIndexDirs": [
-      "../stemcells-core-index",
-      "../stemcells-cpi-index",
-      "../stemcells-windows-index",
-      "../stemcells-softlayer-index",
-      "../stemcells-alicloud-index"
+      "./prod-conf/stemcells-core-index",
+      "./prod-conf/stemcells-cpi-index",
+      "./prod-conf/stemcells-windows-index",
+      "./prod-conf/stemcells-softlayer-index",
+      "./prod-conf/stemcells-alicloud-index"
     ],
     "ReleaseTarballLinker": {
       "Type": "S3",
