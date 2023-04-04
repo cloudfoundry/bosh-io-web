@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
+	"net/url"
 
 	bprel "github.com/bosh-dep-forks/bosh-provisioner/release"
 	"github.com/bosh-io/web/ui/nav"
@@ -108,16 +109,16 @@ func (r Release) AllVersionsURL() string {
 func (r Release) AvatarURL() string { return r.relVerRec.AvatarURL() }
 
 func (r Release) URL() string {
-	return fmt.Sprintf("/releases/%s?version=%s", r.Source, r.Version)
+	return fmt.Sprintf("/releases/%s?version=%s", r.Source, url.QueryEscape(r.Version.AsString()))
 }
 
 func (r Release) DownloadURL() string {
-	return fmt.Sprintf("/d/%s?v=%s", r.Source, r.Version)
+	return fmt.Sprintf("/d/%s?v=%s", r.Source, url.QueryEscape(r.Version.AsString()))
 }
 
 func (r Release) UserVisibleDownloadURL() string {
 	// todo make domain configurable
-	return fmt.Sprintf("https://bosh.io/d/%s?v=%s", r.Source, r.Version)
+	return fmt.Sprintf("https://bosh.io/d/%s?v=%s", r.Source, url.QueryEscape(r.Version.AsString()))
 }
 
 func (r Release) UserVisibleLatestDownloadURL() string {
