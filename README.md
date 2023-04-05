@@ -13,6 +13,7 @@
 
 ```
 ./bin/build-docs.sh
+./bin/git-init-clone.sh
 ./bin/run-local.sh
 ```
 
