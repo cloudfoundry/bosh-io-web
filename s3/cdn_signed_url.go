@@ -9,6 +9,7 @@ import (
 	"encoding/base64"
 	"encoding/pem"
 	"errors"
+	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -94,7 +95,7 @@ func (u CDNSignedURL) buildQuery() string {
 
 	// Headers can be passed in via query
 	if len(u.fileName) > 0 {
-		query = "response-content-disposition=attachment%3B%20filename%3D" + u.fileName
+		query = "response-content-disposition=attachment%3B%20filename%3D" + url.QueryEscape(u.fileName)
 	}
 
 	return "?" + query
