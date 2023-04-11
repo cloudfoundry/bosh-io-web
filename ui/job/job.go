@@ -2,6 +2,7 @@ package job
 
 import (
 	"fmt"
+	"net/url"
 
 	bpreljob "github.com/bosh-dep-forks/bosh-provisioner/release/job"
 
@@ -41,7 +42,7 @@ func NewJob(j bpreljob.Job, rel bhrelui.Release) Job {
 }
 
 func (j Job) URL() string {
-	return fmt.Sprintf("/jobs/%s?source=%s&version=%s", j.Name, j.Release.Source, j.Release.Version)
+	return fmt.Sprintf("/jobs/%s?source=%s&version=%s", j.Name, j.Release.Source, url.QueryEscape(j.Release.Version.AsString()))
 }
 
 func (j Job) HasGithubURL() bool { return j.Release.HasGithubURL() }

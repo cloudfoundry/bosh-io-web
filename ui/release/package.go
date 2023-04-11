@@ -2,6 +2,7 @@ package release
 
 import (
 	"fmt"
+	"net/url"
 	"sort"
 
 	bprel "github.com/bosh-dep-forks/bosh-provisioner/release"
@@ -44,7 +45,7 @@ func NewPackages(ps []*bprel.Package, rel Release) []Package {
 }
 
 func (p Package) URL() string {
-	return fmt.Sprintf("/packages/%s?source=%s&version=%s", p.Name, p.Release.Source, p.Release.Version)
+	return fmt.Sprintf("/packages/%s?source=%s&version=%s", p.Name, p.Release.Source, url.QueryEscape(p.Release.Version.AsString()))
 }
 
 func (p Package) HasGithubURL() bool { return p.Release.HasGithubURL() }
