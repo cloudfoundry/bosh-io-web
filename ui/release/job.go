@@ -2,6 +2,7 @@ package release
 
 import (
 	"fmt"
+	"net/url"
 	"sort"
 
 	bprel "github.com/bosh-dep-forks/bosh-provisioner/release"
@@ -39,7 +40,7 @@ func NewJobs(js []bprel.Job, rel Release) []Job {
 }
 
 func (j Job) URL() string {
-	return fmt.Sprintf("/jobs/%s?source=%s&version=%s", j.Name, j.Release.Source, j.Release.Version)
+	return fmt.Sprintf("/jobs/%s?source=%s&version=%s", j.Name, j.Release.Source, url.QueryEscape(j.Release.Version.AsString()))
 }
 
 func (s JobSorting) Len() int           { return len(s) }
