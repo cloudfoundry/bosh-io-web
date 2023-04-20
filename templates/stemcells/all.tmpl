@@ -40,6 +40,9 @@
           {{ if (eq $osVersion "xenial") }}
             {{ template "stemcells/_xenial_notice" . }}
           {{ end }}
+          {{ if (eq $osVersion "bionic") }}
+            {{ template "stemcells/_bionic_notice" . }}
+          {{ end }}
           {{ if (eq $osVersion "jammy") }}
             {{ template "stemcells/_jammy_notice" . }}
           {{ end }}
