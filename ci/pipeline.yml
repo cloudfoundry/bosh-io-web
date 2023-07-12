@@ -73,7 +73,7 @@ resources:
 - name: web
   type: git
   source:
-    uri: https://github.com/bosh-io/web.git
+    uri: https://github.com/cloudfoundry/bosh-io-web.git
 - name: docs
   type: git
   source:
@@ -92,23 +92,23 @@ resources:
 - name: releases-index
   type: git
   source:
-    uri: https://github.com/bosh-io/releases-index.git
+    uri: https://github.com/cloudfoundry/bosh-io-releases-index.git
 - name: stemcells-core-index
   type: git
   source:
-    uri: https://github.com/bosh-io/stemcells-core-index.git
+    uri: https://github.com/cloudfoundry/bosh-io-stemcells-core-index.git
 - name: stemcells-cpi-index
   type: git
   source:
-    uri: https://github.com/bosh-io/stemcells-cpi-index.git
+    uri: https://github.com/cloudfoundry/bosh-io-stemcells-cpi-index.git
 - name: stemcells-legacy-index
   type: git
   source:
-    uri: https://github.com/bosh-io/stemcells-legacy-index.git
+    uri: https://github.com/cloudfoundry/bosh-io-stemcells-legacy-index.git
 - name: stemcells-softlayer-index
   type: git
   source:
-    uri: https://github.com/bosh-io/stemcells-softlayer-index.git
+    uri: https://github.com/cloudfoundry/bosh-io-stemcells-softlayer-index.git
 - name: stemcells-alicloud-index
   type: git
   source:
@@ -116,4 +116,4 @@ resources:
 - name: stemcells-windows-index
   type: git
   source:
-    uri: https://github.com/bosh-io/stemcells-windows-index.git
+    uri: https://github.com/cloudfoundry/bosh-io-stemcells-windows-index.git

@@ -2,9 +2,9 @@ All teams building stemcells should document their stemcell artifacts by recordi
 
 Git repositories are used to record and audit the stemcell references, which are then indexed and rendered by [bosh.io](https://bosh.io/). These indexing repositories are named based on the team maintaining them, and deployment keys can be used within pipelines to push new commits.
 
- * [bosh-io/stemcells-core-index](https://github.com/bosh-io/stemcells-core-index)
- * [bosh-io/stemcells-cpi-index](https://github.com/bosh-io/stemcells-cpi-index)
- * [bosh-io/stemcells-windows-index](https://github.com/bosh-io/stemcells-windows-index)
+ * [cloudfoundry/bosh-io-stemcells-core-index](https://github.com/cloudfoundry/bosh-io-stemcells-core-index)
+ * [cloudfoundry/bosh-io-stemcells-cpi-index](https://github.com/cloudfoundry/bosh-io-stemcells-cpi-index)
+ * [cloudfoundry/bosh-io-stemcells-windows-index](https://github.com/cloudfoundry/bosh-io-stemcells-windows-index)
 
 The bosh.io site has a hard-coded list of these repositories and subpaths (e.g. `published`) for which stemcells are shown. It regularly pulls the stemcell index repositories and updates its pages.
 
@@ -13,9 +13,9 @@ The bosh.io site has a hard-coded list of these repositories and subpaths (e.g. 
 
 Using the [bosh-linux-stemcell-builder](https://github.com/cloudfoundry/bosh-linux-stemcell-builder)'s stemcell [pipeline](https://github.com/cloudfoundry/bosh-linux-stemcell-builder/blob/master/ci/pipeline.yml) as an example...
 
-**Development Stemcells** - stemcells which have been built (but are not fully tested, nor released to the public) are found in the [`dev`](https://github.com/bosh-io/stemcells-core-index/tree/master/dev) directory with the convention of `{os_name}-{os_version}/{version}/{iaas}-{hypervisor}-go_agent.meta4`.
+**Development Stemcells** - stemcells which have been built (but are not fully tested, nor released to the public) are found in the [`dev`](https://github.com/cloudfoundry/bosh-io-stemcells-core-index/tree/main/dev) directory with the convention of `{os_name}-{os_version}/{version}/{iaas}-{hypervisor}-go_agent.meta4`.
 
-**Published Stemcells** - stemcells which are fully tested and ready for public consumption can be found in the [`published`](https://github.com/bosh-io/stemcells-core-index/tree/master/published) directory with the convention of `{os_name}-{os_version}/{version}/stemcells.meta4`. This file references the stemcell tarballs for all IaaSes. This is the directory that bosh.io watches.
+**Published Stemcells** - stemcells which are fully tested and ready for public consumption can be found in the [`published`](https://github.com/cloudfoundry/bosh-io-stemcells-core-index/tree/main/published) directory with the convention of `{os_name}-{os_version}/{version}/stemcells.meta4`. This file references the stemcell tarballs for all IaaSes. This is the directory that bosh.io watches.
 
 
 ### Pipeline Walkthrough
