@@ -1,0 +1,44 @@
+#
+# bosh/bosh-io-web: https://bosh.io Dockerfile
+#
+# Dockerfile of a custom webserver (https://bosh.io) that provides
+# BOSH documentation and links to BOSH releases and BOSH stemcells.
+#
+# To build:
+#
+#   docker buildx build -f Dockerfile-bosh-io-web -t bosh/bosh-io-web --platform linux/arm64/v8,linux/amd64 --push .
+#
+# docker buildx build -f Dockerfile-bosh-io-web -t bosh/bosh-io-web --platform linux/arm64/v8
+#
+# Typical start command:
+#
+
+FROM ubuntu:jammy
+
+LABEL org.opencontainers.image.authors="BOSH Ecosystem <bosh-ecosystem@groups.vmware.com>"
+
+RUN apt-get update && \
+  apt-get install -y curl git
+
+# Attempt to find the latest Golang version, major.minor, e.g. "1.21"
+# Install that, hoping there's a package
+RUN GO_VERSION=$(curl -L https://go.dev/VERSION\?m\=text | head -1 | sed 's/go//' | awk -F. '{ print $1"."$2 }') && \
+ apt-get install -y golang-$GO_VERSION && \
+ update-alternatives --install /usr/bin/go    go    /usr/lib/go-${GO_VERSION}/bin/go    0 && \
+ update-alternatives --install /usr/bin/gofmt gofmt /usr/lib/go-${GO_VERSION}/bin/gofmt 0
+
+RUN git clone http://github.com/cloudfoundry/bosh-io-web
+
+ARG TARGETARCH # amd64, arm64 (so I can run on mac M1)
+
+RUN cd bosh-io-web/ && \
+  export GOARCH=$TARGETARCH GOOS=linux && \
+  go build -o /usr/bin/bosh-hub /bosh-io-web/main
+
+CMD ["/usr/bin/bosh-hub"]
+
+# ENTRYPOINT ["/usr/bin/bosh-hub"]
+
+# DNS listens on port 53 UDP
+# The `EXPOSE` directive doesn't do much in our case. We use it for documentation.
+# EXPOSE 53/udp
