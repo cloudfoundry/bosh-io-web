@@ -25,7 +25,7 @@
         <p>You can upload the latest version to your director with the <code>upload-stemcell</code> command:</p>
 
         <div class="codehilite"><pre>bosh upload-stemcell --sha1 {{ $s.SHA1 }} \
-  <a href="{{ $s.UserVisibleDownloadURL }}" style="color:inherit;">{{ $s.UserVisibleDownloadURL }}</a></pre></div>
+  "<a href="{{ $s.UserVisibleDownloadURL }}" style="color:inherit;">{{ $s.UserVisibleDownloadURL }}</a>"</pre></div>
 
         <p>And reference this stemcell in your deployment manifest from the <code>stemcells</code> section:</p>
 
