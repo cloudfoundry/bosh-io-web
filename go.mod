@@ -12,7 +12,7 @@ require (
 	github.com/dustin/go-humanize v0.0.0-20180421182945-02af3965c54e
 	github.com/go-martini/martini v0.0.0-20140519164645-49411a5b6468
 	github.com/martini-contrib/render v0.0.0-20150707142108-ec18f8345a11
-	github.com/microcosm-cc/bluemonday v0.0.0-20180621201946-f0761eb8ed07
+	github.com/microcosm-cc/bluemonday v1.0.20
 	github.com/onsi/ginkgo v1.16.1
 	github.com/onsi/gomega v1.11.0
 	github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c // indirect
