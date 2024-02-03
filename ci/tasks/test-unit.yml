@@ -1,0 +1,7 @@
+platform: linux
+
+inputs:
+- name: web
+
+run:
+  path: web/ci/tasks/test-unit.sh
