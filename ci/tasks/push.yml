@@ -1,12 +1,5 @@
 ---
 platform: linux
-image_resource:
-  type: docker-image
-  source:
-    repository: bosh/bosh-io-web
-    tag: default
-    username: ((docker.username))
-    password: ((docker.password))
 inputs:
 - name: web
   path: src/github.com/bosh-io/web
