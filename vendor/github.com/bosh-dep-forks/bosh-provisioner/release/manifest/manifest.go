@@ -2,9 +2,9 @@
 package manifest
 
 import (
-	"github.com/cloudfoundry-incubator/candiedyaml"
 	bosherr "github.com/cloudfoundry/bosh-utils/errors"
 	boshsys "github.com/cloudfoundry/bosh-utils/system"
+	"gopkg.in/yaml.v2"
 )
 
 type Manifest struct {
@@ -26,28 +26,22 @@ type Job struct {
 	Name string `yaml:"name"`
 
 	// bosh_cli uses fingerprint as job version
-	VersionRaw string `yaml:"version"`
-	Version    string
+	Version string `yaml:"version"`
 
-	FingerprintRaw string `yaml:"fingerprint"`
-	Fingerprint    string
+	Fingerprint string `yaml:"fingerprint"`
 
-	SHA1Raw string `yaml:"sha1"`
-	SHA1    string
+	SHA1 string `yaml:"sha1"`
 }
 
 type Package struct {
 	Name string `yaml:"name"`
 
 	// bosh_cli uses fingerprint as package version
-	VersionRaw string `yaml:"version"`
-	Version    string
+	Version string `yaml:"version"`
 
-	FingerprintRaw string `yaml:"fingerprint"`
-	Fingerprint    string
+	Fingerprint string `yaml:"fingerprint"`
 
-	SHA1Raw string `yaml:"sha1"`
-	SHA1    string
+	SHA1 string `yaml:"sha1"`
 
 	DependencyNames []DependencyName `yaml:"dependencies"`
 }
@@ -73,7 +67,7 @@ func NewManifestFromBytes(bytes []byte) (Manifest, error) {
 	var manifest Manifest
 	var release Release
 
-	err := candiedyaml.Unmarshal(bytes, &release)
+	err := yaml.Unmarshal(bytes, &release)
 	if err != nil {
 		return manifest, bosherr.WrapError(err, "Parsing release")
 	}

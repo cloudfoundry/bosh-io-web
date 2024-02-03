@@ -5,9 +5,9 @@ package manifest
 import (
 	gonet "net"
 
-	"github.com/cloudfoundry-incubator/candiedyaml"
 	bosherr "github.com/cloudfoundry/bosh-utils/errors"
 	boshsys "github.com/cloudfoundry/bosh-utils/system"
+	"gopkg.in/yaml.v2"
 )
 
 type Manifest struct {
@@ -32,7 +32,7 @@ type Deployment struct {
 	// Global properties.
 	// Non-raw field is populated by the validator.
 	PropertiesRaw map[interface{}]interface{} `yaml:"properties"`
-	Properties    Properties
+	Properties    Properties                  `yaml:"-"`
 }
 
 type Release struct {
@@ -76,7 +76,7 @@ type Job struct {
 	// Job specific properties that override global properties.
 	// Non-raw field is populated by the validator.
 	PropertiesRaw map[interface{}]interface{} `yaml:"properties"`
-	Properties    Properties
+	Properties    Properties                  `yaml:"-"`
 
 	NetworkAssociations []NetworkAssociation `yaml:"networks"`
 }
@@ -98,16 +98,16 @@ type Update struct {
 	UpdateWatchTimeRaw *string `yaml:"update_watch_time"`
 
 	// Populated by the validator
-	CanaryWatchTime *WatchTime
-	UpdateWatchTime *WatchTime
+	CanaryWatchTime *WatchTime `yaml:"-"`
+	UpdateWatchTime *WatchTime `yaml:"-"`
 }
 
 type NetworkAssociation struct {
 	NetworkName string `yaml:"name"`
 
 	// Non-raw field populated by the validator.
-	StaticIPsRaw []string `yaml:"static_ips"`
-	StaticIPs    []gonet.IP
+	StaticIPsRaw []string   `yaml:"static_ips"`
+	StaticIPs    []gonet.IP `yaml:"-"`
 }
 
 // NewManifestFromPath returns manifest read from the file system.
@@ -127,7 +127,7 @@ func NewManifestFromBytes(bytes []byte) (Manifest, error) {
 	var manifest Manifest
 	var deployment Deployment
 
-	err := candiedyaml.Unmarshal(bytes, &deployment)
+	err := yaml.Unmarshal(bytes, &deployment)
 	if err != nil {
 		return manifest, bosherr.WrapError(err, "Parsing deployment")
 	}

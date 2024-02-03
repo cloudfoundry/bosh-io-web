@@ -5,6 +5,15 @@ import (
 	"time"
 )
 
+type HashType string
+
+const (
+	HashTypeMD5    HashType = "md5"
+	HashTypeSHA1   HashType = "sha-1"
+	HashTypeSHA256 HashType = "sha-256"
+	HashTypeSHA512 HashType = "sha-512"
+)
+
 type Metalink struct {
 	XMLName   xml.Name   `xml:"urn:ietf:params:xml:ns:metalink metalink" json:"-" yaml:"-"`
 	Files     []File     `xml:"file" json:"files,omitempty" yaml:"files,omitempty"`
@@ -27,15 +36,15 @@ type File struct {
 	Description string     `xml:"description,,omitempty" json:"description,omitempty" yaml:"description,omitempty"`
 	Hashes      []Hash     `xml:"hash,,omitempty" json:"hashes,omitempty" yaml:"hashes,omitempty"`
 	Identity    string     `xml:"identity,,omitempty" json:"identity,omitempty" yaml:"identity,omitempty"`
-	Language    []string   `xml:"language,,omitempty" json:"language,omitempty" yaml:"language,omitempty"`
+	Language    []string   `xml:"language,,omitempty" json:"languages,omitempty" yaml:"language,omitempty"`
 	Logo        string     `xml:"logo,,omitempty" json:"logo,omitempty" yaml:"logo,omitempty"`
-	MetaURLs    []MetaURL  `xml:"metaurl,,omitempty" json:"metaurl,omitempty" yaml:"metaurl,omitempty"`
-	OS          []string   `xml:"os,,omitempty" json:"os,omitempty" yaml:"os,omitempty"`
-	Pieces      []Piece    `xml:"pieces,,omitempty" json:"piece,omitempty" yaml:"piece,omitempty"`
+	MetaURLs    []MetaURL  `xml:"metaurl,,omitempty" json:"metaurls,omitempty" yaml:"metaurl,omitempty"`
+	OS          []string   `xml:"os,,omitempty" json:"oses,omitempty" yaml:"os,omitempty"`
+	Pieces      []Piece    `xml:"pieces,,omitempty" json:"pieces,omitempty" yaml:"piece,omitempty"`
 	Publisher   *Publisher `xml:"publisher" json:"publisher,omitempty" yaml:"publisher,omitempty"`
 	Signature   *Signature `xml:"signature" json:"signature,omitempty" yaml:"signature,omitempty"`
 	Size        uint64     `xml:"size,,omitempty" json:"size,omitempty" yaml:"size,omitempty"`
-	URLs        []URL      `xml:"url,,omitempty" json:"url,omitempty" yaml:"url,omitempty"`
+	URLs        []URL      `xml:"url,,omitempty" json:"urls,omitempty" yaml:"url,omitempty"`
 	Version     string     `xml:"version,omitempty" json:"version,omitempty" yaml:"version,omitempty"`
 }
 
@@ -60,7 +69,7 @@ type Publisher struct {
 
 type Hash struct {
 	XMLName xml.Name `xml:"hash" json:"-" yaml:"-"`
-	Type    string   `xml:"type,attr" json:"type" yaml:"type"`
+	Type    HashType `xml:"type,attr" json:"type" yaml:"type"`
 	Hash    string   `xml:",chardata" json:"hash" yaml:"hash"`
 }
 
@@ -68,7 +77,7 @@ type Piece struct {
 	XMLName xml.Name `xml:"pieces" json:"-" yaml:"-"`
 	Type    string   `xml:"type,attr" json:"type" yaml:"type"`
 	Length  string   `xml:"length,attr" json:"length" yaml:"length"`
-	Hash    []string `xml:"hash,chardata" json:"hash" yaml:"hash"`
+	Hash    []string `xml:"hash,chardata" json:"hashes" yaml:"hash"`
 }
 
 type MetaURL struct {

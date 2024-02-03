@@ -3,13 +3,16 @@
 #   all:          Builds the code locally after testing
 #
 #   fmt:          Formats the source files
+#   fmt-check:    Check if the source files are formated
 #   build:        Builds the code locally
 #   vet:          Vets the code
-#   lint:         Runs lint over the code (you do not need to fix everything)
+#   staticcheck:  Runs staticcheck over the code
 #   test:         Runs the tests
 #   cover:        Gives you the URL to a nice test coverage report
 #
 #   install:      Builds, tests and installs the code locally
+
+GOFILES_NOVENDOR = $(shell find . -type f -name '*.go' -not -path "./vendor/*" -not -path "./.git/*")
 
 .PHONY: all fmt build vet lint test cover install
 
@@ -19,16 +22,19 @@
 all: fmt vet test install
 
 fmt:
-	@gofmt -s -w ./$*
+	@gofmt -s -w ${GOFILES_NOVENDOR}
+
+fmt-check:
+	@([ -z "$(shell gofmt -d $(GOFILES_NOVENDOR) | head)" ]) || (echo "Source is unformatted"; exit 1)
 
 build:
 	@go build
 
 vet:
-	@go vet *.go
+	@go vet
 
-lint:
-	@golint *.go
+staticcheck:
+	@staticcheck ./...
 
 test:
 	@go test -v ./...
@@ -36,7 +42,7 @@ test:
 cover: COVERAGE_FILE := coverage.out
 cover:
 	@go test -coverprofile=$(COVERAGE_FILE) && \
-	cover -html=$(COVERAGE_FILE) && rm $(COVERAGE_FILE)
+	go tool cover -html=$(COVERAGE_FILE) && rm $(COVERAGE_FILE)
 
 install:
 	@go install ./...

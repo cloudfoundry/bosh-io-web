@@ -117,7 +117,7 @@ var (
 	// This is not exported as it's not useful by itself, and only has value
 	// within the AllowDataURIImages func
 	dataURIImagePrefix = regexp.MustCompile(
-		`^image/(gif|jpeg|png|webp);base64,`,
+		`^image/(gif|jpeg|png|svg\+xml|webp);base64,`,
 	)
 )
 
@@ -135,13 +135,13 @@ func (p *Policy) AllowStandardURLs() {
 	// Most common URL schemes only
 	p.AllowURLSchemes("mailto", "http", "https")
 
-	// For all anchors we will add rel="nofollow" if it does not already exist
+	// For linking elements we will add rel="nofollow" if it does not already exist
 	// This applies to "a" "area" "link"
 	p.RequireNoFollowOnLinks(true)
 }
 
 // AllowStandardAttributes will enable "id", "title" and the language specific
-// attributes "dir" and "lang" on all elements that are whitelisted
+// attributes "dir" and "lang" on all elements that are allowed
 func (p *Policy) AllowStandardAttributes() {
 	// "dir" "lang" are permitted as both language attributes affect charsets
 	// and direction of text.
@@ -193,10 +193,11 @@ func (p *Policy) AllowImages() {
 // http://en.wikipedia.org/wiki/Data_URI_scheme
 //
 // Images must have a mimetype matching:
-//   image/gif
-//   image/jpeg
-//   image/png
-//   image/webp
+//
+//	image/gif
+//	image/jpeg
+//	image/png
+//	image/webp
 //
 // NOTE: There is a potential security risk to allowing data URIs and you should
 // only permit them on content you already trust.
@@ -221,11 +222,7 @@ func (p *Policy) AllowDataURIImages() {
 			}
 
 			_, err := base64.StdEncoding.DecodeString(url.Opaque[len(matched):])
-			if err != nil {
-				return false
-			}
-
-			return true
+			return err == nil
 		},
 	)
 }
@@ -294,4 +291,10 @@ func (p *Policy) AllowTables() {
 	p.AllowAttrs("valign").Matching(
 		CellVerticalAlign,
 	).OnElements("tbody", "tfoot")
+}
+
+func (p *Policy) AllowIFrames(vals ...SandboxValue) {
+	p.AllowAttrs("sandbox").OnElements("iframe")
+
+	p.RequireSandboxOnIFrame(vals...)
 }

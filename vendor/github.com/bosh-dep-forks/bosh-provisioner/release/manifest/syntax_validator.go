@@ -56,33 +56,33 @@ func (v SyntaxValidator) validateJob(job *Job) error {
 		return bosherr.Error("Missing name")
 	}
 
-	if job.VersionRaw == "" {
+	if job.Version == "" {
 		return bosherr.Error("Missing version")
 	}
 
-	str, err := bputil.DecodePossibleBase64Str(job.VersionRaw)
+	str, err := bputil.DecodePossibleBase64Str(job.Version)
 	if err != nil {
 		return bosherr.WrapError(err, "Decoding base64 encoded version")
 	}
 
 	job.Version = str
 
-	if job.FingerprintRaw == "" {
+	if job.Fingerprint == "" {
 		return bosherr.Error("Missing fingerprint")
 	}
 
-	str, err = bputil.DecodePossibleBase64Str(job.FingerprintRaw)
+	str, err = bputil.DecodePossibleBase64Str(job.Fingerprint)
 	if err != nil {
 		return bosherr.WrapError(err, "Decoding base64 encoded fingerprint")
 	}
 
 	job.Fingerprint = str
 
-	if job.SHA1Raw == "" {
+	if job.SHA1 == "" {
 		return bosherr.Error("Missing sha1")
 	}
 
-	str, err = bputil.DecodePossibleBase64Str(job.SHA1Raw)
+	str, err = bputil.DecodePossibleBase64Str(job.SHA1)
 	if err != nil {
 		return bosherr.WrapError(err, "Decoding base64 encoded sha1")
 	}
@@ -97,33 +97,33 @@ func (v SyntaxValidator) validatePkg(pkg *Package) error {
 		return bosherr.Error("Missing name")
 	}
 
-	if pkg.VersionRaw == "" {
+	if pkg.Version == "" {
 		return bosherr.Error("Missing version")
 	}
 
-	str, err := bputil.DecodePossibleBase64Str(pkg.VersionRaw)
+	str, err := bputil.DecodePossibleBase64Str(pkg.Version)
 	if err != nil {
 		return bosherr.WrapError(err, "Decoding base64 encoded version")
 	}
 
 	pkg.Version = str
 
-	if pkg.FingerprintRaw == "" {
+	if pkg.Fingerprint == "" {
 		return bosherr.Error("Missing fingerprint")
 	}
 
-	str, err = bputil.DecodePossibleBase64Str(pkg.FingerprintRaw)
+	str, err = bputil.DecodePossibleBase64Str(pkg.Fingerprint)
 	if err != nil {
 		return bosherr.WrapError(err, "Decoding base64 encoded fingerprint")
 	}
 
 	pkg.Fingerprint = str
 
-	if pkg.SHA1Raw == "" {
+	if pkg.SHA1 == "" {
 		return bosherr.Error("Missing sha1")
 	}
 
-	str, err = bputil.DecodePossibleBase64Str(pkg.SHA1Raw)
+	str, err = bputil.DecodePossibleBase64Str(pkg.SHA1)
 	if err != nil {
 		return bosherr.WrapError(err, "Decoding base64 encoded sha1")
 	}
