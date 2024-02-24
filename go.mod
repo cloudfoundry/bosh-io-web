@@ -5,7 +5,7 @@ go 1.21.0
 require (
 	github.com/bosh-dep-forks/bosh-provisioner v0.0.0-20220716015024-96bea0cbc86d
 	github.com/cloudfoundry-incubator/candiedyaml v0.0.0-20170901234223-a41693b7b7af
-	github.com/cloudfoundry/bosh-utils v0.0.445
+	github.com/cloudfoundry/bosh-utils v0.0.446
 	github.com/cppforlife/go-semi-semantic v0.0.0-20160921010311-576b6af77ae4
 	github.com/dpb587/metalink v0.5.0
 	github.com/dustin/go-humanize v1.0.1

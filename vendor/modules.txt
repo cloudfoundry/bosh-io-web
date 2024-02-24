@@ -73,7 +73,7 @@ github.com/cloudfoundry/bosh-agent/platform/windows/disk
 github.com/cloudfoundry/bosh-agent/platform/windows/powershell
 github.com/cloudfoundry/bosh-agent/settings
 github.com/cloudfoundry/bosh-agent/settings/directories
-# github.com/cloudfoundry/bosh-utils v0.0.445
+# github.com/cloudfoundry/bosh-utils v0.0.446
 ## explicit; go 1.21.0
 github.com/cloudfoundry/bosh-utils/blobstore
 github.com/cloudfoundry/bosh-utils/crypto

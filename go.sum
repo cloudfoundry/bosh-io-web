@@ -16,8 +16,8 @@ github.com/cloudfoundry-incubator/candiedyaml v0.0.0-20170901234223-a41693b7b7af
 github.com/cloudfoundry-incubator/candiedyaml v0.0.0-20170901234223-a41693b7b7af/go.mod h1:dOLSIXcRQJiDS1vlrYFNJicoHNZLsBKideE+70hGdV4=
 github.com/cloudfoundry/bosh-agent v2.367.0+incompatible h1:cdpYNIqi69cIl1JP8D/3nvQcnPP0su0xapMzzBMXOSw=
 github.com/cloudfoundry/bosh-agent v2.367.0+incompatible/go.mod h1:7UvVn5vc/d6icLrBx6GhBlpSMwe2+x1C2A7x4TbPhiU=
-github.com/cloudfoundry/bosh-utils v0.0.445 h1:QTOieP+vAmfgYC5h95qO0X0/QUUqNoA5pCbLUTqUD7U=
-github.com/cloudfoundry/bosh-utils v0.0.445/go.mod h1:l6ehmy90nDzz3jOR/phOFmPz/Rpto75izLL0zlFZWIs=
+github.com/cloudfoundry/bosh-utils v0.0.446 h1:/FzseLBGn79a3NNwfaQwB9Cv+GRv/44pQZQXxTJuLvA=
+github.com/cloudfoundry/bosh-utils v0.0.446/go.mod h1:l6ehmy90nDzz3jOR/phOFmPz/Rpto75izLL0zlFZWIs=
 github.com/cloudfoundry/go-socks5 v0.0.0-20180221174514-54f73bdb8a8e h1:FQdRViaoDphGRfgrotl2QGsX1gbloe57dbGBS5CG6KY=
 github.com/cloudfoundry/go-socks5 v0.0.0-20180221174514-54f73bdb8a8e/go.mod h1:PXmcacyJB/pJjSxEl15IU6rEIKXrhZQRzsr0UTkgNNs=
 github.com/cloudfoundry/gosigar v1.3.48 h1:xT8unvZCtaYAhfIkGeAmLG6GQGOtWLeRepdxaKus9Rw=
