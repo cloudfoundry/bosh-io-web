@@ -24,16 +24,16 @@ if cf app $new; then echo "$new must not exist"; exit 1; fi
 if cf app $old; then echo "$old must not exist"; exit 1; fi
 
 echo "Pushing new version"
-cf push $new -i 10 -k 2G -m 1G -b https://github.com/shageman/buildpack-binary
+cf push $new -i 10 -k 2G -m 1G -b binary_buildpack -c './run.sh'
 rm prod-conf/web.json
 
 echo "Testing new version"
-./bin/test-server "https://$new.sc2-04-pcf1-apps.oc.vmware.com"
+./bin/test-server "https://$new.de.a9sapp.eu"
 
 echo "Mapping routes to new version"
-cf unmap-route $new sc2-04-pcf1-apps.oc.vmware.com -n $new
-cf map-route $new sc2-04-pcf1-apps.oc.vmware.com -n $curr
-cf map-route $new sc2-04-pcf1-apps.oc.vmware.com -n bosh
+cf unmap-route $new de.a9sapp.eu -n $new
+cf map-route $new de.a9sapp.eu -n $curr
+cf map-route $new de.a9sapp.eu -n bosh
 cf map-route $new cloudfoundry.org -n bosh
 cf map-route $new bosh.io -n www
 cf map-route $new bosh.io
@@ -43,9 +43,9 @@ echo "Swapping version: current->old"
 cf rename $curr $old
 
 echo "Unmapping routes from old version"
-cf map-route $old sc2-04-pcf1-apps.oc.vmware.com -n $old
-cf unmap-route $old sc2-04-pcf1-apps.oc.vmware.com -n $curr
-cf unmap-route $old sc2-04-pcf1-apps.oc.vmware.com -n bosh
+cf map-route $old de.a9sapp.eu -n $old
+cf unmap-route $old de.a9sapp.eu -n $curr
+cf unmap-route $old de.a9sapp.eu -n bosh
 cf unmap-route $old cloudfoundry.org -n bosh
 cf unmap-route $old bosh.io -n www
 cf unmap-route $old bosh.io
