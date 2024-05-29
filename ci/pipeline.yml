@@ -14,15 +14,14 @@ jobs:
     params:
       GOOGLE_ANALYTICS_KEY: ((google_analytics_key))
   - task: push
-    tags: [nimbus]
     file: web/ci/tasks/push.yml
     image: cf-deployment-concourse-tasks-registry-image
     params:
-      CF_API: ((cf_api))
-      CF_USERNAME: ((cf_user.username))
-      CF_PASSWORD: ((cf_user.password))
-      CF_ORGANIZATION: ((cf_organization))
-      CF_SPACE: ((cf_space))
+      CF_API:  https://api.de.a9s.eu
+      CF_USERNAME: ((boshio_cf_user.username))
+      CF_PASSWORD: ((boshio_cf_user.password))
+      CF_ORGANIZATION: sgreenberg_rscale_io
+      CF_SPACE: boshio
       WEB_CONFIG: ((web_config))
       PRIVATE_KEY: ((bosh-io-cloudfront-signing-key.private_key))
 - name: pull-data
@@ -62,15 +61,14 @@ jobs:
         depth: 1
     - get: cf-deployment-concourse-tasks-registry-image
   - task: pull-data
-    tags: [nimbus]
     file: web/ci/tasks/pull-data.yml
     image: cf-deployment-concourse-tasks-registry-image
     params:
-      CF_API: ((cf_api))
-      CF_USERNAME: ((cf_user.username))
-      CF_PASSWORD: ((cf_user.password))
-      CF_ORGANIZATION: ((cf_organization))
-      CF_SPACE: ((cf_space))
+      CF_API: https://api.de.a9s.eu
+      CF_USERNAME: ((boshio_cf_user.username))
+      CF_PASSWORD: ((boshio_cf_user.password))
+      CF_ORGANIZATION: sgreenberg_rscale_io
+      CF_SPACE: boshio
 - name: bump-deps
   plan:
     - get: weekly
@@ -107,14 +105,14 @@ resources:
   type: registry-image
   source:
     repository: cloudfoundry/cf-deployment-concourse-tasks
-    username: ((docker.username))
-    password: ((docker.password))
+    username: ((bosh-dockerhub.username))
+    password: ((bosh-dockerhub.password))
 - name: golang-release-registry-image
   type: registry-image
   source:
     repository: bosh/golang-release
-    username: ((docker.username))
-    password: ((docker.password))
+    username: ((bosh-dockerhub.username))
+    password: ((bosh-dockerhub.password))
 
 - name: data-reload-interval
   type: time
