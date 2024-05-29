@@ -7,9 +7,9 @@ cp -rp docroot src/github.com/bosh-io/web/templates/docs
 cd src/github.com/bosh-io/web
 
 # Application names
-old=bosh-hub-old
-new=bosh-hub-new
-curr=bosh-hub
+old=bosh-io-old
+new=bosh-io-new
+curr=bosh-io
 
 mkdir -p prod-conf
 echo "$WEB_CONFIG" | jq --arg private_key "${PRIVATE_KEY}" '.Repos.ReleaseTarballLinker.PrivateKey = $private_key' > prod-conf/web.json
@@ -33,7 +33,6 @@ echo "Testing new version"
 echo "Mapping routes to new version"
 cf unmap-route $new de.a9sapp.eu -n $new
 cf map-route $new de.a9sapp.eu -n $curr
-cf map-route $new de.a9sapp.eu -n bosh
 cf map-route $new cloudfoundry.org -n bosh
 cf map-route $new bosh.io -n www
 cf map-route $new bosh.io
@@ -45,7 +44,6 @@ cf rename $curr $old
 echo "Unmapping routes from old version"
 cf map-route $old de.a9sapp.eu -n $old
 cf unmap-route $old de.a9sapp.eu -n $curr
-cf unmap-route $old de.a9sapp.eu -n bosh
 cf unmap-route $old cloudfoundry.org -n bosh
 cf unmap-route $old bosh.io -n www
 cf unmap-route $old bosh.io
