@@ -13,7 +13,7 @@
     ],
     "ReleaseTarballLinker": {
       "Type": "S3",
-      "BaseURL": "https://s3.amazonaws.com/bosh-hub-release-tarballs"
+      "BaseURL": "https://s3.amazonaws.com/boshio-release-tarballs"
     }
   }
 }
