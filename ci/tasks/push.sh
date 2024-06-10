@@ -33,8 +33,8 @@ echo "Testing new version"
 echo "Mapping routes to new version"
 cf unmap-route $new de.a9sapp.eu -n $new
 cf map-route $new de.a9sapp.eu -n $curr
-cf map-route $new cloudfoundry.org -n bosh
-cf map-route $new bosh.io -n www
+cf map-route $new bosh.cloudfoundry.org
+cf map-route $new www.bosh.io
 cf map-route $new bosh.io
 
 echo "Swapping version: current->old"
@@ -44,8 +44,8 @@ cf rename $curr $old
 echo "Unmapping routes from old version"
 cf map-route $old de.a9sapp.eu -n $old
 cf unmap-route $old de.a9sapp.eu -n $curr
-cf unmap-route $old cloudfoundry.org -n bosh
-cf unmap-route $old bosh.io -n www
+cf unmap-route $old bosh.cloudfoundry.org
+cf unmap-route $old www.bosh.io
 cf unmap-route $old bosh.io
 
 echo "Swapping version: current->old, new->current"
