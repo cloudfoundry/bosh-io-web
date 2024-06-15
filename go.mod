@@ -21,7 +21,7 @@ require (
 
 require (
 	code.cloudfoundry.org/clock v1.1.0 // indirect
-	code.cloudfoundry.org/tlsconfig v0.0.0-20240606172222-82aa02bc07ea // indirect
+	code.cloudfoundry.org/tlsconfig v0.0.0-20240613173017-075d5b187a0d // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/bmatcuk/doublestar v1.3.4 // indirect
 	github.com/charlievieth/fs v0.0.3 // indirect
