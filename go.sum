@@ -16,8 +16,8 @@ github.com/cloudfoundry-incubator/candiedyaml v0.0.0-20170901234223-a41693b7b7af
 github.com/cloudfoundry-incubator/candiedyaml v0.0.0-20170901234223-a41693b7b7af/go.mod h1:dOLSIXcRQJiDS1vlrYFNJicoHNZLsBKideE+70hGdV4=
 github.com/cloudfoundry/bosh-agent v2.367.0+incompatible h1:cdpYNIqi69cIl1JP8D/3nvQcnPP0su0xapMzzBMXOSw=
 github.com/cloudfoundry/bosh-agent v2.367.0+incompatible/go.mod h1:7UvVn5vc/d6icLrBx6GhBlpSMwe2+x1C2A7x4TbPhiU=
-github.com/cloudfoundry/bosh-utils v0.0.472 h1:CSmn16L4KlfTxUcWvOygSIcTB8lfEu0wUGx0i4nNaxE=
-github.com/cloudfoundry/bosh-utils v0.0.472/go.mod h1:kpbQUfdM+jqwFFBx0/mZfRNVtzVAx0AlZCIJlOj1Nlo=
+github.com/cloudfoundry/bosh-utils v0.0.474 h1:G/wA7jX/FwtEFh/fBgoITT8S+lgsx9dEH/BciJM5z7s=
+github.com/cloudfoundry/bosh-utils v0.0.474/go.mod h1:gElQEXIWgPVBThsF3IaeKasVRp3F1/J4YyuaDopv6NU=
 github.com/cloudfoundry/go-socks5 v0.0.0-20180221174514-54f73bdb8a8e h1:FQdRViaoDphGRfgrotl2QGsX1gbloe57dbGBS5CG6KY=
 github.com/cloudfoundry/go-socks5 v0.0.0-20180221174514-54f73bdb8a8e/go.mod h1:PXmcacyJB/pJjSxEl15IU6rEIKXrhZQRzsr0UTkgNNs=
 github.com/cloudfoundry/gosigar v1.3.61 h1:Ztn9UBhjyQl7ViAoiEZFpaFdwJzogWtuxD0VsLPvDHQ=
@@ -48,8 +48,8 @@ github.com/go-task/slim-sprig/v3 v3.0.0 h1:sUs3vkvUymDpBKi3qH1YSqBQk9+9D/8M2mN1v
 github.com/go-task/slim-sprig/v3 v3.0.0/go.mod h1:W848ghGpv3Qj3dhTPRyJypKRiqCdHZiAzKg9hl15HA8=
 github.com/google/go-cmp v0.6.0 h1:ofyhxvXcZhMsU5ulbFiLKl/XBFqE1GSq7atu8tAmTRI=
 github.com/google/go-cmp v0.6.0/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
-github.com/google/pprof v0.0.0-20240528025155-186aa0362fba h1:ql1qNgCyOB7iAEk8JTNM+zJrgIbnyCKX/wdlyPufP5g=
-github.com/google/pprof v0.0.0-20240528025155-186aa0362fba/go.mod h1:K1liHPHnj73Fdn/EKuT8nrFqBihUSKXoLYU0BuatOYo=
+github.com/google/pprof v0.0.0-20240618054019-d3b898a103f8 h1:ASJ/LAqdCHOyMYI+dwNxn7Rd8FscNkMyTr1KZU1JI/M=
+github.com/google/pprof v0.0.0-20240618054019-d3b898a103f8/go.mod h1:K1liHPHnj73Fdn/EKuT8nrFqBihUSKXoLYU0BuatOYo=
 github.com/google/uuid v1.3.0 h1:t6JiXgmwXMjEs8VusXIJk2BXHsn+wx8BZdTaoZ5fu7I=
 github.com/google/uuid v1.3.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/gorilla/css v1.0.1 h1:ntNaBIghp6JmvWnxbZKANoLyuXTPZ4cAMlo6RyhlbO8=
