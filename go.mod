@@ -5,15 +5,15 @@ go 1.21.0
 require (
 	github.com/bosh-dep-forks/bosh-provisioner v0.0.0-20220716015024-96bea0cbc86d
 	github.com/cloudfoundry-incubator/candiedyaml v0.0.0-20170901234223-a41693b7b7af
-	github.com/cloudfoundry/bosh-utils v0.0.479
+	github.com/cloudfoundry/bosh-utils v0.0.480
 	github.com/cppforlife/go-semi-semantic v0.0.0-20160921010311-576b6af77ae4
 	github.com/dpb587/metalink v0.5.0
 	github.com/dustin/go-humanize v1.0.1
 	github.com/go-martini/martini v0.0.0-20170121215854-22fa46961aab
 	github.com/martini-contrib/render v0.0.0-20150707142108-ec18f8345a11
 	github.com/microcosm-cc/bluemonday v1.0.27
-	github.com/onsi/ginkgo/v2 v2.19.0
-	github.com/onsi/gomega v1.33.1
+	github.com/onsi/ginkgo/v2 v2.19.1
+	github.com/onsi/gomega v1.34.0
 	github.com/russross/blackfriday v1.6.0
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616
 	gopkg.in/yaml.v2 v2.4.0
@@ -27,13 +27,13 @@ require (
 	github.com/charlievieth/fs v0.0.3 // indirect
 	github.com/cloudfoundry/bosh-agent v2.367.0+incompatible // indirect
 	github.com/cloudfoundry/go-socks5 v0.0.0-20180221174514-54f73bdb8a8e // indirect
-	github.com/cloudfoundry/gosigar v1.3.65 // indirect
+	github.com/cloudfoundry/gosigar v1.3.66 // indirect
 	github.com/cloudfoundry/socks5-proxy v0.2.120 // indirect
 	github.com/codegangsta/inject v0.0.0-20150114235600-33e0aa1cb7c0 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/pprof v0.0.0-20240711041743-f6c9dda6c6da // indirect
+	github.com/google/pprof v0.0.0-20240722153945-304e4f0156b8 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
 	github.com/jpillora/backoff v1.0.0 // indirect
 	github.com/kr/text v0.2.0 // indirect
