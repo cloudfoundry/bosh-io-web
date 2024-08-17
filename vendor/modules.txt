@@ -1,7 +1,7 @@
-# code.cloudfoundry.org/clock v1.2.0
+# code.cloudfoundry.org/clock v1.3.0
 ## explicit; go 1.20
 code.cloudfoundry.org/clock
-# code.cloudfoundry.org/tlsconfig v0.0.0-20240808182450-b1b581e211a2
+# code.cloudfoundry.org/tlsconfig v0.1.0
 ## explicit; go 1.21
 code.cloudfoundry.org/tlsconfig
 # github.com/aymerick/douceur v0.2.0
@@ -73,7 +73,7 @@ github.com/cloudfoundry/bosh-agent/platform/windows/disk
 github.com/cloudfoundry/bosh-agent/platform/windows/powershell
 github.com/cloudfoundry/bosh-agent/settings
 github.com/cloudfoundry/bosh-agent/settings/directories
-# github.com/cloudfoundry/bosh-utils v0.0.483
+# github.com/cloudfoundry/bosh-utils v0.0.484
 ## explicit; go 1.21.0
 github.com/cloudfoundry/bosh-utils/blobstore
 github.com/cloudfoundry/bosh-utils/crypto
@@ -205,7 +205,7 @@ golang.org/x/crypto/internal/alias
 golang.org/x/crypto/internal/poly1305
 golang.org/x/crypto/ssh
 golang.org/x/crypto/ssh/internal/bcrypt_pbkdf
-# golang.org/x/exp v0.0.0-20240719175910-8a7402abbf56
+# golang.org/x/exp v0.0.0-20240808152545-0cdaa3abc0fa
 ## explicit; go 1.20
 golang.org/x/exp/constraints
 golang.org/x/exp/slices
