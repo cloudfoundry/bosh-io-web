@@ -27,13 +27,13 @@ require (
 	github.com/charlievieth/fs v0.0.3 // indirect
 	github.com/cloudfoundry/bosh-agent v2.367.0+incompatible // indirect
 	github.com/cloudfoundry/go-socks5 v0.0.0-20240831012420-2590b55236ee // indirect
-	github.com/cloudfoundry/gosigar v1.3.71 // indirect
-	github.com/cloudfoundry/socks5-proxy v0.2.124 // indirect
+	github.com/cloudfoundry/gosigar v1.3.72 // indirect
+	github.com/cloudfoundry/socks5-proxy v0.2.125 // indirect
 	github.com/codegangsta/inject v0.0.0-20150114235600-33e0aa1cb7c0 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/pprof v0.0.0-20240910150728-a0b0bb1d4134 // indirect
+	github.com/google/pprof v0.0.0-20240927233043-f3f46ee36851 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
 	github.com/jpillora/backoff v1.0.0 // indirect
 	github.com/kr/text v0.2.0 // indirect
