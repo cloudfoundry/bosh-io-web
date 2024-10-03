@@ -34,12 +34,6 @@
           <h2 id="{{ .Distro.NameName }}">{{ .Distro.Name }}<a class="headerlink" href="#{{ .Distro.NameName }}" title="Permanent link">&para;</a></h2>
 
           {{ $osVersion := ( index .Distro.OSMatches 0 ).OSVersion }}
-          {{ if (eq $osVersion "trusty") }}
-            {{ template "stemcells/_trusty_notice" . }}
-          {{ end }}
-          {{ if (eq $osVersion "xenial") }}
-            {{ template "stemcells/_xenial_notice" . }}
-          {{ end }}
           {{ if (eq $osVersion "bionic") }}
             {{ template "stemcells/_bionic_notice" . }}
           {{ end }}
