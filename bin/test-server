@@ -40,14 +40,14 @@ fi
 
 # stemcells
 
-if ! curl --fail -s "$server/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?all=1" | grep v3586.8 >/dev/null ; then
-  echo "FAILURE: expected to find bosh-aws-xen-hvm-ubuntu-trusty-go_agent/3586.8 via web page"
+if ! curl --fail -s "$server/stemcells/bosh-aws-xen-hvm-ubuntu-jammy-go_agent?all=1" | grep v1.572 >/dev/null ; then
+  echo "FAILURE: expected to find bosh-aws-xen-hvm-ubuntu-jammy-go_agent/1.572 via web page"
 
   exit 1
 fi
 
-if ! curl --fail -s "$server/api/v1/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?all=1" | jq -e 'map(select(.version == "3586.8"))|length == 1' >/dev/null ; then
-  echo "FAILURE: expected to find bosh-aws-xen-hvm-ubuntu-trusty-go_agent/3586.8 via stemcells API"
+if ! curl --fail -s "$server/api/v1/stemcells/bosh-aws-xen-hvm-ubuntu-jammy-go_agent?all=1" | jq -e 'map(select(.version == "1.572"))|length == 1' >/dev/null ; then
+  echo "FAILURE: expected to find bosh-aws-xen-hvm-ubuntu-jammy-go_agent/1.572 via stemcells API"
 
   exit 1
 fi
