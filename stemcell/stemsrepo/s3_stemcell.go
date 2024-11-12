@@ -19,7 +19,7 @@ var (
 			`(?P<name>(?P<inf_name>\w+)-` +
 			`(?P<hv_name>\w+(-\w+)?)-` +
 			`(?P<os_name>centos|ubuntu|windows)` +
-			`(?P<os_version>-trusty|-xenial|-bionic|-jammy|-jammy-fips|-lucid|2019|1803|2016|2012R2|-\d+)?` +
+			`(?P<os_version>-trusty|-xenial|-bionic|-jammy|-jammy-fips|-noble|-lucid|2019|1803|2016|2012R2|-\d+)?` +
 			`(?P<agent_type>-go_agent)?` +
 			`(?P<disk_fmt>-raw)?)` +
 			`\.tgz\z`,
@@ -50,7 +50,7 @@ type S3Stemcell struct {
 	osName    string // e.g. Ubuntu
 	osVersion string // e.g. Trusty
 
-	agentType string // e.g. Ruby
+	agentType string // e.g. Go
 
 	url string
 }
@@ -78,7 +78,7 @@ func NewS3Stemcell(key, etag, sha1 string, sha256 string, size uint64, lastModif
 	if len(m["agent_type"]) > 0 {
 		agentType = strings.Trim(m["agent_type"], "-")
 	} else {
-		agentType = "ruby_agent"
+		agentType = ""
 	}
 
 	if s3StemcellAgentRegexp.MatchString(osVersion) {
