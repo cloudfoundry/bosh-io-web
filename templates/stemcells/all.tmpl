@@ -35,6 +35,9 @@
           {{ if (eq $osVersion "jammy") }}
             {{ template "stemcells/_jammy_notice" . }}
           {{ end }}
+          {{ if (eq $osVersion "noble") }}
+            {{ template "stemcells/_noble_notice" . }}
+          {{ end }}
           {{ $osName := ( index .Distro.OSMatches 0 ).OSName }}
           {{if (eq $osName "windows") }}
             {{ template "stemcells/_windows_notice" . }}
