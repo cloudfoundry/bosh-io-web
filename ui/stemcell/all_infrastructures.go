@@ -119,4 +119,12 @@ var (
 		vsphereInfrastructure,
 		wardenInfrastructure,
 	}
+	nobleInfrastructures = Infrastructures{
+		awsInfrastructure,
+		googleInfrastructure,
+		azureInfrastructure,
+		openstackInfrastructure,
+		vsphereInfrastructure,
+		wardenInfrastructure,
+	}
 )

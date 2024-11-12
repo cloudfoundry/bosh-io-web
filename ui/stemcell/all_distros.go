@@ -1,6 +1,19 @@
 package stemcell
 
 var (
+	ubuntuNobleDistro = Distro{
+		NameName:        "ubuntu-noble",
+		Name:            "Ubuntu Noble",
+		NoGoAgentSuffix: true,
+
+		OSMatches: []StemcellOSMatch{
+			{OSName: "ubuntu", OSVersion: "noble"},
+		},
+
+		SupportedInfrastructures: nobleInfrastructures,
+
+		Sort: 1,
+	}
 	ubuntuJammyDistro = Distro{
 		NameName: "ubuntu-jammy",
 		Name:     "Ubuntu Jammy",
@@ -11,7 +24,7 @@ var (
 
 		SupportedInfrastructures: allInfrastructures,
 
-		Sort: 1,
+		Sort: 2,
 	}
 	ubuntuBionicDistro = Distro{
 		NameName: "ubuntu-bionic",
@@ -23,7 +36,7 @@ var (
 
 		SupportedInfrastructures: allInfrastructures,
 
-		Sort: 2,
+		Sort: 3,
 	}
 	windows2019Distro = Distro{
 		NameName: "windows2019",
@@ -39,12 +52,13 @@ var (
 			azureInfrastructure,
 		},
 
-		Sort: 3,
+		Sort: 4,
 	}
 )
 
 var (
 	allDistros = []Distro{
+		ubuntuNobleDistro,
 		ubuntuJammyDistro,
 		ubuntuBionicDistro,
 		windows2019Distro,
