@@ -11,8 +11,7 @@ type Distro struct {
 	Name     string // e.g. 'Ubuntu Trusty'
 	Sort     uint8  // smaller == more important
 
-	Deprecated      bool
-	NoGoAgentSuffix bool
+	Deprecated bool
 
 	OSMatches                []StemcellOSMatch
 	SupportedInfrastructures Infrastructures

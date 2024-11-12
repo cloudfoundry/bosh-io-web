@@ -19,15 +19,9 @@ func Navigation() nav.Link {
 		distronav := nav.Link{Title: distro.Name}
 
 		for _, infra := range distro.SupportedInfrastructures {
-			var stemcellUrl string
-			if distro.NoGoAgentSuffix {
-				stemcellUrl = fmt.Sprintf("/stemcells/bosh-%s-%s-%s", infra.Name, infra.SupportedHypervisors[0].Hypervisor.Name, distro.OSMatches[0].Name())
-			} else {
-				stemcellUrl = fmt.Sprintf("/stemcells/bosh-%s-%s-%s-go_agent", infra.Name, infra.SupportedHypervisors[0].Hypervisor.Name, distro.OSMatches[0].Name())
-			}
 			distronav.Add(nav.Link{
 				Title: infra.Title,
-				URL:   stemcellUrl,
+				URL:   fmt.Sprintf("/stemcells/bosh-%s-%s-%s-go_agent", infra.Name, infra.SupportedHypervisors[0].Hypervisor.Name, distro.OSMatches[0].Name()),
 			})
 		}
 
