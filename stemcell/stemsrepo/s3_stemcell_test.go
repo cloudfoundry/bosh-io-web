@@ -25,58 +25,6 @@ var _ = Describe("NewS3Stemcell", func() {
 	}
 
 	var examples = map[string]ExtractedPieces{
-		"bosh-stemcell/aws/bosh-stemcell-891-aws-xen-ubuntu.tgz": ExtractedPieces{
-			Name:    "bosh-aws-xen-ubuntu",
-			Version: "891",
-
-			InfName: "aws",
-			HvName:  "xen",
-
-			OSName:    "ubuntu",
-			OSVersion: "lucid",
-
-			AgentType: "ruby",
-		},
-
-		"bosh-stemcell/aws/bosh-stemcell-2311-aws-xen-centos-go_agent.tgz": ExtractedPieces{
-			Name:    "bosh-aws-xen-centos-go_agent",
-			Version: "2311",
-
-			InfName: "aws",
-			HvName:  "xen",
-
-			OSName:    "centos",
-			OSVersion: "",
-
-			AgentType: "go",
-		},
-
-		"bosh-stemcell/aws/bosh-stemcell-2446-aws-xen-ubuntu-lucid-go_agent.tgz": ExtractedPieces{
-			Name:    "bosh-aws-xen-ubuntu-lucid-go_agent",
-			Version: "2446",
-
-			InfName: "aws",
-			HvName:  "xen",
-
-			OSName:    "ubuntu",
-			OSVersion: "lucid",
-
-			AgentType: "go",
-		},
-
-		"micro-bosh-stemcell/aws/light-micro-bosh-stemcell-891-aws-xen-ubuntu.tgz": ExtractedPieces{
-			Name:    "bosh-aws-xen-ubuntu",
-			Version: "891",
-
-			InfName: "aws",
-			HvName:  "xen",
-
-			OSName:    "ubuntu",
-			OSVersion: "lucid",
-
-			AgentType: "ruby",
-		},
-
 		"micro-bosh-stemcell/warden/bosh-stemcell-56-warden-boshlite-ubuntu-lucid-go_agent.tgz": ExtractedPieces{
 			Name:    "bosh-warden-boshlite-ubuntu-lucid-go_agent",
 			Version: "56",
@@ -88,19 +36,6 @@ var _ = Describe("NewS3Stemcell", func() {
 			OSVersion: "lucid",
 
 			AgentType: "go",
-		},
-
-		"bosh-stemcell/aws/light-bosh-stemcell-2579-aws-xen-centos.tgz": ExtractedPieces{
-			Name:    "bosh-aws-xen-centos",
-			Version: "2579",
-
-			InfName: "aws",
-			HvName:  "xen",
-
-			OSName:    "centos",
-			OSVersion: "",
-
-			AgentType: "ruby",
 		},
 
 		"bosh-stemcell/aws/light-bosh-stemcell-2579-aws-xen-centos-go_agent.tgz": ExtractedPieces{
@@ -333,6 +268,20 @@ var _ = Describe("NewS3Stemcell", func() {
 			OSVersion: "jammy",
 
 			AgentType: "go",
+		},
+
+		// Ubuntu noble
+		"aws/bosh-stemcell-40-aws-xen-hvm-ubuntu-noble.tgz": ExtractedPieces{
+			Name:    "bosh-aws-xen-hvm-ubuntu-noble",
+			Version: "40",
+
+			InfName: "aws",
+			HvName:  "xen-hvm",
+
+			OSName:    "ubuntu",
+			OSVersion: "noble",
+
+			AgentType: "",
 		},
 	}
 
