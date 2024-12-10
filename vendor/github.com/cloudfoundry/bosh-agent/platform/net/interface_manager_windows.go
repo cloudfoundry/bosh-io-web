@@ -10,6 +10,10 @@ import (
 	"golang.org/x/sys/windows"
 )
 
+var (
+	procGetAdaptersInfo = syscall.MustLoadDLL("iphlpapi.dll").MustFindProc("GetAdaptersInfo") //nolint:gochecknoglobals
+)
+
 type windowsInterfaceManager struct{}
 
 func NewInterfaceManager() InterfaceManager {
@@ -17,12 +21,12 @@ func NewInterfaceManager() InterfaceManager {
 }
 
 func (windowsInterfaceManager) GetInterfaces() ([]Interface, error) {
-	var interfaces []Interface
 	ifs, err := goNet.Interfaces()
 	if err != nil {
 		return nil, err
 	}
 
+	interfaces := make([]Interface, 0, len(ifs))
 	for _, fs := range ifs {
 		gateway, err := getGateway(fs.Index)
 		if err != nil {
@@ -34,6 +38,7 @@ func (windowsInterfaceManager) GetInterfaces() ([]Interface, error) {
 		}
 		interfaces = append(interfaces, netInterface)
 	}
+
 	return interfaces, nil
 }
 
@@ -64,12 +69,11 @@ func getAdaptersInfo() (*windows.IpAdapterInfo, error) {
 	for n := 4096; n < 65536; n *= 2 {
 		bufLen := uint32(n)
 		buf := make([]byte, n)
-		r0, _, _ := syscall.Syscall(procGetAdaptersInfo.Addr(), 2,
+		r0, _, _ := syscall.SyscallN(procGetAdaptersInfo.Addr(),
 			uintptr(unsafe.Pointer(&buf[0])),
 			uintptr(unsafe.Pointer(&bufLen)),
-			0,
 		)
-		switch syscall.Errno(r0) {
+		switch syscall.Errno(r0) { //nolint:exhaustive
 		case 0:
 			return (*windows.IpAdapterInfo)(unsafe.Pointer(&buf[0])), nil
 		case windows.ERROR_BUFFER_OVERFLOW:

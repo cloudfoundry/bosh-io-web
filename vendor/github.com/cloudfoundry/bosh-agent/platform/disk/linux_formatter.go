@@ -1,10 +1,11 @@
 package disk
 
 import (
-	bosherr "github.com/cloudfoundry/bosh-utils/errors"
-	boshsys "github.com/cloudfoundry/bosh-utils/system"
 	"regexp"
 	"strings"
+
+	bosherr "github.com/cloudfoundry/bosh-utils/errors"
+	boshsys "github.com/cloudfoundry/bosh-utils/system"
 )
 
 type linuxFormatter struct {
@@ -19,27 +20,27 @@ func NewLinuxFormatter(runner boshsys.CmdRunner, fs boshsys.FileSystem) Formatte
 	}
 }
 
-func (f linuxFormatter) Format(partitionPath string, fsType FileSystemType) (err error) {
-	existingFsType, err := f.getPartitionFormatType(partitionPath)
+func (f linuxFormatter) Format(partitionPath string, fsType FileSystemType) error {
+	existingFsType, err := f.GetPartitionFormatType(partitionPath)
 	if err != nil {
 		return bosherr.WrapError(err, "Checking filesystem format of partition")
 	}
 
 	if fsType == FileSystemSwap {
 		if existingFsType == FileSystemSwap {
-			return
+			return err
 		}
 		// swap is not user-configured, so we're not concerned about reformatting
 	} else if existingFsType == FileSystemExt4 || existingFsType == FileSystemXFS {
 		// never reformat if it is already formatted in a supported format
-		return
+		return err
 	}
 
 	switch fsType {
 	case FileSystemSwap:
 		_, _, _, err = f.runner.RunCommand("mkswap", partitionPath)
 		if err != nil {
-			err = bosherr.WrapError(err, "Shelling out to mkswap")
+			return bosherr.WrapError(err, "Shelling out to mkswap")
 		}
 
 	case FileSystemExt4:
@@ -50,16 +51,50 @@ func (f linuxFormatter) Format(partitionPath string, fsType FileSystemType) (err
 			}
 		}
 		if err != nil {
-			err = bosherr.WrapError(err, "Shelling out to mke2fs")
+			return bosherr.WrapError(err, "Shelling out to mke2fs")
 		}
 
 	case FileSystemXFS:
 		_, _, _, err = f.runner.RunCommand("mkfs.xfs", partitionPath)
 		if err != nil {
-			err = bosherr.WrapError(err, "Shelling out to mkfs.xfs")
+			return bosherr.WrapError(err, "Shelling out to mkfs.xfs")
 		}
+	case FileSystemDefault:
+		return nil
 	}
-	return
+
+	return nil
+}
+
+func (f linuxFormatter) GrowFilesystem(partitionPath string) error {
+	existingFsType, err := f.GetPartitionFormatType(partitionPath)
+	if err != nil {
+		return bosherr.WrapError(err, "Checking filesystem format of partition")
+	}
+
+	switch existingFsType {
+	case FileSystemExt4:
+		_, _, _, err := f.runner.RunCommand(
+			"resize2fs",
+			"-f",
+			partitionPath,
+		)
+		if err != nil {
+			return bosherr.WrapError(err, "Failed to grow Ext4 filesystem")
+		}
+
+	case FileSystemXFS:
+		_, _, _, err = f.runner.RunCommand(
+			"xfs_growfs",
+			partitionPath,
+		)
+		if err != nil {
+			return bosherr.WrapError(err, "Failed to grow XFS filesystem")
+		}
+	case FileSystemDefault, FileSystemSwap:
+		return nil
+	}
+	return nil
 }
 
 func (f linuxFormatter) makeFileSystemExt4(partitionPath string) error {
@@ -72,7 +107,7 @@ func (f linuxFormatter) makeFileSystemExt4(partitionPath string) error {
 	return err
 }
 
-func (f linuxFormatter) getPartitionFormatType(partitionPath string) (FileSystemType, error) {
+func (f linuxFormatter) GetPartitionFormatType(partitionPath string) (FileSystemType, error) {
 	stdout, stderr, exitStatus, err := f.runner.RunCommand("blkid", "-p", partitionPath)
 
 	if err != nil {

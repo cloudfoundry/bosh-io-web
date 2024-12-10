@@ -1,3 +1,4 @@
+//go:build !windows
 // +build !windows
 
 package platform
@@ -24,10 +25,6 @@ func userHomeDirectory(username string) (string, error) {
 
 func localAccountNames() ([]string, error) {
 	return nil, ErrNotImplemented
-}
-
-func isServiceRunning(_ string) error {
-	return ErrNotImplemented
 }
 
 func sshEnabled() error {

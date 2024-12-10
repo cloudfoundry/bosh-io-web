@@ -3,7 +3,6 @@ package action
 import (
 	"errors"
 
-	boshdpresolv "github.com/cloudfoundry/bosh-agent/infrastructure/devicepathresolver"
 	boshsettings "github.com/cloudfoundry/bosh-agent/settings"
 	boshdirs "github.com/cloudfoundry/bosh-agent/settings/directories"
 	bosherr "github.com/cloudfoundry/bosh-utils/errors"
@@ -11,15 +10,15 @@ import (
 )
 
 type diskMounter interface {
+	AdjustPersistentDiskPartitioning(diskSettings boshsettings.DiskSettings, mountPoint string) error
 	MountPersistentDisk(diskSettings boshsettings.DiskSettings, mountPoint string) error
 }
 
 type MountDiskAction struct {
-	settingsService    boshsettings.Service
-	diskMounter        diskMounter
-	devicePathResolver boshdpresolv.DevicePathResolver
-	dirProvider        boshdirs.Provider
-	logger             boshlog.Logger
+	settingsService boshsettings.Service
+	diskMounter     diskMounter
+	dirProvider     boshdirs.Provider
+	logger          boshlog.Logger
 }
 
 func NewMountDisk(
@@ -60,6 +59,11 @@ func (a MountDiskAction) Run(diskCid string) (interface{}, error) {
 
 	mountPoint := a.dirProvider.StoreDir()
 
+	err = a.diskMounter.AdjustPersistentDiskPartitioning(diskSettings, mountPoint)
+	if err != nil {
+		return nil, bosherr.WrapError(err, "Adjusting persistent disk partitioning")
+	}
+
 	err = a.diskMounter.MountPersistentDisk(diskSettings, mountPoint)
 	if err != nil {
 		return nil, bosherr.WrapError(err, "Mounting persistent disk")
@@ -74,13 +78,4 @@ func (a MountDiskAction) Resume() (interface{}, error) {
 
 func (a MountDiskAction) Cancel() error {
 	return errors.New("not supported")
-}
-
-func (a MountDiskAction) pruneNil(hints []interface{}) []interface{} {
-	for i := len(hints) - 1; i >= 0; i-- {
-		if hints[i] == nil {
-			hints = append(hints[:i], hints[i+1:]...)
-		}
-	}
-	return hints
 }

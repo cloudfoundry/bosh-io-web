@@ -1,6 +1,7 @@
 package devicepathresolver
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -55,17 +56,18 @@ func (dpr mappedDevicePathResolver) GetRealDevicePath(diskSettings boshsettings.
 func (dpr mappedDevicePathResolver) findPossibleDevice(devicePath string) (string, bool, error) {
 	needsMapping := strings.HasPrefix(devicePath, "/dev/sd")
 
-	if needsMapping {
-		pathSuffix := strings.Split(devicePath, "/dev/sd")[1]
+	if needsMapping { //nolint:nestif
+		pathLetterSuffix := strings.Split(devicePath, "/dev/sd")[1]
+		pathNumberSuffix := fmt.Sprintf("%d", pathLetterSuffix[0]-97) // a=0, b=1
 
-		possiblePrefixes := []string{
-			"/dev/xvd", // Xen
-			"/dev/vd",  // KVM
-			"/dev/sd",
+		possiblePaths := []string{
+			"/dev/xvd" + pathLetterSuffix, // Xen
+			"/dev/vd" + pathLetterSuffix,  // KVM
+			"/dev/sd" + pathLetterSuffix,
+			"/dev/nvme" + pathNumberSuffix + "n1", // Nitro instances with Noble
 		}
 
-		for _, prefix := range possiblePrefixes {
-			path := prefix + pathSuffix
+		for _, path := range possiblePaths {
 			if dpr.fs.FileExists(path) {
 				return path, true, nil
 			}

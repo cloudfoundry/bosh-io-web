@@ -1,3 +1,4 @@
+//go:build windows
 // +build windows
 
 package platform
@@ -23,19 +24,19 @@ import (
 )
 
 var (
-	userenv  = windows.NewLazySystemDLL("userenv.dll")
-	netapi32 = windows.NewLazySystemDLL("Netapi32.dll")
+	userenv  = windows.NewLazySystemDLL("userenv.dll")  //nolint:gochecknoglobals
+	netapi32 = windows.NewLazySystemDLL("Netapi32.dll") //nolint:gochecknoglobals
 
-	procCreateProfile        = userenv.NewProc("CreateProfile")
-	procDeleteProfile        = userenv.NewProc("DeleteProfileW")
-	procGetProfilesDirectory = userenv.NewProc("GetProfilesDirectoryW")
-	procNetUserEnum          = netapi32.NewProc("NetUserEnum")
+	procCreateProfile        = userenv.NewProc("CreateProfile")         //nolint:gochecknoglobals
+	procDeleteProfile        = userenv.NewProc("DeleteProfileW")        //nolint:gochecknoglobals,unused
+	procGetProfilesDirectory = userenv.NewProc("GetProfilesDirectoryW") //nolint:gochecknoglobals
+	procNetUserEnum          = netapi32.NewProc("NetUserEnum")          //nolint:gochecknoglobals
 )
 
 // createProfile, creates the profile and home directory of the user identified
 // by Security Identifier sid.
 func createProfile(sid, username string) (string, error) {
-	const S_OK = 0x00000000
+	const S_OK = 0x00000000 //nolint:revive
 	if err := procCreateProfile.Find(); err != nil {
 		return "", err
 	}
@@ -48,13 +49,11 @@ func createProfile(sid, username string) (string, error) {
 		return "", err
 	}
 	var pathbuf [260]uint16
-	r1, _, e1 := syscall.Syscall6(procCreateProfile.Addr(), 4,
+	r1, _, e1 := syscall.SyscallN(procCreateProfile.Addr(),
 		uintptr(unsafe.Pointer(psid)),        // _In_  LPCWSTR pszUserSid
 		uintptr(unsafe.Pointer(pusername)),   // _In_  LPCWSTR pszUserName
 		uintptr(unsafe.Pointer(&pathbuf[0])), // _Out_ LPWSTR  pszProfilePath
 		uintptr(len(pathbuf)),                // _In_  DWORD   cchProfilePath
-		0,                                    // unused
-		0,                                    // unused
 	)
 	if r1 != S_OK {
 		if e1 == 0 {
@@ -68,7 +67,7 @@ func createProfile(sid, username string) (string, error) {
 
 // deleteProfile, deletes the profile and home directory of the user identified
 // by Security Identifier sid.
-func deleteProfile(sid string) error {
+func deleteProfile(sid string) error { //nolint:deadcode,unused
 	if err := procDeleteProfile.Find(); err != nil {
 		return err
 	}
@@ -76,7 +75,7 @@ func deleteProfile(sid string) error {
 	if err != nil {
 		return err
 	}
-	r1, _, e1 := syscall.Syscall(procDeleteProfile.Addr(), 3,
+	r1, _, e1 := syscall.SyscallN(procDeleteProfile.Addr(),
 		uintptr(unsafe.Pointer(psid)), // _In_     LPCTSTR lpSidString,
 		0,                             // _In_opt_ LPCTSTR lpProfilePath,
 		0,                             // _In_opt_ LPCTSTR lpComputerName
@@ -98,10 +97,9 @@ func getProfilesDirectory() (string, error) {
 	}
 	var buf [syscall.MAX_PATH]uint16
 	n := uint32(len(buf))
-	r1, _, e1 := syscall.Syscall(procGetProfilesDirectory.Addr(), 2,
+	r1, _, e1 := syscall.SyscallN(procGetProfilesDirectory.Addr(),
 		uintptr(unsafe.Pointer(&buf[0])), // _Out_   LPTSTR  lpProfilesDir,
 		uintptr(unsafe.Pointer(&n)),      // _Inout_ LPDWORD lpcchSize
-		0,
 	)
 	if r1 == 0 {
 		if e1 == 0 {
@@ -148,8 +146,7 @@ func isSpecial(c byte) bool {
 // validPassword, checks if password s meets the Windows complexity
 // requirements defined here:
 //
-//   https://technet.microsoft.com/en-us/library/hh994562(v=ws.11).aspx
-//
+//	https://technet.microsoft.com/en-us/library/hh994562(v=ws.11).aspx
 func validPassword(s string) bool {
 	var (
 		digits    bool
@@ -291,8 +288,8 @@ func deleteLocalUser(username string) error {
 }
 
 func localAccountNames() ([]string, error) {
-	const MAX_PREFERRED_LENGTH = 0xffffffff
-	const FILTER_NORMAL_ACCOUNT = 2
+	const MAX_PREFERRED_LENGTH = 0xffffffff //nolint:revive
+	const FILTER_NORMAL_ACCOUNT = 2         //nolint:revive
 
 	if err := procNetUserEnum.Find(); err != nil {
 		return nil, err
@@ -303,7 +300,7 @@ func localAccountNames() ([]string, error) {
 		total  uint32
 		resume uint32
 	)
-	r1, _, e1 := syscall.Syscall9(procNetUserEnum.Addr(), 8,
+	r1, _, e1 := syscall.SyscallN(procNetUserEnum.Addr(),
 		0, // local computer
 		0, // user account names
 		FILTER_NORMAL_ACCOUNT,
@@ -312,22 +309,21 @@ func localAccountNames() ([]string, error) {
 		uintptr(unsafe.Pointer(&read)),
 		uintptr(unsafe.Pointer(&total)),
 		uintptr(unsafe.Pointer(&resume)),
-		0,
 	)
 	if r1 != 0 {
 		if e1 == syscall.ERROR_MORE_DATA {
 			// This shouldn't happen, but in case
 			// it does we need to free the buffer
-			windows.NetApiBufferFree(buf)
+			windows.NetApiBufferFree(buf) //nolint:errcheck
 		}
 		if e1 == 0 {
 			return nil, os.NewSyscallError("NetUserEnum", syscall.EINVAL)
 		}
 		return nil, os.NewSyscallError("NetUserEnum", e1)
 	}
-	defer windows.NetApiBufferFree(buf)
+	defer windows.NetApiBufferFree(buf) //nolint:errcheck
 
-	type USER_INFO_0 struct {
+	type USER_INFO_0 struct { //nolint:revive
 		Name *uint16
 	}
 	type sliceHeader struct {
@@ -351,7 +347,7 @@ func toString(p *uint16) string {
 	if p == nil {
 		return ""
 	}
-	return syscall.UTF16ToString((*[4096]uint16)(unsafe.Pointer(p))[:])
+	return windows.UTF16PtrToString(p)
 }
 
 func serviceDisabled(s *mgr.Service) bool {
@@ -360,14 +356,14 @@ func serviceDisabled(s *mgr.Service) bool {
 }
 
 // Make the function called by GetHostPublicKey configurable for testing.
-var sshEnabled func() error = checkSSH
+var sshEnabled func() error = checkSSH //nolint:gochecknoglobals,revive
 
 // checkSSH checks if the sshd service is installed and running.
 //
 // The services are installed during stemcell creation, but are disabled.  The
 // job windows-utilities-release/enable_ssh job is used to enable ssh.
 func checkSSH() error {
-	const ERROR_SERVICE_DOES_NOT_EXIST syscall.Errno = 0x424
+	const ERROR_SERVICE_DOES_NOT_EXIST syscall.Errno = 0x424 //nolint:revive
 
 	const msgFmt = "%s service not running and start type is disabled.  " +
 		"To enable ssh on Windows you must run the enable_ssh job from the " +
@@ -377,7 +373,7 @@ func checkSSH() error {
 	if err != nil {
 		return fmt.Errorf("opening service control manager: %s", err)
 	}
-	defer m.Disconnect()
+	defer m.Disconnect() //nolint:errcheck
 
 	sshd, err := m.OpenService("sshd")
 	if err != nil {
@@ -412,7 +408,7 @@ func disableWindowsUpdates() error {
 	if err != nil {
 		return fmt.Errorf("opening service control manager: %s", err)
 	}
-	defer m.Disconnect()
+	defer m.Disconnect() //nolint:errcheck
 
 	s, err := m.OpenService("wuauserv")
 	if err != nil {

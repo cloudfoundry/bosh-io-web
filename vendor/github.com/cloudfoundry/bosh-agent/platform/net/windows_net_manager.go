@@ -80,7 +80,6 @@ netsh interface ip set address %q static %s %s %s
 // We return all of the network interfaces as we configure DNS for all of the
 // network interfaces.  Apart from DNS, the returned network interfaces may
 // not have been configured.
-//
 func (net WindowsNetManager) GetConfiguredNetworkInterfaces() ([]string, error) {
 	net.logger.Info(net.logTag, "Getting Configured Network Interfaces...")
 
@@ -127,11 +126,13 @@ func (net WindowsNetManager) setupNetworkInterfaces(networks boshsettings.Networ
 	return nil
 }
 
-func (net WindowsNetManager) SetupNetworking(networks boshsettings.Networks, errCh chan error) error {
+func (net WindowsNetManager) SetupNetworking(networks boshsettings.Networks, mbus string, errCh chan error) error {
 	if err := net.setupNetworkInterfaces(networks); err != nil {
 		return bosherr.WrapError(err, "setting up network interfaces")
 	}
-
+	if err := net.setupFirewall(mbus); err != nil {
+		return bosherr.WrapError(err, "Setting up Nats Firewall")
+	}
 	if LockFileExistsForDNS(net.fs, net.dirProvider) {
 		return nil
 	}
@@ -149,10 +150,21 @@ func (net WindowsNetManager) SetupNetworking(networks boshsettings.Networks, err
 	if err != nil {
 		return bosherr.WrapError(err, "Starting HTTP service")
 	}
+	err = net.setupDNS(dnsServers)
+	if err != nil {
+		return err
+	}
 
-	return net.setupDNS(dnsServers)
+	return nil
 }
-
+func (net WindowsNetManager) setupFirewall(mbus string) error {
+	if mbus == "" {
+		net.logger.Info("NetworkSetup", "Skipping adding Firewall for outgoing nats. Mbus url is empty")
+		return nil
+	}
+	net.logger.Info("NetworkSetup", "Adding Firewall")
+	return SetupNatsFirewall(mbus)
+}
 func (net WindowsNetManager) ComputeNetworkConfig(networks boshsettings.Networks) (
 	[]StaticInterfaceConfiguration,
 	[]DHCPInterfaceConfiguration,
@@ -175,7 +187,6 @@ func (net WindowsNetManager) ComputeNetworkConfig(networks boshsettings.Networks
 	dnsNetwork, _ := nonVipNetworks.DefaultNetworkFor("dns")
 	dnsServers := dnsNetwork.DNS
 	return staticConfigs, dhcpConfigs, dnsServers, nil
-
 }
 
 func (net WindowsNetManager) SetupIPv6(_ boshsettings.IPv6, _ <-chan struct{}) error { return nil }
@@ -202,7 +213,6 @@ func (net WindowsNetManager) buildInterfaces(networks boshsettings.Networks) (
 	[]DHCPInterfaceConfiguration,
 	error,
 ) {
-
 	interfacesByMacAddress, err := net.macAddressDetector.DetectMacAddresses()
 	if err != nil {
 		return nil, nil, bosherr.WrapError(err, "Getting network interfaces")

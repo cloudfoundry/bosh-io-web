@@ -189,7 +189,12 @@ func (c concreteCompiler) atomicDecompress(archivePath string, finalDir string) 
 		}
 	}
 
-	err := c.compressor.DecompressFileToDir(archivePath, tmpInstallPath, boshcmd.CompressorOptions{})
+	tmpInstallPathWithoutSymlinks, err := c.fs.ReadAndFollowLink(tmpInstallPath)
+	if err != nil {
+		return bosherr.WrapErrorf(err, "Following Compile Path Symlink")
+	}
+
+	err = c.compressor.DecompressFileToDir(archivePath, tmpInstallPathWithoutSymlinks, boshcmd.CompressorOptions{})
 	if err != nil {
 		return bosherr.WrapErrorf(err, "Decompressing files from %s to %s", archivePath, tmpInstallPath)
 	}

@@ -24,17 +24,24 @@ func NewKernelIPv6Impl(fs boshsys.FileSystem, cmdRunner boshsys.CmdRunner, logge
 
 func (net KernelIPv6Impl) Enable(stopCh <-chan struct{}) error {
 	const (
-		grubConfPath       = "/boot/grub/grub.cfg"
+		grubConfPathBIOS   = "/boot/grub/grub.cfg"
+		grubConfPathEFI    = "/boot/efi/EFI/grub/grub.cfg"
 		grubIPv6DisableOpt = "ipv6.disable=1"
 	)
 
+	grubConfPath := grubConfPathBIOS
+
 	grubConf, err := net.fs.ReadFileString(grubConfPath)
 	if err != nil {
-		return bosherr.WrapError(err, "Reading grub")
+		grubConfPath = grubConfPathEFI
+		grubConf, err = net.fs.ReadFileString(grubConfPath)
+		if err != nil {
+			return bosherr.WrapError(err, "Reading grub")
+		}
 	}
 
 	if strings.Contains(grubConf, grubIPv6DisableOpt) {
-		grubConf = strings.Replace(grubConf, grubIPv6DisableOpt, "", -1)
+		grubConf = strings.ReplaceAll(grubConf, grubIPv6DisableOpt, "")
 
 		err = net.fs.WriteFileString(grubConfPath, grubConf)
 		if err != nil {

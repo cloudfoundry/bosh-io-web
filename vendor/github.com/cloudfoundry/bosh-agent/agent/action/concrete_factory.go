@@ -8,6 +8,7 @@ import (
 	blobdelegator "github.com/cloudfoundry/bosh-agent/agent/httpblobprovider/blobstore_delegator"
 	boshscript "github.com/cloudfoundry/bosh-agent/agent/script"
 	boshtask "github.com/cloudfoundry/bosh-agent/agent/task"
+	"github.com/cloudfoundry/bosh-agent/agent/utils"
 	boshjobsuper "github.com/cloudfoundry/bosh-agent/jobsupervisor"
 	boshnotif "github.com/cloudfoundry/bosh-agent/notification"
 	boshplatform "github.com/cloudfoundry/bosh-agent/platform"
@@ -35,13 +36,12 @@ func NewFactory(
 	jobScriptProvider boshscript.JobScriptProvider,
 	logger boshlog.Logger,
 	blobstoreDelegator blobdelegator.BlobstoreDelegator) (factory Factory) {
-	compressor := platform.GetCompressor()
-	copier := platform.GetCopier()
 	dirProvider := platform.GetDirProvider()
 	vitalsService := platform.GetVitalsService()
 	certManager := platform.GetCertManager()
+	logsTarProvider := platform.GetLogsTarProvider()
 
-	factory = concreteFactory{
+	return concreteFactory{
 		availableActions: map[string]Action{
 			// API
 			"ping": NewPing(),
@@ -53,10 +53,12 @@ func NewFactory(
 
 			// VM admin
 			"ssh":                        NewSSH(settingsService, platform, dirProvider, logger),
-			"fetch_logs":                 NewFetchLogs(compressor, copier, blobstoreDelegator, dirProvider),
-			"fetch_logs_with_signed_url": NewFetchLogsWithSignedURLAction(compressor, copier, dirProvider, blobstoreDelegator),
-			"update_settings":            NewUpdateSettings(settingsService, platform, certManager, logger),
+			"bundle_logs":                NewBundleLogs(logsTarProvider, platform.GetFs()),
+			"fetch_logs":                 NewFetchLogs(logsTarProvider, blobstoreDelegator),
+			"fetch_logs_with_signed_url": NewFetchLogsWithSignedURLAction(logsTarProvider, blobstoreDelegator),
+			"update_settings":            NewUpdateSettings(settingsService, platform, certManager, logger, utils.NewAgentKiller()),
 			"shutdown":                   NewShutdown(platform),
+			"remove_file":                NewRemoveFile(platform.GetFs()),
 
 			// Job management
 			"prepare":    NewPrepare(applier),
@@ -91,7 +93,6 @@ func NewFactory(
 			"sync_dns_with_signed_url": NewSyncDNSWithSignedURL(settingsService, platform, logger, blobstoreDelegator),
 		},
 	}
-	return
 }
 
 func (f concreteFactory) Create(method string) (Action, error) {

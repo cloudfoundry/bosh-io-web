@@ -1,29 +1,34 @@
 package platform
 
 import (
+	gonet "net"
 	"time"
 
 	"code.cloudfoundry.org/clock"
-	"github.com/cloudfoundry/bosh-agent/infrastructure/devicepathresolver"
 
-	boshcdrom "github.com/cloudfoundry/bosh-agent/platform/cdrom"
-	boshcert "github.com/cloudfoundry/bosh-agent/platform/cert"
-	boshdisk "github.com/cloudfoundry/bosh-agent/platform/disk"
-	boshnet "github.com/cloudfoundry/bosh-agent/platform/net"
-	bosharp "github.com/cloudfoundry/bosh-agent/platform/net/arp"
-	boship "github.com/cloudfoundry/bosh-agent/platform/net/ip"
-	boshiscsi "github.com/cloudfoundry/bosh-agent/platform/openiscsi"
-	boshstats "github.com/cloudfoundry/bosh-agent/platform/stats"
-	boshudev "github.com/cloudfoundry/bosh-agent/platform/udevdevice"
-	boshvitals "github.com/cloudfoundry/bosh-agent/platform/vitals"
-	boshwindisk "github.com/cloudfoundry/bosh-agent/platform/windows/disk"
-	boshdirs "github.com/cloudfoundry/bosh-agent/settings/directories"
 	bosherror "github.com/cloudfoundry/bosh-utils/errors"
 	boshcmd "github.com/cloudfoundry/bosh-utils/fileutil"
 	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 	boshretry "github.com/cloudfoundry/bosh-utils/retrystrategy"
 	boshsys "github.com/cloudfoundry/bosh-utils/system"
 	boshuuid "github.com/cloudfoundry/bosh-utils/uuid"
+
+	boshlogstarprovider "github.com/cloudfoundry/bosh-agent/agent/logstarprovider"
+	"github.com/cloudfoundry/bosh-agent/infrastructure/devicepathresolver"
+	boshcdrom "github.com/cloudfoundry/bosh-agent/platform/cdrom"
+	boshcert "github.com/cloudfoundry/bosh-agent/platform/cert"
+	boshdisk "github.com/cloudfoundry/bosh-agent/platform/disk"
+	boshnet "github.com/cloudfoundry/bosh-agent/platform/net"
+	bosharp "github.com/cloudfoundry/bosh-agent/platform/net/arp"
+	"github.com/cloudfoundry/bosh-agent/platform/net/dnsresolver"
+	boship "github.com/cloudfoundry/bosh-agent/platform/net/ip"
+	boshiscsi "github.com/cloudfoundry/bosh-agent/platform/openiscsi"
+	boshstats "github.com/cloudfoundry/bosh-agent/platform/stats"
+	boshudev "github.com/cloudfoundry/bosh-agent/platform/udevdevice"
+	boshvitals "github.com/cloudfoundry/bosh-agent/platform/vitals"
+	boshwindisk "github.com/cloudfoundry/bosh-agent/platform/windows/disk"
+	"github.com/cloudfoundry/bosh-agent/servicemanager"
+	boshdirs "github.com/cloudfoundry/bosh-agent/settings/directories"
 )
 
 const (
@@ -65,13 +70,13 @@ func NewProvider(logger boshlog.Logger, dirProvider boshdirs.Provider, statsColl
 	linuxCdrom := boshcdrom.NewLinuxCdrom("/dev/sr0", udev, runner)
 	linuxCdutil := boshcdrom.NewCdUtil(dirProvider.SettingsDir(), fs, linuxCdrom, logger)
 
-	compressor := boshcmd.NewTarballCompressor(runner, fs)
+	compressor := boshcmd.NewTarballCompressor(fs)
 	copier := boshcmd.NewGenericCpCopier(fs, logger)
 
 	// Kick of stats collection as soon as possible
 	statsCollector.StartCollecting(SigarStatsCollectionInterval, nil)
 
-	vitalsService := boshvitals.NewService(statsCollector, dirProvider)
+	vitalsService := boshvitals.NewService(statsCollector, dirProvider, linuxDiskManager.GetMounter())
 
 	ipResolver := boship.NewResolver(boship.NetworkInterfaceToAddrsFunc)
 
@@ -79,22 +84,32 @@ func NewProvider(logger boshlog.Logger, dirProvider boshdirs.Provider, statsColl
 	interfaceConfigurationCreator := boshnet.NewInterfaceConfigurationCreator(logger)
 
 	interfaceAddressesProvider := boship.NewSystemInterfaceAddressesProvider()
-	dnsValidator := boshnet.NewDNSValidator(fs)
-	kernelIPv6 := boshnet.NewKernelIPv6Impl(fs, runner, logger)
-	macAddressDetector := boshnet.NewMacAddressDetector(fs)
 
-	ubuntuNetManager := boshnet.NewUbuntuNetManager(fs, runner, ipResolver, macAddressDetector, interfaceConfigurationCreator, interfaceAddressesProvider, dnsValidator, arping, kernelIPv6, logger)
+	var dnsResolver dnsresolver.DNSResolver
+	switch options.Linux.ServiceManager {
+	case "systemd":
+		dnsResolver = dnsresolver.NewSystemdResolver(fs, runner)
+	default:
+		dnsResolver = dnsresolver.NewResolveConfResolver(fs, runner)
+	}
+
+	kernelIPv6 := boshnet.NewKernelIPv6Impl(fs, runner, logger)
+	macAddressDetector := boshnet.NewLinuxMacAddressDetector(fs)
+
+	centosNetManager := boshnet.NewCentosNetManager(fs, runner, ipResolver, macAddressDetector, interfaceConfigurationCreator, interfaceAddressesProvider, dnsResolver, arping, logger)
+	ubuntuNetManager := boshnet.NewUbuntuNetManager(fs, runner, ipResolver, macAddressDetector, interfaceConfigurationCreator, interfaceAddressesProvider, dnsResolver, arping, kernelIPv6, logger)
 
 	windowsNetManager := boshnet.NewWindowsNetManager(
 		runner,
 		interfaceConfigurationCreator,
-		boshnet.NewMacAddressDetector(nil),
+		boshnet.NewWindowsMacAddressDetector(runner, gonet.Interfaces),
 		logger,
 		clock,
 		fs,
 		dirProvider,
 	)
 
+	centosCertManager := boshcert.NewCentOSCertManager(fs, runner, 0, logger)
 	ubuntuCertManager := boshcert.NewUbuntuCertManager(fs, runner, 60, logger)
 	windowsCertManager := boshcert.NewWindowsCertManager(fs, runner, dirProvider, logger)
 
@@ -103,14 +118,21 @@ func NewProvider(logger boshlog.Logger, dirProvider boshdirs.Provider, statsColl
 	routesSearcher := boshnet.NewRoutesSearcher(logger, runner, interfaceManager)
 	defaultNetworkResolver := boshnet.NewDefaultNetworkResolver(routesSearcher, ipResolver)
 
-	monitRetryable := NewMonitRetryable(runner)
+	var serviceManager servicemanager.ServiceManager
+	if options.Linux.ServiceManager == "systemd" {
+		serviceManager = servicemanager.NewSystemdServiceManager(runner)
+	} else {
+		serviceManager = servicemanager.NewSvServiceManager(fs, runner)
+	}
+
+	monitRetryable := NewMonitRetryable(serviceManager)
 	monitRetryStrategy := boshretry.NewAttemptRetryStrategy(10, 1*time.Second, monitRetryable, logger)
 
 	var devicePathResolver devicepathresolver.DevicePathResolver
 	switch options.Linux.DevicePathResolutionType {
 	case "virtio":
 		udev := boshudev.NewConcreteUdevDevice(runner, logger)
-		idDevicePathResolver := devicepathresolver.NewIDDevicePathResolver(500*time.Millisecond, udev, fs)
+		idDevicePathResolver := devicepathresolver.NewIDDevicePathResolver(500*time.Millisecond, udev, fs, options.Linux.StripVolumeRegex)
 		mappedDevicePathResolver := devicepathresolver.NewMappedDevicePathResolver(30000*time.Millisecond, fs)
 		devicePathResolver = devicepathresolver.NewVirtioDevicePathResolver(idDevicePathResolver, mappedDevicePathResolver, logger)
 	case "scsi":
@@ -129,6 +151,33 @@ func NewProvider(logger boshlog.Logger, dirProvider boshdirs.Provider, statsColl
 	}
 
 	uuidGenerator := boshuuid.NewGenerator()
+	logsTarProvider := boshlogstarprovider.NewLogsTarProvider(compressor, copier, dirProvider)
+
+	var centos = func() Platform {
+		return NewLinuxPlatform(
+			fs,
+			runner,
+			statsCollector,
+			compressor,
+			copier,
+			dirProvider,
+			vitalsService,
+			linuxCdutil,
+			linuxDiskManager,
+			centosNetManager,
+			centosCertManager,
+			monitRetryStrategy,
+			devicePathResolver,
+			bootstrapState,
+			options.Linux,
+			logger,
+			defaultNetworkResolver,
+			uuidGenerator,
+			auditLogger,
+			logsTarProvider,
+			serviceManager,
+		)
+	}
 
 	var ubuntu = func() Platform {
 		return NewLinuxPlatform(
@@ -151,6 +200,8 @@ func NewProvider(logger boshlog.Logger, dirProvider boshdirs.Provider, statsColl
 			defaultNetworkResolver,
 			uuidGenerator,
 			auditLogger,
+			logsTarProvider,
+			serviceManager,
 		)
 	}
 
@@ -169,6 +220,7 @@ func NewProvider(logger boshlog.Logger, dirProvider boshdirs.Provider, statsColl
 			auditLogger,
 			uuidGenerator,
 			windowsDiskManager,
+			logsTarProvider,
 		)
 	}
 
@@ -181,12 +233,14 @@ func NewProvider(logger boshlog.Logger, dirProvider boshdirs.Provider, statsColl
 			devicePathResolver,
 			logger,
 			auditLogger,
+			logsTarProvider,
 		)
 	}
 
 	return provider{
 		platforms: map[string]func() Platform{
 			"ubuntu":  ubuntu,
+			"centos":  centos,
 			"dummy":   dummy,
 			"windows": windows,
 		},

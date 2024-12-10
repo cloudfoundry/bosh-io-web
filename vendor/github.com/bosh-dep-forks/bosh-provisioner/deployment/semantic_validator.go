@@ -6,7 +6,7 @@ import (
 
 // SemanticValidator validates deployment to determine if it represents a meaningful state.
 // e.g. - is each job template associated with a release?
-//      - are there enough static ips for each job instance?
+//   - are there enough static ips for each job instance?
 type SemanticValidator struct {
 	deployment Deployment
 }

@@ -100,7 +100,7 @@ func (p partedPartitioner) partitionsMatch(existingPartitions []ExistingPartitio
 			return false
 		}
 
-		remainingDiskSpace = remainingDiskSpace - partition.SizeInBytes
+		remainingDiskSpace -= partition.SizeInBytes
 	}
 
 	return true
@@ -192,6 +192,7 @@ func (p partedPartitioner) RemovePartitions(partitions []ExistingPartition, devi
 	partitionRetryable := boshretry.NewRetryable(func() (bool, error) {
 		_, _, _, err := p.cmdRunner.RunCommand(
 			"wipefs",
+			"--force", // to prevent "wipefs: error: /**: probing initialization failed: Device or resource busy" errors
 			"-a",
 			devicePath,
 		)
@@ -215,16 +216,15 @@ func (p partedPartitioner) RemovePartitions(partitions []ExistingPartition, devi
 func (p partedPartitioner) runPartedPrint(devicePath string) (stdout, stderr string, exitStatus int, err error) {
 	stdout, stderr, exitStatus, err = p.cmdRunner.RunCommand("parted", "-m", devicePath, "unit", "B", "print")
 
-	defer p.cmdRunner.RunCommand("udevadm", "settle")
+	defer p.cmdRunner.RunCommand("udevadm", "settle") // nolint:errcheck
 
-	printFields := strings.SplitN(string(stdout), ":", 7)
+	printFields := strings.SplitN(stdout, ":", 7)
 
 	// Create a new partition table if
 	// - there is none, or
 	// - a "loop" partition table is shown (which can mean a valid one was not found)
-	if strings.Contains(fmt.Sprintf("%s\n%s", stdout, stderr), "unrecognised disk label") ||
-		(len(printFields) > 5 && printFields[5] == "loop") {
-
+	containsUnrecognizedDiskLabel := strings.Contains(fmt.Sprintf("%s\n%s", stdout, stderr), "unrecognised disk label")
+	if containsUnrecognizedDiskLabel || (len(printFields) > 5 && printFields[5] == "loop") {
 		stdout, stderr, exitStatus, err = p.getPartitionTable(devicePath)
 		if err != nil {
 			return stdout, stderr, exitStatus, bosherr.WrapErrorf(err, "Parted making label")
@@ -304,7 +304,7 @@ func (p partedPartitioner) createEachPartition(partitions []Partition, deviceFul
 			)
 			if err != nil {
 				p.logger.Error(p.logTag, "Failed with an error: %s", err)
-				//TODO: double check the output here. Does it make sense?
+				// TODO: double check the output here. Does it make sense?
 				return true, bosherr.WrapError(err, "Creating partition using parted")
 			}
 
@@ -314,7 +314,10 @@ func (p partedPartitioner) createEachPartition(partitions []Partition, deviceFul
 				return true, bosherr.WrapError(err, "Creating partition using parted")
 			}
 
-			p.cmdRunner.RunCommand("udevadm", "settle")
+			_, _, _, err = p.cmdRunner.RunCommand("udevadm", "settle")
+			if err != nil {
+				p.logger.Error(p.logTag, "Failed to run udevadm settle: %s", err)
+			}
 
 			p.logger.Info(p.logTag, "Successfully created partition %d on %s", index, devicePath)
 			return false, nil
@@ -353,10 +356,11 @@ func (p partedPartitioner) createMapperPartition(devicePath string) error {
 			return true, bosherr.Errorf("No devices found")
 		}
 
+		part1Regexp := regexp.MustCompile("-part1")
 		device := strings.TrimPrefix(devicePath, "/dev/mapper/")
 		lines := strings.Split(strings.Trim(output, "\n"), "\n")
 		for i := 0; i < len(lines); i++ {
-			if match, _ := regexp.MatchString("-part1", lines[i]); match {
+			if part1Regexp.MatchString(lines[i]) {
 				if strings.Contains(lines[i], device) {
 					p.logger.Info(p.logTag, "Succeeded in detecting partition %s", devicePath+"-part1")
 					return false, nil
@@ -369,4 +373,60 @@ func (p partedPartitioner) createMapperPartition(devicePath string) error {
 
 	detectPartitionRetryStrategy := NewPartitionStrategy(detectPartitionRetryable, p.timeService, p.logger)
 	return detectPartitionRetryStrategy.Try()
+}
+
+func (p partedPartitioner) SinglePartitionNeedsResize(devicePath string, expectedPartitionType PartitionType) (needsResize bool, err error) {
+	existingPartitions, diskSize, err := p.GetPartitions(devicePath)
+	if err != nil {
+		return false, bosherr.WrapError(err, "Failed to get existing partitions")
+	}
+	if len(existingPartitions) > 1 {
+		return false, bosherr.Errorf(
+			"Persistent disks with many partitions are not supported. Expected 1, got %d.",
+			len(existingPartitions))
+	}
+	if len(existingPartitions) < 1 {
+		return false, nil
+	}
+
+	partition := existingPartitions[0]
+	if partition.Type != expectedPartitionType {
+		return false, nil
+	}
+	return significantlySmallerThan(
+		partition.SizeInBytes, diskSize, ConvertFromMbToBytes(deltaSize)), nil
+}
+
+func (p partedPartitioner) ResizeSinglePartition(devicePath string) (err error) {
+	if !p.cmdRunner.CommandExists("growpart") {
+		p.logger.Info(p.logTag, "The program 'growpart' is not installed, Persistent Filesystem cannot be grown")
+		return bosherr.Error("The program 'growpart' is not installed, Persistent Filesystem cannot be grown")
+	}
+
+	if !p.cmdRunner.CommandExists("partx") {
+		p.logger.Info(p.logTag, "The program 'partx' is not installed, Persistent Filesystem cannot be grown")
+		return bosherr.Error("The program 'partx' is not installed, Persistent Filesystem cannot be grown")
+	}
+
+	partitionRetryable := boshretry.NewRetryable(func() (bool, error) {
+		_, _, _, err := p.cmdRunner.RunCommand(
+			"growpart", devicePath, "1", "--update", "auto",
+		)
+		if err != nil {
+			p.logger.Error(p.logTag, "Failed with an error: %s", err)
+			return true, bosherr.WrapError(err, "Resizing partition using growpart")
+		}
+
+		p.logger.Info(p.logTag, "Successfully resized sinlge partition in %s", devicePath)
+		return false, nil
+	})
+
+	partitionRetryStrategy := NewPartitionStrategy(partitionRetryable, p.timeService, p.logger)
+	err = partitionRetryStrategy.Try()
+
+	if err != nil {
+		return bosherr.WrapErrorf(err, "Repartitioning disk `%s'", devicePath)
+	}
+
+	return nil
 }

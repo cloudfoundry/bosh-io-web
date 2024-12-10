@@ -76,7 +76,6 @@ func (p *EphemeralDevicePartitioner) matchPartitionNames(existingPartitions []Ex
 		if !strings.HasPrefix(existingPartition.Name, partition.NamePrefix) {
 			return false
 		}
-
 	}
 
 	return true
@@ -88,10 +87,13 @@ func (p EphemeralDevicePartitioner) RemovePartitions(partitions []ExistingPartit
 
 func (p EphemeralDevicePartitioner) ensureGPTPartition(devicePath string) (err error) {
 	stdout, _, _, err := p.cmdRunner.RunCommand("parted", "-m", devicePath, "unit", "B", "print")
+	if err != nil {
+		return bosherr.WrapErrorf(err, "Running 'parted'")
+	}
 
 	if !strings.Contains(stdout, "gpt") {
 		p.logger.Debug(p.logTag, "Creating gpt table")
-		stdout, _, _, err = p.cmdRunner.RunCommand(
+		_, _, _, err = p.cmdRunner.RunCommand(
 			"parted",
 			"-s",
 			devicePath,
@@ -105,4 +107,12 @@ func (p EphemeralDevicePartitioner) ensureGPTPartition(devicePath string) (err e
 	}
 
 	return nil
+}
+
+func (p *EphemeralDevicePartitioner) SinglePartitionNeedsResize(devicePath string, expectedPartitionType PartitionType) (needsResize bool, err error) {
+	return false, bosherr.WrapError(err, "Resizing the ephemeral disk is not supported")
+}
+
+func (p *EphemeralDevicePartitioner) ResizeSinglePartition(devicePath string) (err error) {
+	return bosherr.WrapError(err, "Resizing the ephemeral disk is not supported")
 }

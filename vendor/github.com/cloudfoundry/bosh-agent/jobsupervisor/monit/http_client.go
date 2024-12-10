@@ -2,7 +2,7 @@ package monit
 
 import (
 	"encoding/xml"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"path"
@@ -14,7 +14,7 @@ import (
 	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 )
 
-//go:generate counterfeiter . HTTPClient
+//go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . HTTPClient
 
 type HTTPClient interface {
 	Do(request *http.Request) (*http.Response, error)
@@ -169,7 +169,7 @@ func (c httpClient) validateResponse(response *http.Response) error {
 		return nil
 	}
 
-	body, err := ioutil.ReadAll(response.Body)
+	body, err := io.ReadAll(response.Body)
 	if err != nil {
 		return bosherr.WrapError(err, "Reading body of failed Monit response")
 	}
@@ -182,7 +182,7 @@ func (c httpClient) validateResponse(response *http.Response) error {
 func (c httpClient) makeRequest(client HTTPClient, target url.URL, method, requestBody string) (*http.Response, error) {
 	c.logger.Debug("http-client", "Monit request: url='%s' body='%s'", target.String(), requestBody)
 
-	request, err := http.NewRequest(method, target.String(), strings.NewReader(requestBody))
+	request, err := http.NewRequest(method, target.String(), strings.NewReader(requestBody)) //nolint:noctx
 	if err != nil {
 		return nil, err
 	}

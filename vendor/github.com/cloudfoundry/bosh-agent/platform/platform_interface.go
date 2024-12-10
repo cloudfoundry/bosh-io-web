@@ -1,12 +1,14 @@
 package platform
 
 import (
-	"github.com/cloudfoundry/bosh-agent/platform/cert"
-
 	"log"
 
+	"github.com/cloudfoundry/bosh-agent/platform/cert"
+
+	boshlogstarprovider "github.com/cloudfoundry/bosh-agent/agent/logstarprovider"
 	boshdpresolv "github.com/cloudfoundry/bosh-agent/infrastructure/devicepathresolver"
 	boshvitals "github.com/cloudfoundry/bosh-agent/platform/vitals"
+	"github.com/cloudfoundry/bosh-agent/servicemanager"
 	boshsettings "github.com/cloudfoundry/bosh-agent/settings"
 	boshdir "github.com/cloudfoundry/bosh-agent/settings/directories"
 	boshcmd "github.com/cloudfoundry/bosh-utils/fileutil"
@@ -24,8 +26,9 @@ type AuditLoggerProvider interface {
 	ProvideErrorLogger() (*log.Logger, error)
 }
 
-//go:generate counterfeiter . Platform
-//go:generate counterfeiter . AuditLogger
+//go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 -generate
+//counterfeiter:generate . Platform
+//counterfeiter:generate . AuditLogger
 
 type Platform interface {
 	GetFs() boshsys.FileSystem
@@ -36,8 +39,11 @@ type Platform interface {
 	GetVitalsService() boshvitals.Service
 	GetAuditLogger() AuditLogger
 	GetDevicePathResolver() (devicePathResolver boshdpresolv.DevicePathResolver)
+	GetServiceManager() servicemanager.ServiceManager
 	GetAgentSettingsPath(tmpfs bool) string
 	GetPersistentDiskSettingsPath(tmpfs bool) string
+	GetUpdateSettingsPath(tmpfs bool) string
+	GetLogsTarProvider() boshlogstarprovider.LogsTarProvider
 
 	// User management
 	CreateUser(username, basePath string) (err error)
@@ -51,7 +57,7 @@ type Platform interface {
 	SetupBoshSettingsDisk() (err error)
 	SetupIPv6(boshsettings.IPv6) error
 	SetupHostname(hostname string) (err error)
-	SetupNetworking(networks boshsettings.Networks) (err error)
+	SetupNetworking(networks boshsettings.Networks, mbus string) (err error)
 	SetupLogrotate(groupName, basePath, size string) (err error)
 	SetTimeWithNtpServers(servers []string) (err error)
 	SetupEphemeralDiskWithPath(devicePath string, desiredSwapSizeInBytes *uint64, labelPrefix string) (err error)
@@ -67,13 +73,15 @@ type Platform interface {
 	SetupRuntimeConfiguration() (err error)
 	SetupLogDir() (err error)
 	SetupLoggingAndAuditing() (err error)
+	SetupOptDir() (err error)
 	SetupRecordsJSONPermission(path string) error
 
 	// Disk management
+	AdjustPersistentDiskPartitioning(diskSettings boshsettings.DiskSettings, mountPoint string) error
 	MountPersistentDisk(diskSettings boshsettings.DiskSettings, mountPoint string) error
 	UnmountPersistentDisk(diskSettings boshsettings.DiskSettings) (didUnmount bool, err error)
 	MigratePersistentDisk(fromMountPoint, toMountPoint string) (err error)
-	GetEphemeralDiskPath(diskSettings boshsettings.DiskSettings) string
+	GetEphemeralDiskPath(diskSettings boshsettings.DiskSettings) (string, error)
 	IsMountPoint(path string) (partitionPath string, result bool, err error)
 	IsPersistentDiskMounted(diskSettings boshsettings.DiskSettings) (result bool, err error)
 	IsPersistentDiskMountable(diskSettings boshsettings.DiskSettings) (bool, error)

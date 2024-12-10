@@ -10,7 +10,7 @@ import (
 	boshsys "github.com/cloudfoundry/bosh-utils/system"
 )
 
-//go:generate counterfeiter . Manager
+//go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . Manager
 
 // Manager is a set of operations for manipulating the set of trusted CA certificates
 // on any OS platform.
@@ -55,6 +55,18 @@ func NewUbuntuCertManager(fs boshsys.FileSystem, runner boshsys.CmdRunner, timeo
 		updateCmdArgs: []string{"-f"},
 		logger:        logger,
 		logTag:        "UbuntuCertManager",
+		updateTimeout: timeout,
+	}
+}
+
+func NewCentOSCertManager(fs boshsys.FileSystem, runner boshsys.CmdRunner, timeout time.Duration, logger logger.Logger) Manager {
+	return &certManager{
+		fs:            fs,
+		runner:        runner,
+		path:          "/etc/pki/ca-trust/source/anchors/",
+		updateCmdPath: "/usr/bin/update-ca-trust",
+		logger:        logger,
+		logTag:        "CentOSCertManager",
 		updateTimeout: timeout,
 	}
 }
