@@ -1,11 +1,9 @@
 module github.com/bosh-io/web
 
-go 1.22.1
-
-toolchain go1.23.0
+go 1.22.0
 
 require (
-	github.com/bosh-dep-forks/bosh-provisioner v0.0.0-20241210222424-2c56855f4c3d
+	github.com/bosh-dep-forks/bosh-provisioner v0.0.0-20241211003357-d8722eb6ebaa
 	github.com/cloudfoundry-incubator/candiedyaml v0.0.0-20170901234223-a41693b7b7af
 	github.com/cloudfoundry/bosh-utils v0.0.511
 	github.com/cppforlife/go-semi-semantic v0.0.0-20160921010311-576b6af77ae4
@@ -64,6 +62,6 @@ require (
 	golang.org/x/text v0.21.0 // indirect
 	golang.org/x/tools v0.28.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	honnef.co/go/tools v0.5.1 // indirect
+	honnef.co/go/tools v0.5.0-0.dev // indirect
 	inet.af/wf v0.0.0-20221017222439-36129f591884 // indirect
 )
