@@ -3,7 +3,7 @@ package deployment
 import (
 	gonet "net"
 
-	boshaction "github.com/cloudfoundry/bosh-agent/agent/action"
+	boshaction "github.com/cloudfoundry/bosh-agent/v2/agent/action"
 
 	bpdepman "github.com/bosh-dep-forks/bosh-provisioner/deployment/manifest"
 )

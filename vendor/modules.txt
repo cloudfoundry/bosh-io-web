@@ -1,7 +1,7 @@
-# code.cloudfoundry.org/clock v1.24.0
+# code.cloudfoundry.org/clock v1.25.0
 ## explicit; go 1.22.0
 code.cloudfoundry.org/clock
-# code.cloudfoundry.org/tlsconfig v0.12.0
+# code.cloudfoundry.org/tlsconfig v0.13.0
 ## explicit; go 1.22
 code.cloudfoundry.org/tlsconfig
 # github.com/BurntSushi/toml v1.4.1-0.20240526193622-a339e1f7089c
@@ -15,7 +15,7 @@ github.com/aymerick/douceur/parser
 # github.com/bmatcuk/doublestar v1.3.4
 ## explicit; go 1.12
 github.com/bmatcuk/doublestar
-# github.com/bosh-dep-forks/bosh-provisioner v0.0.0-20241211003357-d8722eb6ebaa
+# github.com/bosh-dep-forks/bosh-provisioner v0.0.0-20241217205932-40fb8b191414
 ## explicit; go 1.22.0
 github.com/bosh-dep-forks/bosh-provisioner/deployment
 github.com/bosh-dep-forks/bosh-provisioner/deployment/manifest
@@ -32,55 +32,55 @@ github.com/charlievieth/fs
 # github.com/cloudfoundry-incubator/candiedyaml v0.0.0-20170901234223-a41693b7b7af
 ## explicit
 github.com/cloudfoundry-incubator/candiedyaml
-# github.com/cloudfoundry/bosh-agent v0.0.61-0.20241205231637-f0f09112ec0b
+# github.com/cloudfoundry/bosh-agent/v2 v2.705.0
 ## explicit; go 1.22.0
-github.com/cloudfoundry/bosh-agent/agent/action
-github.com/cloudfoundry/bosh-agent/agent/action/state
-github.com/cloudfoundry/bosh-agent/agent/alert
-github.com/cloudfoundry/bosh-agent/agent/applier
-github.com/cloudfoundry/bosh-agent/agent/applier/applyspec
-github.com/cloudfoundry/bosh-agent/agent/applier/bundlecollection
-github.com/cloudfoundry/bosh-agent/agent/applier/jobs
-github.com/cloudfoundry/bosh-agent/agent/applier/models
-github.com/cloudfoundry/bosh-agent/agent/applier/packages
-github.com/cloudfoundry/bosh-agent/agent/blobstore
-github.com/cloudfoundry/bosh-agent/agent/cmdrunner
-github.com/cloudfoundry/bosh-agent/agent/compiler
-github.com/cloudfoundry/bosh-agent/agent/httpblobprovider
-github.com/cloudfoundry/bosh-agent/agent/httpblobprovider/blobstore_delegator
-github.com/cloudfoundry/bosh-agent/agent/logstarprovider
-github.com/cloudfoundry/bosh-agent/agent/script
-github.com/cloudfoundry/bosh-agent/agent/script/cmd
-github.com/cloudfoundry/bosh-agent/agent/script/drain
-github.com/cloudfoundry/bosh-agent/agent/script/pathenv
-github.com/cloudfoundry/bosh-agent/agent/tarpath
-github.com/cloudfoundry/bosh-agent/agent/task
-github.com/cloudfoundry/bosh-agent/agent/utils
-github.com/cloudfoundry/bosh-agent/handler
-github.com/cloudfoundry/bosh-agent/infrastructure/devicepathresolver
-github.com/cloudfoundry/bosh-agent/ini
-github.com/cloudfoundry/bosh-agent/jobsupervisor
-github.com/cloudfoundry/bosh-agent/jobsupervisor/monit
-github.com/cloudfoundry/bosh-agent/jobsupervisor/winsvc
-github.com/cloudfoundry/bosh-agent/notification
-github.com/cloudfoundry/bosh-agent/platform
-github.com/cloudfoundry/bosh-agent/platform/cdrom
-github.com/cloudfoundry/bosh-agent/platform/cert
-github.com/cloudfoundry/bosh-agent/platform/disk
-github.com/cloudfoundry/bosh-agent/platform/net
-github.com/cloudfoundry/bosh-agent/platform/net/arp
-github.com/cloudfoundry/bosh-agent/platform/net/dnsresolver
-github.com/cloudfoundry/bosh-agent/platform/net/ip
-github.com/cloudfoundry/bosh-agent/platform/openiscsi
-github.com/cloudfoundry/bosh-agent/platform/stats
-github.com/cloudfoundry/bosh-agent/platform/udevdevice
-github.com/cloudfoundry/bosh-agent/platform/vitals
-github.com/cloudfoundry/bosh-agent/platform/windows/disk
-github.com/cloudfoundry/bosh-agent/platform/windows/powershell
-github.com/cloudfoundry/bosh-agent/servicemanager
-github.com/cloudfoundry/bosh-agent/settings
-github.com/cloudfoundry/bosh-agent/settings/directories
-# github.com/cloudfoundry/bosh-utils v0.0.514
+github.com/cloudfoundry/bosh-agent/v2/agent/action
+github.com/cloudfoundry/bosh-agent/v2/agent/action/state
+github.com/cloudfoundry/bosh-agent/v2/agent/alert
+github.com/cloudfoundry/bosh-agent/v2/agent/applier
+github.com/cloudfoundry/bosh-agent/v2/agent/applier/applyspec
+github.com/cloudfoundry/bosh-agent/v2/agent/applier/bundlecollection
+github.com/cloudfoundry/bosh-agent/v2/agent/applier/jobs
+github.com/cloudfoundry/bosh-agent/v2/agent/applier/models
+github.com/cloudfoundry/bosh-agent/v2/agent/applier/packages
+github.com/cloudfoundry/bosh-agent/v2/agent/blobstore
+github.com/cloudfoundry/bosh-agent/v2/agent/cmdrunner
+github.com/cloudfoundry/bosh-agent/v2/agent/compiler
+github.com/cloudfoundry/bosh-agent/v2/agent/httpblobprovider
+github.com/cloudfoundry/bosh-agent/v2/agent/httpblobprovider/blobstore_delegator
+github.com/cloudfoundry/bosh-agent/v2/agent/logstarprovider
+github.com/cloudfoundry/bosh-agent/v2/agent/script
+github.com/cloudfoundry/bosh-agent/v2/agent/script/cmd
+github.com/cloudfoundry/bosh-agent/v2/agent/script/drain
+github.com/cloudfoundry/bosh-agent/v2/agent/script/pathenv
+github.com/cloudfoundry/bosh-agent/v2/agent/tarpath
+github.com/cloudfoundry/bosh-agent/v2/agent/task
+github.com/cloudfoundry/bosh-agent/v2/agent/utils
+github.com/cloudfoundry/bosh-agent/v2/handler
+github.com/cloudfoundry/bosh-agent/v2/infrastructure/devicepathresolver
+github.com/cloudfoundry/bosh-agent/v2/ini
+github.com/cloudfoundry/bosh-agent/v2/jobsupervisor
+github.com/cloudfoundry/bosh-agent/v2/jobsupervisor/monit
+github.com/cloudfoundry/bosh-agent/v2/jobsupervisor/winsvc
+github.com/cloudfoundry/bosh-agent/v2/notification
+github.com/cloudfoundry/bosh-agent/v2/platform
+github.com/cloudfoundry/bosh-agent/v2/platform/cdrom
+github.com/cloudfoundry/bosh-agent/v2/platform/cert
+github.com/cloudfoundry/bosh-agent/v2/platform/disk
+github.com/cloudfoundry/bosh-agent/v2/platform/net
+github.com/cloudfoundry/bosh-agent/v2/platform/net/arp
+github.com/cloudfoundry/bosh-agent/v2/platform/net/dnsresolver
+github.com/cloudfoundry/bosh-agent/v2/platform/net/ip
+github.com/cloudfoundry/bosh-agent/v2/platform/openiscsi
+github.com/cloudfoundry/bosh-agent/v2/platform/stats
+github.com/cloudfoundry/bosh-agent/v2/platform/udevdevice
+github.com/cloudfoundry/bosh-agent/v2/platform/vitals
+github.com/cloudfoundry/bosh-agent/v2/platform/windows/disk
+github.com/cloudfoundry/bosh-agent/v2/platform/windows/powershell
+github.com/cloudfoundry/bosh-agent/v2/servicemanager
+github.com/cloudfoundry/bosh-agent/v2/settings
+github.com/cloudfoundry/bosh-agent/v2/settings/directories
+# github.com/cloudfoundry/bosh-utils v0.0.515
 ## explicit; go 1.22.0
 github.com/cloudfoundry/bosh-utils/blobstore
 github.com/cloudfoundry/bosh-utils/crypto
@@ -161,12 +161,6 @@ github.com/gorilla/css/scanner
 # github.com/jpillora/backoff v1.0.0
 ## explicit; go 1.13
 github.com/jpillora/backoff
-# github.com/klauspost/compress v1.17.11
-## explicit; go 1.21
-github.com/klauspost/compress/flate
-# github.com/klauspost/pgzip v1.2.6
-## explicit
-github.com/klauspost/pgzip
 # github.com/kr/text v0.2.0
 ## explicit
 # github.com/martini-contrib/render v0.0.0-20150707142108-ec18f8345a11
@@ -201,7 +195,7 @@ github.com/onsi/ginkgo/v2/internal/parallel_support
 github.com/onsi/ginkgo/v2/internal/testingtproxy
 github.com/onsi/ginkgo/v2/reporters
 github.com/onsi/ginkgo/v2/types
-# github.com/onsi/gomega v1.36.0
+# github.com/onsi/gomega v1.36.1
 ## explicit; go 1.22
 github.com/onsi/gomega
 github.com/onsi/gomega/format
@@ -244,7 +238,7 @@ golang.org/x/crypto/internal/alias
 golang.org/x/crypto/internal/poly1305
 golang.org/x/crypto/ssh
 golang.org/x/crypto/ssh/internal/bcrypt_pbkdf
-# golang.org/x/exp/typeparams v0.0.0-20241210194714-1829a127f884
+# golang.org/x/exp/typeparams v0.0.0-20241217172543-b2144cdd0a67
 ## explicit; go 1.18
 golang.org/x/exp/typeparams
 # golang.org/x/lint v0.0.0-20241112194109-818c5a804067
