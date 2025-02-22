@@ -32,8 +32,8 @@ github.com/charlievieth/fs
 # github.com/cloudfoundry-incubator/candiedyaml v0.0.0-20170901234223-a41693b7b7af
 ## explicit
 github.com/cloudfoundry-incubator/candiedyaml
-# github.com/cloudfoundry/bosh-agent/v2 v2.731.0
-## explicit; go 1.22.0
+# github.com/cloudfoundry/bosh-agent/v2 v2.733.0
+## explicit; go 1.23.0
 github.com/cloudfoundry/bosh-agent/v2/agent/action
 github.com/cloudfoundry/bosh-agent/v2/agent/action/state
 github.com/cloudfoundry/bosh-agent/v2/agent/alert
@@ -80,8 +80,8 @@ github.com/cloudfoundry/bosh-agent/v2/platform/windows/powershell
 github.com/cloudfoundry/bosh-agent/v2/servicemanager
 github.com/cloudfoundry/bosh-agent/v2/settings
 github.com/cloudfoundry/bosh-agent/v2/settings/directories
-# github.com/cloudfoundry/bosh-utils v0.0.530
-## explicit; go 1.22.0
+# github.com/cloudfoundry/bosh-utils v0.0.532
+## explicit; go 1.23.0
 github.com/cloudfoundry/bosh-utils/blobstore
 github.com/cloudfoundry/bosh-utils/crypto
 github.com/cloudfoundry/bosh-utils/errors
@@ -99,7 +99,7 @@ github.com/cloudfoundry/go-socks5
 ## explicit; go 1.23.0
 github.com/cloudfoundry/gosigar
 github.com/cloudfoundry/gosigar/sys/windows
-# github.com/cloudfoundry/socks5-proxy v0.2.142
+# github.com/cloudfoundry/socks5-proxy v0.2.143
 ## explicit; go 1.23.0
 github.com/cloudfoundry/socks5-proxy
 # github.com/codegangsta/inject v0.0.0-20150114235600-33e0aa1cb7c0
@@ -229,8 +229,8 @@ github.com/russross/blackfriday
 # go4.org/netipx v0.0.0-20231129151722-fdeea329fbba
 ## explicit; go 1.18
 go4.org/netipx
-# golang.org/x/crypto v0.33.0
-## explicit; go 1.20
+# golang.org/x/crypto v0.34.0
+## explicit; go 1.23.0
 golang.org/x/crypto/blowfish
 golang.org/x/crypto/chacha20
 golang.org/x/crypto/curve25519
@@ -238,8 +238,8 @@ golang.org/x/crypto/internal/alias
 golang.org/x/crypto/internal/poly1305
 golang.org/x/crypto/ssh
 golang.org/x/crypto/ssh/internal/bcrypt_pbkdf
-# golang.org/x/exp/typeparams v0.0.0-20250210185358-939b2ce775ac
-## explicit; go 1.18
+# golang.org/x/exp/typeparams v0.0.0-20250218142911-aa4b98e5adaa
+## explicit; go 1.23.0
 golang.org/x/exp/typeparams
 # golang.org/x/lint v0.0.0-20241112194109-818c5a804067
 ## explicit; go 1.11

@@ -5,7 +5,7 @@ go 1.23.0
 require (
 	github.com/bosh-dep-forks/bosh-provisioner v0.0.0-20241217205932-40fb8b191414
 	github.com/cloudfoundry-incubator/candiedyaml v0.0.0-20170901234223-a41693b7b7af
-	github.com/cloudfoundry/bosh-utils v0.0.530
+	github.com/cloudfoundry/bosh-utils v0.0.532
 	github.com/cppforlife/go-semi-semantic v0.0.0-20160921010311-576b6af77ae4
 	github.com/dpb587/metalink v0.5.0
 	github.com/dustin/go-humanize v1.0.1
@@ -26,10 +26,10 @@ require (
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/bmatcuk/doublestar v1.3.4 // indirect
 	github.com/charlievieth/fs v0.0.3 // indirect
-	github.com/cloudfoundry/bosh-agent/v2 v2.731.0 // indirect
+	github.com/cloudfoundry/bosh-agent/v2 v2.733.0 // indirect
 	github.com/cloudfoundry/go-socks5 v0.0.0-20240831012420-2590b55236ee // indirect
 	github.com/cloudfoundry/gosigar v1.3.88 // indirect
-	github.com/cloudfoundry/socks5-proxy v0.2.142 // indirect
+	github.com/cloudfoundry/socks5-proxy v0.2.143 // indirect
 	github.com/codegangsta/inject v0.0.0-20150114235600-33e0aa1cb7c0 // indirect
 	github.com/containerd/cgroups v1.1.0 // indirect
 	github.com/coreos/go-iptables v0.8.0 // indirect
@@ -51,8 +51,8 @@ require (
 	github.com/pivotal/go-smtpd v0.0.0-20140108210614-0af6982457e5 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	go4.org/netipx v0.0.0-20231129151722-fdeea329fbba // indirect
-	golang.org/x/crypto v0.33.0 // indirect
-	golang.org/x/exp/typeparams v0.0.0-20250210185358-939b2ce775ac // indirect
+	golang.org/x/crypto v0.34.0 // indirect
+	golang.org/x/exp/typeparams v0.0.0-20250218142911-aa4b98e5adaa // indirect
 	golang.org/x/mod v0.23.0 // indirect
 	golang.org/x/net v0.35.0 // indirect
 	golang.org/x/sync v0.11.0 // indirect
