@@ -1,7 +1,7 @@
-# code.cloudfoundry.org/clock v1.29.0
-## explicit; go 1.22.0
+# code.cloudfoundry.org/clock v1.30.0
+## explicit; go 1.23.0
 code.cloudfoundry.org/clock
-# code.cloudfoundry.org/tlsconfig v0.20.0
+# code.cloudfoundry.org/tlsconfig v0.21.0
 ## explicit; go 1.23.0
 code.cloudfoundry.org/tlsconfig
 # github.com/BurntSushi/toml v1.4.1-0.20240526193622-a339e1f7089c
@@ -32,7 +32,7 @@ github.com/charlievieth/fs
 # github.com/cloudfoundry-incubator/candiedyaml v0.0.0-20170901234223-a41693b7b7af
 ## explicit
 github.com/cloudfoundry-incubator/candiedyaml
-# github.com/cloudfoundry/bosh-agent/v2 v2.736.0
+# github.com/cloudfoundry/bosh-agent/v2 v2.738.0
 ## explicit; go 1.23.0
 github.com/cloudfoundry/bosh-agent/v2/agent/action
 github.com/cloudfoundry/bosh-agent/v2/agent/action/state
@@ -80,7 +80,7 @@ github.com/cloudfoundry/bosh-agent/v2/platform/windows/powershell
 github.com/cloudfoundry/bosh-agent/v2/servicemanager
 github.com/cloudfoundry/bosh-agent/v2/settings
 github.com/cloudfoundry/bosh-agent/v2/settings/directories
-# github.com/cloudfoundry/bosh-utils v0.0.534
+# github.com/cloudfoundry/bosh-utils v0.0.536
 ## explicit; go 1.23.0
 github.com/cloudfoundry/bosh-utils/blobstore
 github.com/cloudfoundry/bosh-utils/crypto
@@ -95,7 +95,7 @@ github.com/cloudfoundry/bosh-utils/work
 # github.com/cloudfoundry/go-socks5 v0.0.0-20240831012420-2590b55236ee
 ## explicit; go 1.21.0
 github.com/cloudfoundry/go-socks5
-# github.com/cloudfoundry/gosigar v1.3.88
+# github.com/cloudfoundry/gosigar v1.3.90
 ## explicit; go 1.23.0
 github.com/cloudfoundry/gosigar
 github.com/cloudfoundry/gosigar/sys/windows
@@ -152,7 +152,7 @@ github.com/google/go-cmp/cmp/internal/diff
 github.com/google/go-cmp/cmp/internal/flags
 github.com/google/go-cmp/cmp/internal/function
 github.com/google/go-cmp/cmp/internal/value
-# github.com/google/pprof v0.0.0-20250302191652-9094ed2288e7
+# github.com/google/pprof v0.0.0-20250315033105-103756e64e1d
 ## explicit; go 1.22
 github.com/google/pprof/profile
 # github.com/gorilla/css v1.0.1
