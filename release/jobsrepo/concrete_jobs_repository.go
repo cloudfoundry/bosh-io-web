@@ -20,7 +20,7 @@ type CJRepository struct {
 	logger        boshlog.Logger
 }
 
-type relVerRecKey struct {
+type relVerRecKey struct { //nolint:unused
 	Source     string
 	VersionRaw string
 }

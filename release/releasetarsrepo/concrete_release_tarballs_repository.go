@@ -72,7 +72,7 @@ func (r CRTRepository) Find(source, version string) (ReleaseTarballRec, error) {
 	}
 
 	if relTarRec.SHA1 == "" {
-		return relTarRec, errors.New("Missing SHA1")
+		return relTarRec, errors.New("Missing SHA1") //nolint:staticcheck
 	}
 
 	return relTarRec, nil

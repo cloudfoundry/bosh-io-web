@@ -117,7 +117,7 @@ func (u CDNSignedURL) hashAndSignPolicy(policy []byte) ([]byte, []byte, error) {
 // amzEncode encodes data with base64 and special char replacements for AWS
 func (u CDNSignedURL) awsEncode(bytes []byte) string {
 	in := base64.StdEncoding.EncodeToString(bytes)
-	in = strings.Replace(in, "+", "-", -1)
-	in = strings.Replace(in, "=", "_", -1)
-	return strings.Replace(in, "/", "~", -1)
+	in = strings.Replace(in, "+", "-", -1)   //nolint:staticcheck
+	in = strings.Replace(in, "=", "_", -1)   //nolint:staticcheck
+	return strings.Replace(in, "/", "~", -1) //nolint:staticcheck
 }

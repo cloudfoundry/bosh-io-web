@@ -71,7 +71,7 @@ func (r CRRepository) ListCurated() ([]ReleaseVersionRec, error) {
 		}
 	}
 
-	for i, _ := range relVerRecs {
+	for i := range relVerRecs {
 		relVerRecs[i].avatarsResolver = r.avatarsResolver
 	}
 
@@ -90,7 +90,7 @@ func (r CRRepository) ListAll() ([]Source, error) {
 		sources = append(sources, Source{Full: def.TrimmedURL()})
 	}
 
-	for i, _ := range sources {
+	for i := range sources {
 		sources[i].avatarsResolver = r.avatarsResolver
 	}
 
