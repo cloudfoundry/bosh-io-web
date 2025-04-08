@@ -1,13 +1,13 @@
 package stemcell
 
 var (
-	lightFormat = Format{
+	lightFormat = Format{ //nolint:unused
 		Name: "Light",
 	}
-	fullFormat = Format{
+	fullFormat = Format{ //nolint:unused
 		Name: "Full",
 	}
-	openstackRawFormat = Format{
+	openstackRawFormat = Format{ //nolint:unused
 		Name: "Raw",
 	}
 )

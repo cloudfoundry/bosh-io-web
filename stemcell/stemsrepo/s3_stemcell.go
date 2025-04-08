@@ -25,8 +25,8 @@ var (
 			`\.tgz\z`,
 	)
 	// Previous verisons derived checksums from other locations instead of DB
-	minLinuxChecksumedVersion, _   = semiver.NewVersionFromString("3262.2")
-	minWindowsChecksumedVersion, _ = semiver.NewVersionFromString("1079.0")
+	minLinuxChecksumedVersion, _   = semiver.NewVersionFromString("3262.2") //nolint:errcheck
+	minWindowsChecksumedVersion, _ = semiver.NewVersionFromString("1079.0") //nolint:errcheck
 )
 
 type S3Stemcell struct {
@@ -148,7 +148,7 @@ func (f S3Stemcell) IsLight() bool {
 }
 
 func (f S3Stemcell) IsForChina() bool {
-	return strings.Index(f.flavor, "-china-") != -1
+	return strings.Index(f.flavor, "-china-") != -1 //nolint:staticcheck
 }
 
 func (f S3Stemcell) IsDeprecated() bool {

@@ -98,7 +98,7 @@ var (
 )
 
 var (
-	trustyInfrastructures = Infrastructures{
+	trustyInfrastructures = Infrastructures{ //nolint:unused
 		awsInfrastructure,
 		googleInfrastructure,
 		azureInfrastructure,
