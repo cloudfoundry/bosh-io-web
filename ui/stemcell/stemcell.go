@@ -182,7 +182,7 @@ func (s Stemcell) ActualDownloadURL(preferLight bool, mustBeForChina bool) (stri
 			return s.LightChinaSource.URL, nil
 		}
 
-		return "", errors.New("No light stemcell for China found")
+		return "", errors.New("No light stemcell for China found") //nolint:staticcheck
 	}
 
 	if preferLight {

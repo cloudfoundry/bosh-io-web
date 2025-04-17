@@ -83,7 +83,7 @@ func (s UniqueVersionStemcells) ForAPI() []Stemcell {
 	stemcells := []Stemcell{}
 
 	for _, uniqueStems := range s {
-		for _, stem := range uniqueStems.Stemcells {
+		for _, stem := range uniqueStems.Stemcells { //nolint:staticcheck
 			stemcells = append(stemcells, stem)
 		}
 	}

@@ -18,7 +18,7 @@ type ReleaseVersionRec struct {
 	Source     string
 	VersionRaw string
 
-	avatarURL string
+	avatarURL string //nolint:unused
 }
 
 type ReleaseVersionRecSorting []ReleaseVersionRec

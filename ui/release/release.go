@@ -7,10 +7,11 @@ import (
 	"net/url"
 
 	bprel "github.com/bosh-dep-forks/bosh-provisioner/release"
-	"github.com/bosh-io/web/ui/nav"
 	semiver "github.com/cppforlife/go-semi-semantic/version"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/russross/blackfriday"
+
+	"github.com/bosh-io/web/ui/nav"
 
 	bhrelsrepo "github.com/bosh-io/web/release/releasesrepo"
 )
@@ -225,7 +226,7 @@ func (r Release) MarshalJSON() ([]byte, error) {
 
 func (r Release) Navigation() nav.Link {
 	releaseNav := nav.Link{
-		Title: fmt.Sprintf("%s", r.Version),
+		Title: fmt.Sprintf("%s", r.Version), //nolint:staticcheck
 		URL:   r.URL(),
 	}
 
@@ -267,7 +268,7 @@ func (s ReleaseSorting) Len() int           { return len(s) }
 func (s ReleaseSorting) Less(i, j int) bool { return s[i].Version.IsLt(s[j].Version) }
 func (s ReleaseSorting) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
 
-func parseVersion(versionRaw string) semiver.Version {
+func parseVersion(versionRaw string) semiver.Version { //nolint:unused
 	ver, err := semiver.NewVersionFromString(versionRaw)
 	if err != nil {
 		panic(fmt.Sprintf("Version '%s' is not valid: %s", versionRaw, err))

@@ -52,19 +52,19 @@ func (g ReleaseGraph) FocusedSVG(focusedPkg bhrelui.Package) template.HTML {
 func (g ReleaseGraph) render(focusedPkg *bhrelui.Package) template.HTML {
 	var in bytes.Buffer
 
-	fmt.Fprintf(&in, "digraph packages {\n")
-	fmt.Fprintf(&in, " size=\"11,1000\";\n")
-	fmt.Fprintf(&in, " overlap=\"false\";\n")
-	fmt.Fprintf(&in, " packMode=\"node\";\n")
-	fmt.Fprintf(&in, " splines=\"spline\";\n")
-	fmt.Fprintf(&in, " sep=\"+20\";\n")
+	fmt.Fprintf(&in, "digraph packages {\n")   //nolint:errcheck
+	fmt.Fprintf(&in, " size=\"11,1000\";\n")   //nolint:errcheck
+	fmt.Fprintf(&in, " overlap=\"false\";\n")  //nolint:errcheck
+	fmt.Fprintf(&in, " packMode=\"node\";\n")  //nolint:errcheck
+	fmt.Fprintf(&in, " splines=\"spline\";\n") //nolint:errcheck
+	fmt.Fprintf(&in, " sep=\"+20\";\n")        //nolint:errcheck
 
 	for i, pkg := range g.pkgs {
 		nodeI := i
 
 		style := ", style=\"\", color=\"#ffffff\", fontname=\"Helvetica\""
 
-		fmt.Fprintf(
+		fmt.Fprintf( //nolint:errcheck
 			&in,
 			" n%d [label=\"%s\", URL=\"%s\", tooltip=\"%s\" %s];\n",
 			nodeI, pkg.Name, pkg.URL(), pkg.Fingerprint, style,
@@ -74,7 +74,7 @@ func (g ReleaseGraph) render(focusedPkg *bhrelui.Package) template.HTML {
 			// Draw edge between pkg and its depPkg
 			for allI, allPkg := range g.pkgs {
 				if depPkg.Name == allPkg.Name {
-					fmt.Fprintf(&in, " n%d -> n%d [style=\"dotted\"];\n", nodeI, allI)
+					fmt.Fprintf(&in, " n%d -> n%d [style=\"dotted\"];\n", nodeI, allI) //nolint:errcheck
 					break
 				}
 			}
@@ -98,7 +98,7 @@ func (g ReleaseGraph) render(focusedPkg *bhrelui.Package) template.HTML {
 			// Draw edge between pkg and its depPkg
 			for allI, allPkg := range g.pkgs {
 				if depPkg.Name == allPkg.Name {
-					fmt.Fprintf(&in, " n%d -> n%d [style=\"\"];\n", nodeI, allI)
+					fmt.Fprintf(&in, " n%d -> n%d [style=\"\"];\n", nodeI, allI) //nolint:errcheck
 					break
 				}
 			}
@@ -108,7 +108,7 @@ func (g ReleaseGraph) render(focusedPkg *bhrelui.Package) template.HTML {
 	in.WriteString("}\n")
 
 	stdout, _, _, err := g.runner.RunCommandWithInput(
-		string(in.Bytes()),
+		string(in.Bytes()), //nolint:staticcheck
 		"sfdp",
 		"-Tsvg",
 	)

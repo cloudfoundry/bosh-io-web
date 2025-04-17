@@ -66,7 +66,7 @@ func (g DistroGroup) Infrastructures() []string {
 		for _, v := range n.ByVersion {
 			for _, s := range v.Stemcells {
 				for _, ss := range s.Sources() {
-					infrastructures[ss.InfrastructureName()] = struct{}{}
+					infrastructures[ss.InfrastructureName()] = struct{}{} //nolint:staticcheck
 				}
 			}
 		}
@@ -74,7 +74,7 @@ func (g DistroGroup) Infrastructures() []string {
 
 	var result []string
 
-	for infrastructureName, _ := range infrastructures {
+	for infrastructureName := range infrastructures {
 		result = append(result, infrastructureName)
 	}
 

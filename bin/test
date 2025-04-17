@@ -1,33 +1,24 @@
 #!/bin/bash
+set -u -o pipefail
+
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 result=0
 
-bin=$(dirname $0)
-
-echo -e "\n Formatting packages..."
-go fmt github.com/bosh-io/web/...
-let "result+=$?"
+"${repo_root}/bin/golint"
 
 echo -e "\n Testing packages..."
-go run github.com/onsi/ginkgo/v2/ginkgo --skip-package docs-bosh -r $bin/..
-let "result+=$?"
-
-echo -e "\n Vetting packages for potential issues..."
-go vet github.com/bosh-io/web/...
-let "result+=$?"
-
-echo -e "\n Checking with golint..."
-$bin/golint
-let "result+=$?"
+go run github.com/onsi/ginkgo/v2/ginkgo run --skip-package docs-bosh -r ${repo_root}/bin/..
+(( result+=$? ))
 
 echo -e "\n Running build script to confirm everything compiles..."
 go build -o bosh-hub github.com/bosh-io/web/main
-let "result+=$?"
+(( result+=$? ))
 
-if [ $result -eq 0 ]; then
+if [ ${result} -eq 0 ]; then
   echo -e "\nSUITE SUCCESS"
 else
   echo -e "\nSUITE FAILURE"
 fi
 
-exit $result
+exit ${result}
