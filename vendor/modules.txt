@@ -1,4 +1,4 @@
-# code.cloudfoundry.org/clock v1.34.0
+# code.cloudfoundry.org/clock v1.35.0
 ## explicit; go 1.23.0
 code.cloudfoundry.org/clock
 # code.cloudfoundry.org/tlsconfig v0.24.0
@@ -99,7 +99,7 @@ github.com/cloudfoundry/go-socks5
 ## explicit; go 1.23.0
 github.com/cloudfoundry/gosigar
 github.com/cloudfoundry/gosigar/sys/windows
-# github.com/cloudfoundry/socks5-proxy v0.2.148
+# github.com/cloudfoundry/socks5-proxy v0.2.149
 ## explicit; go 1.23.0
 github.com/cloudfoundry/socks5-proxy
 # github.com/codegangsta/inject v0.0.0-20150114235600-33e0aa1cb7c0
@@ -152,7 +152,7 @@ github.com/google/go-cmp/cmp/internal/diff
 github.com/google/go-cmp/cmp/internal/flags
 github.com/google/go-cmp/cmp/internal/function
 github.com/google/go-cmp/cmp/internal/value
-# github.com/google/pprof v0.0.0-20250403155104-27863c87afa6
+# github.com/google/pprof v0.0.0-20250418163039-24c5476c6587
 ## explicit; go 1.23
 github.com/google/pprof/profile
 # github.com/gorilla/css v1.0.1
