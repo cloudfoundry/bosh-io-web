@@ -1,9 +1,10 @@
 package releasesrepo
 
 import (
-	"gopkg.in/yaml.v2"
 	"path/filepath"
 	"strings"
+
+	"gopkg.in/yaml.v2"
 
 	bosherr "github.com/cloudfoundry/bosh-utils/errors"
 	boshsys "github.com/cloudfoundry/bosh-utils/system"

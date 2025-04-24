@@ -1,17 +1,17 @@
 #!/bin/bash 
+set -eu -o pipefail
 
-set -e
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-bin=$(dirname $0)
+(
+  cd "${repo_root}"
 
-errors=$(
-  go run golang.org/x/lint/golint $bin/..                                   \
-    | grep -v    '/vendor/'                                 \
-    | grep -v -e 'should have comment.* or be unexported'   \
-    | grep -v    'error strings should not be capitalized'
+  if ! command -v golangci-lint &> /dev/null; then
+    go install -v github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+  fi
+
+  echo " Linting with:"
+  golangci-lint version
+  golangci-lint run ./...
 )
 
-if [ "$(echo -n "$errors")" != "" ]; then
-  echo "$errors"
-  exit 1
-fi

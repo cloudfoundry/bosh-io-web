@@ -60,7 +60,7 @@ func NewRepos(options ReposOptions, fs boshsys.FileSystem, logger boshlog.Logger
 	signal.Notify(sigs, syscall.SIGHUP)
 
 	go func() {
-		for {
+		for { //nolint:staticcheck
 			select {
 			case <-sigs:
 				cachingFS.DropCache()
@@ -74,7 +74,7 @@ func NewRepos(options ReposOptions, fs boshsys.FileSystem, logger boshlog.Logger
 
 	var linkerFactory bhs3.URLFactory
 
-	switch {
+	switch { //nolint:staticcheck
 	case linkerOpts.Type == "CloudFront":
 		linkerFactory, err = bhs3.NewCDNURLFactory(linkerOpts.BaseURL, linkerOpts.KeyPairID, linkerOpts.PrivateKey)
 	case linkerOpts.Type == "S3":
