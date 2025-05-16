@@ -93,9 +93,16 @@
               <li>
                 <a href="{{ .DownloadURL }}">Release Tarball</a>
                 &ndash;
-                {{ if .TarballSHA1 }}
-                  <code class="codehilite">sha1:{{ .TarballSHA1 }}</code>
-                {{ end }}
+                  {{ if and .TarballSHA1 .TarballSHA256 }}
+                    <button onclick="toggleHash(this)">SHA256 ⇋</button>
+                  {{ end }}
+                  <br>
+                  {{ with .TarballSHA1 }}
+                    <code class="codehilite hash sha1">sha1:{{ . }}</code>
+                  {{ end }}
+                  {{ with .TarballSHA256 }}
+                    <code class="codehilite hash sha256" style="display: none">sha1: sha256:{{ . }}</code>
+                  {{ end }}
               </li>
             </ul>
           {{ end }}
@@ -103,6 +110,20 @@
           <p class="empty">No release versions</p>
         {{ end }}
       </article>
+      <script>
+          function toggleHash(button) {
+            const li = button.closest('li');
+            const sha1 = li.querySelector('.sha1');
+            const sha256 = li.querySelector('.sha256');
+
+            if (sha1 && sha256) {
+              const showingSHA1 = sha1.style.display !== 'none';
+              sha1.style.display = showingSHA1 ? 'none' : 'inline';
+              sha256.style.display = showingSHA1 ? 'inline' : 'none';
+              button.textContent = `${showingSHA1 ? 'SHA1 ⇋' : 'SHA256 ⇋'}`;
+            }
+          }
+      </script>
     </div>
   </div>
 </main>
