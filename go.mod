@@ -20,16 +20,16 @@ require (
 )
 
 require (
-	code.cloudfoundry.org/clock v1.39.0 // indirect
-	code.cloudfoundry.org/tlsconfig v0.28.0 // indirect
+	code.cloudfoundry.org/clock v1.40.0 // indirect
+	code.cloudfoundry.org/tlsconfig v0.29.0 // indirect
 	github.com/BurntSushi/toml v1.5.0 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/bmatcuk/doublestar v1.3.4 // indirect
 	github.com/charlievieth/fs v0.0.3 // indirect
-	github.com/cloudfoundry/bosh-agent/v2 v2.749.0 // indirect
+	github.com/cloudfoundry/bosh-agent/v2 v2.751.0 // indirect
 	github.com/cloudfoundry/go-socks5 v0.0.0-20250423223041-4ad5fea42851 // indirect
 	github.com/cloudfoundry/gosigar v1.3.93 // indirect
-	github.com/cloudfoundry/socks5-proxy v0.2.153 // indirect
+	github.com/cloudfoundry/socks5-proxy v0.2.154 // indirect
 	github.com/codegangsta/inject v0.0.0-20150114235600-33e0aa1cb7c0 // indirect
 	github.com/containerd/cgroups v1.1.0 // indirect
 	github.com/coreos/go-iptables v0.8.0 // indirect
@@ -40,7 +40,7 @@ require (
 	github.com/godbus/dbus/v5 v5.1.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
-	github.com/google/pprof v0.0.0-20250602020802-c6617b811d0e // indirect
+	github.com/google/pprof v0.0.0-20250607225305-033d6d78b36a // indirect
 	github.com/gorilla/css v1.0.1 // indirect
 	github.com/jpillora/backoff v1.0.0 // indirect
 	github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d // indirect

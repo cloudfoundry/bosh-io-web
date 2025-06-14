@@ -1,7 +1,7 @@
-# code.cloudfoundry.org/clock v1.39.0
+# code.cloudfoundry.org/clock v1.40.0
 ## explicit; go 1.23.0
 code.cloudfoundry.org/clock
-# code.cloudfoundry.org/tlsconfig v0.28.0
+# code.cloudfoundry.org/tlsconfig v0.29.0
 ## explicit; go 1.23.0
 code.cloudfoundry.org/tlsconfig
 # github.com/BurntSushi/toml v1.5.0
@@ -32,7 +32,7 @@ github.com/charlievieth/fs
 # github.com/cloudfoundry-incubator/candiedyaml v0.0.0-20170901234223-a41693b7b7af
 ## explicit
 github.com/cloudfoundry-incubator/candiedyaml
-# github.com/cloudfoundry/bosh-agent/v2 v2.749.0
+# github.com/cloudfoundry/bosh-agent/v2 v2.751.0
 ## explicit; go 1.23.0
 github.com/cloudfoundry/bosh-agent/v2/agent/action
 github.com/cloudfoundry/bosh-agent/v2/agent/action/state
@@ -99,7 +99,7 @@ github.com/cloudfoundry/go-socks5
 ## explicit; go 1.23.0
 github.com/cloudfoundry/gosigar
 github.com/cloudfoundry/gosigar/sys/windows
-# github.com/cloudfoundry/socks5-proxy v0.2.153
+# github.com/cloudfoundry/socks5-proxy v0.2.154
 ## explicit; go 1.23.0
 github.com/cloudfoundry/socks5-proxy
 # github.com/codegangsta/inject v0.0.0-20150114235600-33e0aa1cb7c0
@@ -152,7 +152,7 @@ github.com/google/go-cmp/cmp/internal/diff
 github.com/google/go-cmp/cmp/internal/flags
 github.com/google/go-cmp/cmp/internal/function
 github.com/google/go-cmp/cmp/internal/value
-# github.com/google/pprof v0.0.0-20250602020802-c6617b811d0e
+# github.com/google/pprof v0.0.0-20250607225305-033d6d78b36a
 ## explicit; go 1.23.0
 github.com/google/pprof/profile
 # github.com/gorilla/css v1.0.1
