@@ -93,8 +93,8 @@
               <li>
                 <a href="{{ .DownloadURL }}">Release Tarball</a>
                 &ndash;
-                {{ if .TarballSHA1 }}
-                  <code class="codehilite">sha1:{{ .TarballSHA1 }}</code>
+                {{ if .TarballSHA256 }}
+                  <code class="codehilite">sha1: sha256:{{ .TarballSHA256 }}</code>
                 {{ end }}
               </li>
             </ul>
