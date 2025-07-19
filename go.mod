@@ -5,7 +5,7 @@ go 1.23.0
 require (
 	github.com/bosh-dep-forks/bosh-provisioner v0.0.0-20241217205932-40fb8b191414
 	github.com/cloudfoundry-incubator/candiedyaml v0.0.0-20170901234223-a41693b7b7af
-	github.com/cloudfoundry/bosh-utils v0.0.548
+	github.com/cloudfoundry/bosh-utils v0.0.552
 	github.com/cppforlife/go-semi-semantic v0.0.0-20160921010311-576b6af77ae4
 	github.com/dpb587/metalink v0.5.0
 	github.com/dustin/go-humanize v1.0.1
@@ -20,13 +20,13 @@ require (
 )
 
 require (
-	code.cloudfoundry.org/clock v1.41.0 // indirect
-	code.cloudfoundry.org/tlsconfig v0.30.0 // indirect
+	code.cloudfoundry.org/clock v1.42.0 // indirect
+	code.cloudfoundry.org/tlsconfig v0.31.0 // indirect
 	github.com/BurntSushi/toml v1.5.0 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/bmatcuk/doublestar v1.3.4 // indirect
 	github.com/charlievieth/fs v0.0.3 // indirect
-	github.com/cloudfoundry/bosh-agent/v2 v2.755.0 // indirect
+	github.com/cloudfoundry/bosh-agent/v2 v2.758.0 // indirect
 	github.com/cloudfoundry/go-socks5 v0.0.0-20250423223041-4ad5fea42851 // indirect
 	github.com/cloudfoundry/gosigar v1.3.96 // indirect
 	github.com/cloudfoundry/socks5-proxy v0.2.156 // indirect
@@ -52,14 +52,13 @@ require (
 	go.uber.org/automaxprocs v1.6.0 // indirect
 	go4.org/netipx v0.0.0-20231129151722-fdeea329fbba // indirect
 	golang.org/x/crypto v0.40.0 // indirect
-	golang.org/x/exp/typeparams v0.0.0-20250711185948-6ae5c78190dc // indirect
+	golang.org/x/exp/typeparams v0.0.0-20250718183923-645b1fa84792 // indirect
 	golang.org/x/mod v0.26.0 // indirect
 	golang.org/x/net v0.42.0 // indirect
 	golang.org/x/sync v0.16.0 // indirect
 	golang.org/x/sys v0.34.0 // indirect
 	golang.org/x/text v0.27.0 // indirect
 	golang.org/x/tools v0.35.0 // indirect
-	golang.org/x/tools/go/expect v0.1.1-deprecated // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	honnef.co/go/tools v0.6.1 // indirect
 	inet.af/wf v0.0.0-20221017222439-36129f591884 // indirect
