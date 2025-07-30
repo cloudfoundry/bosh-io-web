@@ -13,20 +13,20 @@ require (
 	github.com/martini-contrib/render v0.0.0-20150707142108-ec18f8345a11
 	github.com/microcosm-cc/bluemonday v1.0.27
 	github.com/onsi/ginkgo/v2 v2.23.4
-	github.com/onsi/gomega v1.37.0
+	github.com/onsi/gomega v1.38.0
 	github.com/russross/blackfriday v1.6.0
 	golang.org/x/lint v0.0.0-20241112194109-818c5a804067
 	gopkg.in/yaml.v2 v2.4.0
 )
 
 require (
-	code.cloudfoundry.org/clock v1.42.0 // indirect
+	code.cloudfoundry.org/clock v1.43.0 // indirect
 	code.cloudfoundry.org/tlsconfig v0.31.0 // indirect
 	github.com/BurntSushi/toml v1.5.0 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/bmatcuk/doublestar v1.3.4 // indirect
 	github.com/charlievieth/fs v0.0.3 // indirect
-	github.com/cloudfoundry/bosh-agent/v2 v2.758.0 // indirect
+	github.com/cloudfoundry/bosh-agent/v2 v2.759.0 // indirect
 	github.com/cloudfoundry/go-socks5 v0.0.0-20250423223041-4ad5fea42851 // indirect
 	github.com/cloudfoundry/gosigar v1.3.96 // indirect
 	github.com/cloudfoundry/socks5-proxy v0.2.156 // indirect
