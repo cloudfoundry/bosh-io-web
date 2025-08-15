@@ -7,5 +7,5 @@
 
 <p>Or upload it to your director with the <code>upload-release</code> command:</p>
 
-<div class="codehilite"><pre>bosh upload-release --sha2 {{ .TarballSHA256 }} \
+<div class="codehilite"><pre>bosh upload-release --sha1=sha256:{{ .TarballSHA256 }} \
   "<a href="{{ .UserVisibleDownloadURL }}" style="color:inherit;">{{ .UserVisibleDownloadURL }}</a>"</pre></div>
