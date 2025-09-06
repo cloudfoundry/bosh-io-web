@@ -83,7 +83,7 @@ github.com/cloudfoundry/bosh-agent/v2/platform/windows/powershell
 github.com/cloudfoundry/bosh-agent/v2/servicemanager
 github.com/cloudfoundry/bosh-agent/v2/settings
 github.com/cloudfoundry/bosh-agent/v2/settings/directories
-# github.com/cloudfoundry/bosh-utils v0.0.554
+# github.com/cloudfoundry/bosh-utils v0.0.555
 ## explicit; go 1.23.0
 github.com/cloudfoundry/bosh-utils/blobstore
 github.com/cloudfoundry/bosh-utils/crypto
@@ -98,7 +98,7 @@ github.com/cloudfoundry/bosh-utils/work
 # github.com/cloudfoundry/go-socks5 v0.0.0-20250423223041-4ad5fea42851
 ## explicit; go 1.21.0
 github.com/cloudfoundry/go-socks5
-# github.com/cloudfoundry/gosigar v1.3.98
+# github.com/cloudfoundry/gosigar v1.3.100
 ## explicit; go 1.23.0
 github.com/cloudfoundry/gosigar
 github.com/cloudfoundry/gosigar/sys/windows
@@ -174,7 +174,7 @@ github.com/microcosm-cc/bluemonday/css
 # github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d
 ## explicit
 github.com/nu7hatch/gouuid
-# github.com/onsi/ginkgo/v2 v2.25.2
+# github.com/onsi/ginkgo/v2 v2.25.3
 ## explicit; go 1.23.0
 github.com/onsi/ginkgo/v2
 github.com/onsi/ginkgo/v2/config
