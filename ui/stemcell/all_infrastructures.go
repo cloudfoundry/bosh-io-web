@@ -123,6 +123,7 @@ var (
 		awsInfrastructure,
 		googleInfrastructure,
 		azureInfrastructure,
+    	alicloudInfrastructure,
 		openstackInfrastructure,
 		vsphereInfrastructure,
 		wardenInfrastructure,
