@@ -5,7 +5,7 @@ go 1.23.0
 require (
 	github.com/bosh-dep-forks/bosh-provisioner v0.0.0-20241217205932-40fb8b191414
 	github.com/cloudfoundry-incubator/candiedyaml v0.0.0-20170901234223-a41693b7b7af
-	github.com/cloudfoundry/bosh-utils v0.0.555
+	github.com/cloudfoundry/bosh-utils v0.0.556
 	github.com/cppforlife/go-semi-semantic v0.0.0-20160921010311-576b6af77ae4
 	github.com/dpb587/metalink v0.5.0
 	github.com/dustin/go-humanize v1.0.1
@@ -27,10 +27,10 @@ require (
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/bmatcuk/doublestar v1.3.4 // indirect
 	github.com/charlievieth/fs v0.0.3 // indirect
-	github.com/cloudfoundry/bosh-agent/v2 v2.759.0 // indirect
+	github.com/cloudfoundry/bosh-agent/v2 v2.769.0 // indirect
 	github.com/cloudfoundry/go-socks5 v0.0.0-20250423223041-4ad5fea42851 // indirect
-	github.com/cloudfoundry/gosigar v1.3.102 // indirect
-	github.com/cloudfoundry/socks5-proxy v0.2.156 // indirect
+	github.com/cloudfoundry/gosigar v1.3.103 // indirect
+	github.com/cloudfoundry/socks5-proxy v0.2.157 // indirect
 	github.com/codegangsta/inject v0.0.0-20150114235600-33e0aa1cb7c0 // indirect
 	github.com/containerd/cgroups v1.1.0 // indirect
 	github.com/coreos/go-iptables v0.8.0 // indirect
