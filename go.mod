@@ -5,14 +5,14 @@ go 1.23.0
 require (
 	github.com/bosh-dep-forks/bosh-provisioner v0.0.0-20241217205932-40fb8b191414
 	github.com/cloudfoundry-incubator/candiedyaml v0.0.0-20170901234223-a41693b7b7af
-	github.com/cloudfoundry/bosh-utils v0.0.556
+	github.com/cloudfoundry/bosh-utils v0.0.560
 	github.com/cppforlife/go-semi-semantic v0.0.0-20160921010311-576b6af77ae4
 	github.com/dpb587/metalink v0.5.0
 	github.com/dustin/go-humanize v1.0.1
 	github.com/go-martini/martini v0.0.0-20170121215854-22fa46961aab
 	github.com/martini-contrib/render v0.0.0-20150707142108-ec18f8345a11
 	github.com/microcosm-cc/bluemonday v1.0.27
-	github.com/onsi/ginkgo/v2 v2.26.0
+	github.com/onsi/ginkgo/v2 v2.27.2
 	github.com/onsi/gomega v1.38.2
 	github.com/russross/blackfriday v1.6.0
 	golang.org/x/lint v0.0.0-20241112194109-818c5a804067
@@ -27,10 +27,10 @@ require (
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/bmatcuk/doublestar v1.3.4 // indirect
 	github.com/charlievieth/fs v0.0.3 // indirect
-	github.com/cloudfoundry/bosh-agent/v2 v2.769.0 // indirect
+	github.com/cloudfoundry/bosh-agent/v2 v2.775.0 // indirect
 	github.com/cloudfoundry/go-socks5 v0.0.0-20250423223041-4ad5fea42851 // indirect
-	github.com/cloudfoundry/gosigar v1.3.103 // indirect
-	github.com/cloudfoundry/socks5-proxy v0.2.157 // indirect
+	github.com/cloudfoundry/gosigar v1.3.107 // indirect
+	github.com/cloudfoundry/socks5-proxy v0.2.159 // indirect
 	github.com/codegangsta/inject v0.0.0-20150114235600-33e0aa1cb7c0 // indirect
 	github.com/containerd/cgroups v1.1.0 // indirect
 	github.com/coreos/go-iptables v0.8.0 // indirect
@@ -50,7 +50,6 @@ require (
 	github.com/pivotal-cf/paraphernalia v0.0.0-20180203224945-a64ae2051c20 // indirect
 	github.com/pivotal/go-smtpd v0.0.0-20140108210614-0af6982457e5 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	go.uber.org/automaxprocs v1.6.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
 	go4.org/netipx v0.0.0-20231129151722-fdeea329fbba // indirect
 	golang.org/x/crypto v0.41.0 // indirect

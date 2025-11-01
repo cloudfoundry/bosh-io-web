@@ -35,7 +35,7 @@ github.com/charlievieth/fs
 # github.com/cloudfoundry-incubator/candiedyaml v0.0.0-20170901234223-a41693b7b7af
 ## explicit
 github.com/cloudfoundry-incubator/candiedyaml
-# github.com/cloudfoundry/bosh-agent/v2 v2.769.0
+# github.com/cloudfoundry/bosh-agent/v2 v2.775.0
 ## explicit; go 1.23.0
 github.com/cloudfoundry/bosh-agent/v2/agent/action
 github.com/cloudfoundry/bosh-agent/v2/agent/action/state
@@ -83,7 +83,7 @@ github.com/cloudfoundry/bosh-agent/v2/platform/windows/powershell
 github.com/cloudfoundry/bosh-agent/v2/servicemanager
 github.com/cloudfoundry/bosh-agent/v2/settings
 github.com/cloudfoundry/bosh-agent/v2/settings/directories
-# github.com/cloudfoundry/bosh-utils v0.0.556
+# github.com/cloudfoundry/bosh-utils v0.0.560
 ## explicit; go 1.23.0
 github.com/cloudfoundry/bosh-utils/blobstore
 github.com/cloudfoundry/bosh-utils/crypto
@@ -98,11 +98,11 @@ github.com/cloudfoundry/bosh-utils/work
 # github.com/cloudfoundry/go-socks5 v0.0.0-20250423223041-4ad5fea42851
 ## explicit; go 1.21.0
 github.com/cloudfoundry/go-socks5
-# github.com/cloudfoundry/gosigar v1.3.103
+# github.com/cloudfoundry/gosigar v1.3.107
 ## explicit; go 1.23.0
 github.com/cloudfoundry/gosigar
 github.com/cloudfoundry/gosigar/sys/windows
-# github.com/cloudfoundry/socks5-proxy v0.2.157
+# github.com/cloudfoundry/socks5-proxy v0.2.159
 ## explicit; go 1.23.0
 github.com/cloudfoundry/socks5-proxy
 # github.com/codegangsta/inject v0.0.0-20150114235600-33e0aa1cb7c0
@@ -174,12 +174,13 @@ github.com/microcosm-cc/bluemonday/css
 # github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d
 ## explicit
 github.com/nu7hatch/gouuid
-# github.com/onsi/ginkgo/v2 v2.26.0
+# github.com/onsi/ginkgo/v2 v2.27.2
 ## explicit; go 1.23.0
 github.com/onsi/ginkgo/v2
 github.com/onsi/ginkgo/v2/config
 github.com/onsi/ginkgo/v2/formatter
 github.com/onsi/ginkgo/v2/ginkgo
+github.com/onsi/ginkgo/v2/ginkgo/automaxprocs
 github.com/onsi/ginkgo/v2/ginkgo/build
 github.com/onsi/ginkgo/v2/ginkgo/command
 github.com/onsi/ginkgo/v2/ginkgo/generators
@@ -228,12 +229,6 @@ github.com/pkg/errors
 # github.com/russross/blackfriday v1.6.0
 ## explicit; go 1.13
 github.com/russross/blackfriday
-# go.uber.org/automaxprocs v1.6.0
-## explicit; go 1.20
-go.uber.org/automaxprocs
-go.uber.org/automaxprocs/internal/cgroups
-go.uber.org/automaxprocs/internal/runtime
-go.uber.org/automaxprocs/maxprocs
 # go.yaml.in/yaml/v3 v3.0.4
 ## explicit; go 1.16
 go.yaml.in/yaml/v3
