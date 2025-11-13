@@ -109,9 +109,7 @@ resources:
 - name: golang-release-registry-image
   type: registry-image
   source:
-    repository: bosh/golang-release
-    username: ((bosh-dockerhub.username))
-    password: ((bosh-dockerhub.password))
+    repository: ghcr.io/cloudfoundry/bosh/golang-release
 
 - name: data-reload-interval
   type: time
