@@ -18,8 +18,8 @@ github.com/charlievieth/fs v0.0.3 h1:3lZQXTj4PbE81CVPwALSn+JoyCNXkZgORHN6h2XHGlg
 github.com/charlievieth/fs v0.0.3/go.mod h1:hD4sRzto1Hw8zCua76tNVKZxaeZZr1RiKftjAJQRLLo=
 github.com/cloudfoundry-incubator/candiedyaml v0.0.0-20170901234223-a41693b7b7af h1:6Cpkahw28+gcBdnXQL7LcMTX488+6jl6hfoTMRT6Hm4=
 github.com/cloudfoundry-incubator/candiedyaml v0.0.0-20170901234223-a41693b7b7af/go.mod h1:dOLSIXcRQJiDS1vlrYFNJicoHNZLsBKideE+70hGdV4=
-github.com/cloudfoundry/bosh-agent/v2 v2.795.0 h1:Yu9hPZPBEU+gXZZVGj+f9vWZWj4Gv9dcjv52KOK5ND4=
-github.com/cloudfoundry/bosh-agent/v2 v2.795.0/go.mod h1:Q/xz2brcj4CsNKeqm8D0FkdUnXMBccGxLyJj90AQpyw=
+github.com/cloudfoundry/bosh-agent/v2 v2.799.0 h1:x4yW4NAV+pZ9vUxPIIHP3ROv4O+Vp/xyEZFfQQ/ievI=
+github.com/cloudfoundry/bosh-agent/v2 v2.799.0/go.mod h1:sJFsJ8uUuZxXXEsrG9PTQKVGnChJFV5M6RLg9IZmLGg=
 github.com/cloudfoundry/bosh-utils v0.0.582 h1:GvpXLVuqIFO0ANzUC/cLp+ZNcbM6M/pozTmmFFflCaM=
 github.com/cloudfoundry/bosh-utils v0.0.582/go.mod h1:2XGBz94ysudy+8WawbeMyiMntLgVNU492pIpZUQkxyI=
 github.com/cloudfoundry/go-socks5 v0.0.0-20250423223041-4ad5fea42851 h1:oy59UYcspoP44ggE8DM3kjxl1+sTFd802bbZlBBhBMk=
