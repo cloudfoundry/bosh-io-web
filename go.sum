@@ -18,10 +18,10 @@ github.com/charlievieth/fs v0.0.3 h1:3lZQXTj4PbE81CVPwALSn+JoyCNXkZgORHN6h2XHGlg
 github.com/charlievieth/fs v0.0.3/go.mod h1:hD4sRzto1Hw8zCua76tNVKZxaeZZr1RiKftjAJQRLLo=
 github.com/cloudfoundry-incubator/candiedyaml v0.0.0-20170901234223-a41693b7b7af h1:6Cpkahw28+gcBdnXQL7LcMTX488+6jl6hfoTMRT6Hm4=
 github.com/cloudfoundry-incubator/candiedyaml v0.0.0-20170901234223-a41693b7b7af/go.mod h1:dOLSIXcRQJiDS1vlrYFNJicoHNZLsBKideE+70hGdV4=
-github.com/cloudfoundry/bosh-agent/v2 v2.813.0 h1:cd5MfXCbtfIk48EhrtfrUJ1g5ZjhAA9lGqqny+j3i1E=
-github.com/cloudfoundry/bosh-agent/v2 v2.813.0/go.mod h1:FvA1JFzY0nrqR7f4nq6WW7V4KilywqfWMpxWfdvut6I=
-github.com/cloudfoundry/bosh-utils v0.0.591 h1:IhdNEpWaXxEDAbZG3v80HJmeZcMnISGkvl6BMTNtYnY=
-github.com/cloudfoundry/bosh-utils v0.0.591/go.mod h1:DWEeNf4n80B1nNRCjYDx2wrP21upNSnPwvHe1t7VBg0=
+github.com/cloudfoundry/bosh-agent/v2 v2.815.0 h1:+QaqJE9eu+DsBy8R9xK9uK8ShJ0PdWs8+ZlSO18Jzx0=
+github.com/cloudfoundry/bosh-agent/v2 v2.815.0/go.mod h1:GeKhODDLd8veg+RYamQAwyvhUH/Mtl1vKYI15HbyfcA=
+github.com/cloudfoundry/bosh-utils v0.0.592 h1:jlwQzsM/hmwKpw1o06WxtUgIaHaTzzSg7HewrAUs6Cs=
+github.com/cloudfoundry/bosh-utils v0.0.592/go.mod h1:2zgyeinuPhejU2VGnRTlMYCJkaxK3C85/UsLbLOmp5I=
 github.com/cloudfoundry/go-socks5 v0.0.0-20250423223041-4ad5fea42851 h1:oy59UYcspoP44ggE8DM3kjxl1+sTFd802bbZlBBhBMk=
 github.com/cloudfoundry/go-socks5 v0.0.0-20250423223041-4ad5fea42851/go.mod h1:72EEm1oq5oXqGfu9XGtaRPWEcAFYd/P10cMNln0QhA8=
 github.com/cloudfoundry/gosigar v1.3.116 h1:CCl5yCoHaIC6K7TgERlPql7BerCpT5DPgdYYA5Hh09c=
@@ -142,8 +142,8 @@ golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACk
 golang.org/x/crypto v0.0.0-20191011191535-87dc89f01550/go.mod h1:yigFU9vqHzYiE8UmvKecakEJjdnWj3jj499lnFckfCI=
 golang.org/x/crypto v0.48.0 h1:/VRzVqiRSggnhY7gNRxPauEQ5Drw9haKdM0jqfcCFts=
 golang.org/x/crypto v0.48.0/go.mod h1:r0kV5h3qnFPlQnBSrULhlsRfryS2pmewsg+XfMgkVos=
-golang.org/x/exp/typeparams v0.0.0-20260212183809-81e46e3db34a h1:n3SZDk8iNpMasCwQD7/0dIaCVf3gJiGZ9Rqa094jUN0=
-golang.org/x/exp/typeparams v0.0.0-20260212183809-81e46e3db34a/go.mod h1:PqrXSW65cXDZH0k4IeUbhmg/bcAZDbzNz3byBpKCsXo=
+golang.org/x/exp/typeparams v0.0.0-20260218203240-3dfff04db8fa h1:6Wi43P0isP8Nl8D4qJmA3VC4FswVH0RJkr5cauo67SQ=
+golang.org/x/exp/typeparams v0.0.0-20260218203240-3dfff04db8fa/go.mod h1:PqrXSW65cXDZH0k4IeUbhmg/bcAZDbzNz3byBpKCsXo=
 golang.org/x/lint v0.0.0-20241112194109-818c5a804067 h1:adDmSQyFTCiv19j015EGKJBoaa7ElV0Q1Wovb/4G7NA=
 golang.org/x/lint v0.0.0-20241112194109-818c5a804067/go.mod h1:3xt1FjdF8hUf6vQPIChWIBhFzV8gjjsPE/fR3IyQdNY=
 golang.org/x/mod v0.1.1-0.20191105210325-c90efee705ee/go.mod h1:QqPTAvyqsEbceGzBzNggFXnrqF1CaUcvgkdR5Ot7KZg=
