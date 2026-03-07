@@ -1,5 +1,5 @@
-# code.cloudfoundry.org/clock v1.61.0
-## explicit; go 1.24.9
+# code.cloudfoundry.org/clock v1.62.0
+## explicit; go 1.25.0
 code.cloudfoundry.org/clock
 # code.cloudfoundry.org/tlsconfig v0.46.0
 ## explicit; go 1.24.0
@@ -35,7 +35,7 @@ github.com/charlievieth/fs
 # github.com/cloudfoundry-incubator/candiedyaml v0.0.0-20170901234223-a41693b7b7af
 ## explicit
 github.com/cloudfoundry-incubator/candiedyaml
-# github.com/cloudfoundry/bosh-agent/v2 v2.819.0
+# github.com/cloudfoundry/bosh-agent/v2 v2.822.0
 ## explicit; go 1.25.0
 github.com/cloudfoundry/bosh-agent/v2/agent/action
 github.com/cloudfoundry/bosh-agent/v2/agent/action/state
@@ -84,7 +84,7 @@ github.com/cloudfoundry/bosh-agent/v2/platform/windows/powershell
 github.com/cloudfoundry/bosh-agent/v2/servicemanager
 github.com/cloudfoundry/bosh-agent/v2/settings
 github.com/cloudfoundry/bosh-agent/v2/settings/directories
-# github.com/cloudfoundry/bosh-utils v0.0.593
+# github.com/cloudfoundry/bosh-utils v0.0.594
 ## explicit; go 1.25.0
 github.com/cloudfoundry/bosh-utils/blobstore
 github.com/cloudfoundry/bosh-utils/crypto
@@ -103,7 +103,7 @@ github.com/cloudfoundry/go-socks5
 ## explicit; go 1.25.0
 github.com/cloudfoundry/gosigar
 github.com/cloudfoundry/gosigar/sys/windows
-# github.com/cloudfoundry/socks5-proxy v0.2.169
+# github.com/cloudfoundry/socks5-proxy v0.2.170
 ## explicit; go 1.25.0
 github.com/cloudfoundry/socks5-proxy
 # github.com/codegangsta/inject v0.0.0-20150114235600-33e0aa1cb7c0
@@ -144,7 +144,7 @@ github.com/google/nftables/expr
 github.com/google/nftables/internal/parseexprfunc
 github.com/google/nftables/userdata
 github.com/google/nftables/xt
-# github.com/google/pprof v0.0.0-20260202012954-cb029daf43ef
+# github.com/google/pprof v0.0.0-20260302011040-a15ffb7f9dcc
 ## explicit; go 1.24.0
 github.com/google/pprof/profile
 # github.com/gorilla/css v1.0.1
@@ -156,8 +156,8 @@ github.com/jpillora/backoff
 # github.com/martini-contrib/render v0.0.0-20150707142108-ec18f8345a11
 ## explicit
 github.com/martini-contrib/render
-# github.com/mdlayher/netlink v1.8.0
-## explicit; go 1.23.0
+# github.com/mdlayher/netlink v1.9.0
+## explicit; go 1.24.0
 github.com/mdlayher/netlink
 github.com/mdlayher/netlink/nlenc
 github.com/mdlayher/netlink/nltest
