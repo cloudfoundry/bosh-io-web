@@ -1,7 +1,7 @@
-code.cloudfoundry.org/clock v1.63.0 h1:tBK7Mj9V7i2yu1D51z6/s2lqVsb3zVuCQY+0KgNDypw=
-code.cloudfoundry.org/clock v1.63.0/go.mod h1:W3x+LKnVUYowJivVSudvWRaDFe4n68cvoIL+yv7WAng=
-code.cloudfoundry.org/tlsconfig v0.47.0 h1:Qv4SiPMLKQTtCxUyLG0u0pvhZyxjtbvvuaWVL6Q5SXI=
-code.cloudfoundry.org/tlsconfig v0.47.0/go.mod h1:6pX+slnyBS6pNu1ETofrEIw5ozxWsOKnjWPQQzlZwFA=
+code.cloudfoundry.org/clock v1.64.0 h1:b8JCOjU0n5UIGeSia1MOH9/4XAHaWE3aZIxya7CSjRM=
+code.cloudfoundry.org/clock v1.64.0/go.mod h1:k2jbAp/Swu0HMToTixxoBBK9J/aX4VoFb8Ueg6fDSjs=
+code.cloudfoundry.org/tlsconfig v0.48.0 h1:pXgD+Ctes+K4lLpXmobDzn47OthNSM/T6q6M2x/FImI=
+code.cloudfoundry.org/tlsconfig v0.48.0/go.mod h1:Y6e79JPXDXlky4pwaSTJd4qa84GyCW+U09XxSPQiuj4=
 filippo.io/edwards25519 v1.2.0 h1:crnVqOiS4jqYleHd9vaKZ+HKtHfllngJIiOpNpoJsjo=
 filippo.io/edwards25519 v1.2.0/go.mod h1:xzAOLCNug/yB62zG1bQ8uziwrIqIuxhctzJT18Q77mc=
 github.com/BurntSushi/toml v1.6.0 h1:dRaEfpa2VI55EwlIW72hMRHdWouJeRF7TPYhI+AUQjk=
@@ -18,10 +18,10 @@ github.com/charlievieth/fs v0.0.3 h1:3lZQXTj4PbE81CVPwALSn+JoyCNXkZgORHN6h2XHGlg
 github.com/charlievieth/fs v0.0.3/go.mod h1:hD4sRzto1Hw8zCua76tNVKZxaeZZr1RiKftjAJQRLLo=
 github.com/cloudfoundry-incubator/candiedyaml v0.0.0-20170901234223-a41693b7b7af h1:6Cpkahw28+gcBdnXQL7LcMTX488+6jl6hfoTMRT6Hm4=
 github.com/cloudfoundry-incubator/candiedyaml v0.0.0-20170901234223-a41693b7b7af/go.mod h1:dOLSIXcRQJiDS1vlrYFNJicoHNZLsBKideE+70hGdV4=
-github.com/cloudfoundry/bosh-agent/v2 v2.825.0 h1:M+BjZdfk/w3+o8YW0umPIfsBHZlwjTb/MTzDimqewGM=
-github.com/cloudfoundry/bosh-agent/v2 v2.825.0/go.mod h1:1R2Cmw+qqaof1/1Eh5tv2+ApPs9yLqjFyOLGuWigR6s=
-github.com/cloudfoundry/bosh-utils v0.0.597 h1:M5Zg5WBK5cV5lZjbinjn+pU7DrsD+iirXoUcfkPCjgc=
-github.com/cloudfoundry/bosh-utils v0.0.597/go.mod h1:FHfMGmxFQOcPZOgrk1ZrlJloT25mOU0K/N8eGksP8AU=
+github.com/cloudfoundry/bosh-agent/v2 v2.830.0 h1:edZvcw0jzHQETp1G63IPCOpoDSk3d4DfS6BS+XQUU+I=
+github.com/cloudfoundry/bosh-agent/v2 v2.830.0/go.mod h1:Gq0VX9SSfdnwEEFIuf3d/UO7nivjI7HLiuUI4IkTmHI=
+github.com/cloudfoundry/bosh-utils v0.0.600 h1:poqFe6XMmTY4cr+jWPWXfSnJYxkiMLoF09i25zFPvK8=
+github.com/cloudfoundry/bosh-utils v0.0.600/go.mod h1:eVBf2aLTYESPvfA316aKx/AgqbwyU88goc50SLPY08s=
 github.com/cloudfoundry/go-socks5 v0.0.0-20250423223041-4ad5fea42851 h1:oy59UYcspoP44ggE8DM3kjxl1+sTFd802bbZlBBhBMk=
 github.com/cloudfoundry/go-socks5 v0.0.0-20250423223041-4ad5fea42851/go.mod h1:72EEm1oq5oXqGfu9XGtaRPWEcAFYd/P10cMNln0QhA8=
 github.com/cloudfoundry/gosigar v1.3.117 h1:sbBOcGTZHn0MrBnS0gsCeepK/+oWdUX+k2AhJBDMFb8=
