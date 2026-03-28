@@ -1,7 +1,7 @@
 # code.cloudfoundry.org/clock v1.64.0
 ## explicit; go 1.25.0
 code.cloudfoundry.org/clock
-# code.cloudfoundry.org/tlsconfig v0.48.0
+# code.cloudfoundry.org/tlsconfig v0.49.0
 ## explicit; go 1.25.0
 code.cloudfoundry.org/tlsconfig
 # github.com/BurntSushi/toml v1.6.0
@@ -35,7 +35,7 @@ github.com/charlievieth/fs
 # github.com/cloudfoundry-incubator/candiedyaml v0.0.0-20170901234223-a41693b7b7af
 ## explicit
 github.com/cloudfoundry-incubator/candiedyaml
-# github.com/cloudfoundry/bosh-agent/v2 v2.830.0
+# github.com/cloudfoundry/bosh-agent/v2 v2.835.0
 ## explicit; go 1.25.0
 github.com/cloudfoundry/bosh-agent/v2/agent/action
 github.com/cloudfoundry/bosh-agent/v2/agent/action/state
@@ -84,7 +84,7 @@ github.com/cloudfoundry/bosh-agent/v2/platform/windows/powershell
 github.com/cloudfoundry/bosh-agent/v2/servicemanager
 github.com/cloudfoundry/bosh-agent/v2/settings
 github.com/cloudfoundry/bosh-agent/v2/settings/directories
-# github.com/cloudfoundry/bosh-utils v0.0.600
+# github.com/cloudfoundry/bosh-utils v0.0.605
 ## explicit; go 1.25.0
 github.com/cloudfoundry/bosh-utils/blobstore
 github.com/cloudfoundry/bosh-utils/crypto
