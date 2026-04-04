@@ -1,7 +1,7 @@
 # code.cloudfoundry.org/clock v1.64.0
 ## explicit; go 1.25.0
 code.cloudfoundry.org/clock
-# code.cloudfoundry.org/tlsconfig v0.49.0
+# code.cloudfoundry.org/tlsconfig v0.50.0
 ## explicit; go 1.25.0
 code.cloudfoundry.org/tlsconfig
 # github.com/BurntSushi/toml v1.6.0
@@ -35,7 +35,7 @@ github.com/charlievieth/fs
 # github.com/cloudfoundry-incubator/candiedyaml v0.0.0-20170901234223-a41693b7b7af
 ## explicit
 github.com/cloudfoundry-incubator/candiedyaml
-# github.com/cloudfoundry/bosh-agent/v2 v2.835.0
+# github.com/cloudfoundry/bosh-agent/v2 v2.836.0
 ## explicit; go 1.25.0
 github.com/cloudfoundry/bosh-agent/v2/agent/action
 github.com/cloudfoundry/bosh-agent/v2/agent/action/state
@@ -103,7 +103,7 @@ github.com/cloudfoundry/go-socks5
 ## explicit; go 1.25.0
 github.com/cloudfoundry/gosigar
 github.com/cloudfoundry/gosigar/sys/windows
-# github.com/cloudfoundry/socks5-proxy v0.2.171
+# github.com/cloudfoundry/socks5-proxy v0.2.172
 ## explicit; go 1.25.0
 github.com/cloudfoundry/socks5-proxy
 # github.com/codegangsta/inject v0.0.0-20150114235600-33e0aa1cb7c0
@@ -144,7 +144,7 @@ github.com/google/nftables/expr
 github.com/google/nftables/internal/parseexprfunc
 github.com/google/nftables/userdata
 github.com/google/nftables/xt
-# github.com/google/pprof v0.0.0-20260302011040-a15ffb7f9dcc
+# github.com/google/pprof v0.0.0-20260402051712-545e8a4df936
 ## explicit; go 1.24.0
 github.com/google/pprof/profile
 # github.com/gorilla/css v1.0.1
@@ -156,13 +156,13 @@ github.com/jpillora/backoff
 # github.com/martini-contrib/render v0.0.0-20150707142108-ec18f8345a11
 ## explicit
 github.com/martini-contrib/render
-# github.com/mdlayher/netlink v1.9.0
+# github.com/mdlayher/netlink v1.10.0
 ## explicit; go 1.24.0
 github.com/mdlayher/netlink
 github.com/mdlayher/netlink/nlenc
 github.com/mdlayher/netlink/nltest
-# github.com/mdlayher/socket v0.5.1
-## explicit; go 1.20
+# github.com/mdlayher/socket v0.6.0
+## explicit; go 1.25.0
 github.com/mdlayher/socket
 # github.com/microcosm-cc/bluemonday v1.0.27
 ## explicit; go 1.19
