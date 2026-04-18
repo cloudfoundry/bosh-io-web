@@ -1,7 +1,7 @@
-# code.cloudfoundry.org/clock v1.65.0
+# code.cloudfoundry.org/clock v1.66.0
 ## explicit; go 1.25.0
 code.cloudfoundry.org/clock
-# code.cloudfoundry.org/tlsconfig v0.50.0
+# code.cloudfoundry.org/tlsconfig v0.51.0
 ## explicit; go 1.25.0
 code.cloudfoundry.org/tlsconfig
 # github.com/BurntSushi/toml v1.6.0
@@ -84,7 +84,7 @@ github.com/cloudfoundry/bosh-agent/v2/platform/windows/powershell
 github.com/cloudfoundry/bosh-agent/v2/servicemanager
 github.com/cloudfoundry/bosh-agent/v2/settings
 github.com/cloudfoundry/bosh-agent/v2/settings/directories
-# github.com/cloudfoundry/bosh-utils v0.0.605
+# github.com/cloudfoundry/bosh-utils v0.0.607
 ## explicit; go 1.25.0
 github.com/cloudfoundry/bosh-utils/blobstore
 github.com/cloudfoundry/bosh-utils/crypto
@@ -99,7 +99,7 @@ github.com/cloudfoundry/bosh-utils/work
 # github.com/cloudfoundry/go-socks5 v0.0.0-20250423223041-4ad5fea42851
 ## explicit; go 1.21.0
 github.com/cloudfoundry/go-socks5
-# github.com/cloudfoundry/gosigar v1.3.117
+# github.com/cloudfoundry/gosigar v1.3.118
 ## explicit; go 1.25.0
 github.com/cloudfoundry/gosigar
 github.com/cloudfoundry/gosigar/sys/windows
@@ -156,7 +156,7 @@ github.com/jpillora/backoff
 # github.com/martini-contrib/render v0.0.0-20150707142108-ec18f8345a11
 ## explicit
 github.com/martini-contrib/render
-# github.com/mdlayher/netlink v1.11.0
+# github.com/mdlayher/netlink v1.11.1
 ## explicit; go 1.25.0
 github.com/mdlayher/netlink
 github.com/mdlayher/netlink/nlenc
