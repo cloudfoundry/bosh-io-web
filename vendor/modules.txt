@@ -1,4 +1,4 @@
-# code.cloudfoundry.org/clock v1.66.0
+# code.cloudfoundry.org/clock v1.67.0
 ## explicit; go 1.25.0
 code.cloudfoundry.org/clock
 # code.cloudfoundry.org/tlsconfig v0.51.0
@@ -35,7 +35,7 @@ github.com/charlievieth/fs
 # github.com/cloudfoundry-incubator/candiedyaml v0.0.0-20170901234223-a41693b7b7af
 ## explicit
 github.com/cloudfoundry-incubator/candiedyaml
-# github.com/cloudfoundry/bosh-agent/v2 v2.837.0
+# github.com/cloudfoundry/bosh-agent/v2 v2.841.0
 ## explicit; go 1.25.0
 github.com/cloudfoundry/bosh-agent/v2/agent/action
 github.com/cloudfoundry/bosh-agent/v2/agent/action/state

@@ -20,14 +20,14 @@ require (
 )
 
 require (
-	code.cloudfoundry.org/clock v1.66.0 // indirect
+	code.cloudfoundry.org/clock v1.67.0 // indirect
 	code.cloudfoundry.org/tlsconfig v0.51.0 // indirect
 	github.com/BurntSushi/toml v1.6.0 // indirect
 	github.com/Masterminds/semver/v3 v3.4.0 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/bmatcuk/doublestar v1.3.4 // indirect
 	github.com/charlievieth/fs v0.0.3 // indirect
-	github.com/cloudfoundry/bosh-agent/v2 v2.837.0 // indirect
+	github.com/cloudfoundry/bosh-agent/v2 v2.841.0 // indirect
 	github.com/cloudfoundry/go-socks5 v0.0.0-20250423223041-4ad5fea42851 // indirect
 	github.com/cloudfoundry/gosigar v1.3.118 // indirect
 	github.com/cloudfoundry/socks5-proxy v0.2.173 // indirect
