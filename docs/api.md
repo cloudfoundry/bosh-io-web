@@ -124,6 +124,7 @@ GET /d/stemcells/{name}
 
 | Status | Description |
 |--------|-------------|
+| `400` | Invalid request parameters (for example, an empty stemcell name or an invalid `v` version string) |
 | `404` | Stemcell or requested version not found |
 | `500` | Internal server error |
 
@@ -192,7 +193,7 @@ GET /api/v1/releases/{source}
 | Status | Description |
 |--------|-------------|
 | `400` | `source` parameter is missing |
-| `500` | Internal server error |
+| `500` | Internal server error. On repository failures, this endpoint renders an HTML error page (`text/html`) rather than a JSON error body, unlike the stemcell API. |
 
 **Example**
 
@@ -230,10 +231,13 @@ GET /d/{source}
 
 `302 Found` — Redirects to the direct download URL of the release tarball.
 
+> Note: Unlike the JSON API endpoints above, this download endpoint returns an HTML error page on failure rather than a JSON error body.
+
 **Error responses**
 
 | Status | Description |
 |--------|-------------|
+| `400` | Bad request; the release source path is empty |
 | `500` | Release or version not found, or tarball unavailable |
 
 **Examples**
