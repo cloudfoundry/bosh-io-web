@@ -1,5 +1,6 @@
 # `bosh-io/web`
 
+* [API](docs/api.md)
 * [Publishing stemcells](docs/publishing-stemcells.md)
 
 ## Run Documentation Locally
