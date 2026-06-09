@@ -7,9 +7,6 @@
       <article class="md-content__inner md-typeset">
         <h1>{{ .Filter.Name }}</h1>
 
-          {{ if (eq $s.OSVersion "bionic") }}
-            {{ template "stemcells/_bionic_notice" . }}
-          {{ end }}
           {{ if (eq $s.OSVersion "jammy") }}
             {{ template "stemcells/_jammy_notice" . }}
           {{ end }}
