@@ -26,18 +26,6 @@ var (
 
 		Sort: 2,
 	}
-	ubuntuBionicDistro = Distro{
-		NameName: "ubuntu-bionic",
-		Name:     "Ubuntu Bionic",
-
-		OSMatches: []StemcellOSMatch{
-			{OSName: "ubuntu", OSVersion: "bionic"},
-		},
-
-		SupportedInfrastructures: allInfrastructures,
-
-		Sort: 3,
-	}
 	windows2019Distro = Distro{
 		NameName: "windows2019",
 		Name:     "Windows 2019",
@@ -52,7 +40,7 @@ var (
 			azureInfrastructure,
 		},
 
-		Sort: 4,
+		Sort: 3,
 	}
 )
 
@@ -60,7 +48,6 @@ var (
 	allDistros = []Distro{
 		ubuntuNobleDistro,
 		ubuntuJammyDistro,
-		ubuntuBionicDistro,
 		windows2019Distro,
 	}
 )

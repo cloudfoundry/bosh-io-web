@@ -11,7 +11,6 @@
               <li class="md-nav__item">
                 <a href="#ubuntu-noble" title="Ubuntu Noble" class="md-nav__link">Ubuntu Noble</a>
                 <a href="#ubuntu-jammy" title="Ubuntu Jammy" class="md-nav__link">Ubuntu Jammy</a>
-                <a href="#ubuntu-bionic" title="Ubuntu Bionic" class="md-nav__link">Ubuntu Bionic</a>
                 <a href="#windows2019" title="Windows 2019" class="md-nav__link">Windows 2019</a>
               </li>
             </ul>
@@ -29,9 +28,6 @@
           <h2 id="{{ .Distro.NameName }}">{{ .Distro.Name }}<a class="headerlink" href="#{{ .Distro.NameName }}" title="Permanent link">&para;</a></h2>
 
           {{ $osVersion := ( index .Distro.OSMatches 0 ).OSVersion }}
-          {{ if (eq $osVersion "bionic") }}
-            {{ template "stemcells/_bionic_notice" . }}
-          {{ end }}
           {{ if (eq $osVersion "jammy") }}
             {{ template "stemcells/_jammy_notice" . }}
           {{ end }}
