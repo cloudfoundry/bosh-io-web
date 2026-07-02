@@ -18,8 +18,8 @@ if curl --fail -s  "$server/docs/terminology/" | grep 'Pivotal Tracker' >/dev/nu
   exit 1
 fi
 
-if ! curl --fail -s  "$server/docs/community/" | grep 'Pivotal Tracker' >/dev/null ; then
-  echo "FAILURE: expected to see 'Pivotal Tracker' on the /docs/community/ page" >&2
+if ! curl --fail -s  "$server/docs/community/" | grep -z 'GitHub\sProjects' >/dev/null ; then
+  echo "FAILURE: expected to see 'GitHub Projects' on the /docs/community/ page" >&2
 
   exit 1
 fi
