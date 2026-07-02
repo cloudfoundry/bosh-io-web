@@ -1,12 +1,36 @@
-<nav class="md-tabs md-tabs--active" data-md-component="tabs">
-  <div class="md-tabs__inner md-grid">
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
     <ul class="md-tabs__list">
-      <li class="md-tabs__item"><a href="/docs/" title="About" class="md-tabs__link">About</a></li>
-      <li class="md-tabs__item"><a href="/docs/cli-v2-install/" title="Installation" class="md-tabs__link">Installation</a></li>
-      <li class="md-tabs__item"><a href="/docs/update-cloud-config/" title="Guides" class="md-tabs__link">Guides</a></li>
-      <li class="md-tabs__item"><a href="/docs/terminology/" title="Reference" class="md-tabs__link">Reference</a></li>
-      <li class="md-tabs__item"><a href="/stemcells/" title="Stemcells" class="md-tabs__link{{ if eq . "Stemcells" }} md-tabs__link--active{{ end }}">Stemcells</a></li>
-      <li class="md-tabs__item"><a href="/releases/" title="Releases" class="md-tabs__link{{ if eq . "Releases" }} md-tabs__link--active{{ end }}">Releases</a></li>
+      <li class="md-tabs__item">
+        <a href="/docs/" class="md-tabs__link">
+          About
+        </a>
+      </li>
+      <li class="md-tabs__item">
+        <a href="/docs/cli-v2-install/" class="md-tabs__link">
+          Installation
+        </a>
+      </li>
+      <li class="md-tabs__item">
+        <a href="/docs/update-cloud-config/" class="md-tabs__link">
+          Guides
+        </a>
+      </li>
+      <li class="md-tabs__item">
+        <a href="/docs/terminology/" class="md-tabs__link">
+          Reference
+        </a>
+      </li>
+      <li class="md-tabs__item{{ if eq . "Stemcells" }} md-tabs__item--active{{ end }}">
+        <a href="/stemcells/" class="md-tabs__link">
+          Stemcells
+        </a>
+      </li>
+      <li class="md-tabs__item{{ if eq . "Releases" }} md-tabs__item--active{{ end }}">
+        <a href="/releases/" class="md-tabs__link">
+          Releases
+        </a>
+      </li>
     </ul>
   </div>
 </nav>

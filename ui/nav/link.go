@@ -5,6 +5,8 @@ import "fmt"
 type Link struct {
 	Title string
 	URL   string
+	IsPersistent bool
+	IsSection  bool
 
 	idx      int
 	active   bool
@@ -16,6 +18,8 @@ func (l *Link) Add(link Link) *Link {
 	nl := Link{
 		Title:  link.Title,
 		URL:    link.URL,
+		IsPersistent: link.IsPersistent,
+		IsSection: link.IsSection,
 		parent: l,
 		idx:    len(l.children),
 	}

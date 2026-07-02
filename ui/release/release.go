@@ -88,7 +88,7 @@ func NewIncompleteRelease(relVerRec bhrelsrepo.ReleaseVersionRec, name string) R
 func (r Release) BuildNavigation(active string) nav.Link {
 	root := Navigation()
 
-	relnav := nav.Link{Title: r.Name}
+	relnav := nav.Link{Title: r.Name, IsSection: true}
 	relnav.Add(nav.Link{
 		Title: "All Versions",
 		URL:   r.AllVersionsURL(),

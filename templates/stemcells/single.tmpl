@@ -1,8 +1,8 @@
 {{ template "shared/_nav_tabs" "Stemcells" }}
-<main class="md-main">
+<main class="md-main" data-md-component="main">
   <div class="md-main__inner md-grid" data-md-component="container">
     {{ template "shared/_nav_primary" .NavPrimary }}
-    <div class="md-sidebar md-sidebar--secondary" data-md-component="toc"></div>
+    <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc"></div>
     <div class="md-content">{{ $s := .DistroGroups.FirstStemcell }}
       <article class="md-content__inner md-typeset">
         <h1>{{ .Filter.Name }}</h1>
@@ -18,15 +18,17 @@
 
         <p>You can upload the latest version to your director with the <code>upload-stemcell</code> command:</p>
 
-        <div class="codehilite"><pre>bosh upload-stemcell --sha1 {{ $s.SHA1 }} \
-  "<a href="{{ $s.UserVisibleDownloadURL }}" style="color:inherit;">{{ $s.UserVisibleDownloadURL }}</a>"</pre></div>
+        <div class="highlight">
+          <pre><span></span><code>bosh upload-stemcell --sha1 {{ $s.SHA1 }} \
+  "<a href="{{ $s.UserVisibleDownloadURL }}" style="color:inherit;">{{ $s.UserVisibleDownloadURL }}</a>"</code></pre>
+        </div>
 
         <p>And reference this stemcell in your deployment manifest from the <code>stemcells</code> section:</p>
-
-        <div class="codehilite"><pre>- alias: "default"
-  os: "{{ $s.OSName }}{{ if ( ne $s.OSName "windows" ) }}-{{ end }}{{ $s.OSVersion }}"
-  version: "{{ $s.Version }}"
-</pre></div>
+        <div class="highlight">
+          <pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="s">"default"</span>
+<span class="w">  </span><span class="nt">os</span><span class="p">:</span><span class="w"> </span><span class="s">"{{ $s.OSName }}{{ if ( ne $s.OSName "windows" ) }}-{{ end }}{{ $s.OSVersion }}"</span>
+<span class="w">  </span><span class="nt">sha1</span><span class="p">:</span><span class="w"> </span><span class="s">"{{ $s.Version }}"</span></code></pre>
+        </div>
 
         {{ if (eq $s.OSName "windows") }}
           {{ template "stemcells/_windows_notice" . }}
@@ -52,7 +54,7 @@
                       <a href="{{ .UserVisibleDownloadURL }}" title="{{ .FormattedSize }}">{{ .LinkName }}</a>
                       {{ if .SHA1 }}
                         &ndash;
-                        <code class="codehilite">sha1:{{ .SHA1 }}</code>
+                        <code class="highlight">sha1:{{ .SHA1 }}</code>
                       {{ end }}
                     </li>
                   {{ end }}
