@@ -10,8 +10,8 @@ func Navigation() nav.Link {
 	root := nav.Link{Title: "Stemcells"}
 
 	allnav := nav.Link{
-		Title: "Stemcells",
-		URL: "#stemcells",
+		Title:     "Stemcells",
+		URL:       "#stemcells",
 		IsSection: true,
 	}
 	allnav.Add(nav.Link{

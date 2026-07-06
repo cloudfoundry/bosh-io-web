@@ -148,10 +148,19 @@ func configureAssets(m *mart.ClassicMartini, analyticsConfig AnalyticsConfig, lo
 
 	themeJavascriptApplication, err := filepath.Glob("templates/docs/assets/javascripts/bundle.*.min.js")
 	if err != nil {
-		logger.Error(mainLogTag, fmt.Sprintf("Failed to find bnudle.*.min.js: %v", err))
+		logger.Error(mainLogTag, fmt.Sprintf("Failed to find bundle.*.min.js: %v", err))
 		os.Exit(1)
 	} else if len(themeJavascriptApplication) != 1 {
 		logger.Error(mainLogTag, fmt.Sprintf("Failed to find exactly one bundle.*.min.js: found %d", len(themeJavascriptApplication)))
+		os.Exit(1)
+	}
+
+	themeJavascriptSearch, err := filepath.Glob("templates/docs/assets/javascripts/workers/search.*.min.js")
+	if err != nil {
+		logger.Error(mainLogTag, fmt.Sprintf("Failed to find search.*.min.js: %v", err))
+		os.Exit(1)
+	} else if len(themeJavascriptApplication) != 1 {
+		logger.Error(mainLogTag, fmt.Sprintf("Failed to find exactly one search.*.min.js: found %d", len(themeJavascriptApplication)))
 		os.Exit(1)
 	}
 
@@ -185,6 +194,9 @@ func configureAssets(m *mart.ClassicMartini, analyticsConfig AnalyticsConfig, lo
 		},
 		"themeJavascriptApplication": func() string {
 			return fmt.Sprintf("/docs/assets/javascripts/%s", path.Base(themeJavascriptApplication[0]))
+		},
+		"themeJavascriptSearch": func() string {
+			return fmt.Sprintf("/docs/assets/javascripts/workers/%s", path.Base(themeJavascriptSearch[0]))
 		},
 		"themeImageFavicon": func() string {
 			return fmt.Sprintf("/docs/assets/images/%s", path.Base(themeImageFavicon[0]))

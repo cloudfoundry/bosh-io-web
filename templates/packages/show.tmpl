@@ -5,7 +5,7 @@
     {{ template "packages/_nav_secondary" . }}
     <div class="md-content">
       <article class="md-content__inner md-typeset">
-        <h1>{{ .Name }} package <small>from {{ .Release.Name }}/{{ .Release.Version }}</small></h1>
+        <h1 id="bosh-content-start">{{ .Name }} package <small>from {{ .Release.Name }}/{{ .Release.Version }}</small></h1>
 
         {{ if .HasGithubURL }}
           <p>

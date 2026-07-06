@@ -1,13 +1,13 @@
 {{ template "shared/_nav_tabs" "Releases" }}
 <main class="md-main" data-md-component="main">
-  <div class="md-main__inner md-grid">
+  <div class="md-main__inner md-grid" data-md-component="container">
     <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
       <div class="md-sidebar__scrollwrap">
         <div class="md-sidebar__inner">
-          <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" aria-md-level="0">
+          <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
             <label class="md-nav__title" for="__drawer">
               <a href="." title="Cloud Foundry BOSH" class="md-nav__button md-logo" aria-label="Cloud Foundry BOSH" data-md-component="logo">
-                <img src="/docs/assets/images/logo.d93e7da69dbf.png" alt="logo">
+                <img src="{{ themeImageLogo }}" alt="logo">
               </a>
               Cloud Foundry BOSH
             </label>
@@ -107,7 +107,7 @@
     <div class="md-content">
       <article class="md-content__inner md-typeset">
         {{ if .Releases }}
-          <h1>{{ with index .Releases 0 }}{{ .Name }}{{ end }} Release</span></h1>
+          <h1 id="bosh-content-start">{{ with index .Releases 0 }}{{ .Name }}{{ end }} Release</span></h1>
         {{ else }}
           <h1>{{ .Source.Short }} Release</h1>
         {{ end }}

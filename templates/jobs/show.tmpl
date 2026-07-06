@@ -6,7 +6,7 @@
     <div class="md-content">
       <article class="md-content__inner md-typeset">
         <div class="bosh-schema">
-          <h1>{{ .Name }} job <small>from {{ .Release.Name }}/{{ .Release.Version }}</small></h1>
+          <h1 id="bosh-content-start">{{ .Name }} job <small>from {{ .Release.Name }}/{{ .Release.Version }}</small></h1>
 
           {{ if .Description }}
             <p>{{ .Description }}</p>

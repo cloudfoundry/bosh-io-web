@@ -3,10 +3,10 @@ package nav
 import "fmt"
 
 type Link struct {
-	Title string
-	URL   string
+	Title        string
+	URL          string
 	IsPersistent bool
-	IsSection  bool
+	IsSection    bool
 
 	idx      int
 	active   bool
@@ -16,12 +16,12 @@ type Link struct {
 
 func (l *Link) Add(link Link) *Link {
 	nl := Link{
-		Title:  link.Title,
-		URL:    link.URL,
+		Title:        link.Title,
+		URL:          link.URL,
 		IsPersistent: link.IsPersistent,
-		IsSection: link.IsSection,
-		parent: l,
-		idx:    len(l.children),
+		IsSection:    link.IsSection,
+		parent:       l,
+		idx:          len(l.children),
 	}
 
 	for _, cl := range link.Children() {
