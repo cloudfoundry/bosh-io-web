@@ -13,14 +13,14 @@ require (
 	github.com/martini-contrib/render v0.0.0-20150707142108-ec18f8345a11
 	github.com/microcosm-cc/bluemonday v1.0.27
 	github.com/onsi/ginkgo/v2 v2.32.0
-	github.com/onsi/gomega v1.42.0
+	github.com/onsi/gomega v1.42.1
 	github.com/russross/blackfriday v1.6.0
 	golang.org/x/lint v0.0.0-20241112194109-818c5a804067
 	gopkg.in/yaml.v2 v2.4.0
 )
 
 require (
-	code.cloudfoundry.org/clock v1.76.0 // indirect
+	code.cloudfoundry.org/clock v1.77.0 // indirect
 	code.cloudfoundry.org/tlsconfig v0.53.0 // indirect
 	github.com/BurntSushi/toml v1.6.0 // indirect
 	github.com/Masterminds/semver/v3 v3.5.0 // indirect
@@ -53,7 +53,7 @@ require (
 	golang.org/x/net v0.56.0 // indirect
 	golang.org/x/sync v0.21.0 // indirect
 	golang.org/x/sys v0.46.0 // indirect
-	golang.org/x/text v0.38.0 // indirect
+	golang.org/x/text v0.39.0 // indirect
 	golang.org/x/tools v0.47.0 // indirect
 	honnef.co/go/tools v0.7.0 // indirect
 	inet.af/wf v0.0.0-20221017222439-36129f591884 // indirect
