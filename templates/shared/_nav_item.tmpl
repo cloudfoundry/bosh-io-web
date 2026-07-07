@@ -2,7 +2,8 @@
   <li class="md-nav__item{{ if .Active }} md-nav__item--active{{ end }}{{ if .IsSection }} md-nav__item--section{{ end }}{{ if .IsPersistent }} md-nav__item--bosh-persistent{{ end }} md-nav__item--nested">
     <input class="md-toggle md-nav__toggle" data-md-toggle="{{ .Ref }}" type="checkbox" id="{{ .Ref }}"{{ if .Active }} checked{{ end }} />
     <label class="md-nav__link" for="{{ .Ref }}">
-      {{ .Title }}
+      <span class="md-ellipsis">{{ .Title }}</span>
+      <span class="md-nav__icon md-icon"></span>
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="{{ .Depth }}">
       <label class="md-nav__title" for="{{ .Ref }}">
