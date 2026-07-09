@@ -77,9 +77,12 @@ func (c ReleasesController) Index(r martrend.Render) {
 		return
 	}
 
+	rootnav := bhrelui.Navigation()
+	rootnav.Activate("/releases")
+
 	page := releasesControllerIndexPage{
 		UniqueSources: bhrelui.NewUniqueSources(sources),
-		NavPrimary:    bhrelui.Navigation(),
+		NavPrimary:    rootnav,
 	}
 
 	r.HTML(200, c.indexTmpl, page)

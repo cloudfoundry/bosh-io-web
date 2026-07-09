@@ -1,8 +1,8 @@
 {{ template "shared/_nav_tabs" "Stemcells" }}
-<main class="md-main">
+<main class="md-main" data-md-component="main">
   <div class="md-main__inner md-grid" data-md-component="container">
     {{ template "shared/_nav_primary" .NavPrimary }}
-    <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+    <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
       <div class="md-sidebar__scrollwrap">
         <div class="md-sidebar__inner">
           <nav class="md-nav md-nav--secondary">
@@ -20,7 +20,7 @@
     </div>
     <div class="md-content">
       <article class="md-content__inner md-typeset">
-        <h1>Stemcells</h1>
+        <h1 id="bosh-content-start">Stemcells</h1>
 
         {{ template "stemcells/_defined" . }}
 

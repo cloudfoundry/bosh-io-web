@@ -119,21 +119,21 @@ func runControllers(controllerFactory bhctrls.Factory, analyticsConfig Analytics
 }
 
 func configureAssets(m *mart.ClassicMartini, analyticsConfig AnalyticsConfig, logger boshlog.Logger) {
-	themeStylesheetApplication, err := filepath.Glob("templates/docs/assets/stylesheets/application.*.css")
+	themeStylesheetApplication, err := filepath.Glob("templates/docs/assets/stylesheets/main.*.min.css")
 	if err != nil {
-		logger.Error(mainLogTag, fmt.Sprintf("Failed to find application.*.css: %v", err))
+		logger.Error(mainLogTag, fmt.Sprintf("Failed to find main.*.min.css: %v", err))
 		os.Exit(1)
 	} else if len(themeStylesheetApplication) != 1 {
-		logger.Error(mainLogTag, fmt.Sprintf("Failed to find exactly one application.*.css: found %d", len(themeStylesheetApplication)))
+		logger.Error(mainLogTag, fmt.Sprintf("Failed to find exactly one main.*.min.css: found %d", len(themeStylesheetApplication)))
 		os.Exit(1)
 	}
 
-	themeStylesheetApplicationPalette, err := filepath.Glob("templates/docs/assets/stylesheets/application-palette.*.css")
+	themeStylesheetApplicationPalette, err := filepath.Glob("templates/docs/assets/stylesheets/palette.*.min.css")
 	if err != nil {
-		logger.Error(mainLogTag, fmt.Sprintf("Failed to find application-palette.*.css: %v", err))
+		logger.Error(mainLogTag, fmt.Sprintf("Failed to find palette.*.min.css: %v", err))
 		os.Exit(1)
 	} else if len(themeStylesheetApplicationPalette) != 1 {
-		logger.Error(mainLogTag, fmt.Sprintf("Failed to find exactly one application-palette.*.css: found %d", len(themeStylesheetApplicationPalette)))
+		logger.Error(mainLogTag, fmt.Sprintf("Failed to find exactly one palette.*.min.css: found %d", len(themeStylesheetApplicationPalette)))
 		os.Exit(1)
 	}
 
@@ -146,21 +146,21 @@ func configureAssets(m *mart.ClassicMartini, analyticsConfig AnalyticsConfig, lo
 		os.Exit(1)
 	}
 
-	themeJavascriptModernizr, err := filepath.Glob("templates/docs/assets/javascripts/modernizr.*.js")
+	themeJavascriptApplication, err := filepath.Glob("templates/docs/assets/javascripts/bundle.*.min.js")
 	if err != nil {
-		logger.Error(mainLogTag, fmt.Sprintf("Failed to find modernizr.*.js: %v", err))
+		logger.Error(mainLogTag, fmt.Sprintf("Failed to find bundle.*.min.js: %v", err))
 		os.Exit(1)
-	} else if len(themeJavascriptModernizr) != 1 {
-		logger.Error(mainLogTag, fmt.Sprintf("Failed to find exactly one modernizr.*.js: found %d", len(themeJavascriptModernizr)))
+	} else if len(themeJavascriptApplication) != 1 {
+		logger.Error(mainLogTag, fmt.Sprintf("Failed to find exactly one bundle.*.min.js: found %d", len(themeJavascriptApplication)))
 		os.Exit(1)
 	}
 
-	themeJavascriptApplication, err := filepath.Glob("templates/docs/assets/javascripts/application.*.js")
+	themeJavascriptSearch, err := filepath.Glob("templates/docs/assets/javascripts/workers/search.*.min.js")
 	if err != nil {
-		logger.Error(mainLogTag, fmt.Sprintf("Failed to find application.*.js: %v", err))
+		logger.Error(mainLogTag, fmt.Sprintf("Failed to find search.*.min.js: %v", err))
 		os.Exit(1)
 	} else if len(themeJavascriptApplication) != 1 {
-		logger.Error(mainLogTag, fmt.Sprintf("Failed to find exactly one application.*.js: found %d", len(themeJavascriptApplication)))
+		logger.Error(mainLogTag, fmt.Sprintf("Failed to find exactly one search.*.min.js: found %d", len(themeJavascriptApplication)))
 		os.Exit(1)
 	}
 
@@ -192,11 +192,11 @@ func configureAssets(m *mart.ClassicMartini, analyticsConfig AnalyticsConfig, lo
 		"themeStylesheetExtra": func() string {
 			return fmt.Sprintf("/docs/assets/stylesheets/%s", path.Base(themeStylesheetExtra[0]))
 		},
-		"themeJavascriptModernizr": func() string {
-			return fmt.Sprintf("/docs/assets/javascripts/%s", path.Base(themeJavascriptModernizr[0]))
-		},
 		"themeJavascriptApplication": func() string {
 			return fmt.Sprintf("/docs/assets/javascripts/%s", path.Base(themeJavascriptApplication[0]))
+		},
+		"themeJavascriptSearch": func() string {
+			return fmt.Sprintf("/docs/assets/javascripts/workers/%s", path.Base(themeJavascriptSearch[0]))
 		},
 		"themeImageFavicon": func() string {
 			return fmt.Sprintf("/docs/assets/images/%s", path.Base(themeImageFavicon[0]))

@@ -1,11 +1,15 @@
 <p>You can reference this release in your deployment manifest from the <code>releases</code> section:</p>
 
-<div class="codehilite"><pre>- name: "{{ .Name }}"
-  version: "{{ .Version }}"
-  url: "<a href="{{ .UserVisibleDownloadURL }}" style="color:inherit;">{{ .UserVisibleDownloadURL }}</a>"
-  sha1: sha256:{{ .TarballSHA256 }}</pre></div>
+<div class="highlight">
+  <pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">{{ .Name }}</span>
+<span class="w">  </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">"{{ .Version }}"</span>
+<span class="w">  </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s">"<a href="{{ .UserVisibleDownloadURL }}" style="color:inherit;">{{ .UserVisibleDownloadURL }}</a>"</span>
+<span class="w">  </span><span class="nt">sha1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sha256:{{ .TarballSHA256 }}</span></code></pre>
+</div>
 
 <p>Or upload it to your director with the <code>upload-release</code> command:</p>
 
-<div class="codehilite"><pre>bosh upload-release --sha1=sha256:{{ .TarballSHA256 }} \
-  "<a href="{{ .UserVisibleDownloadURL }}" style="color:inherit;">{{ .UserVisibleDownloadURL }}</a>"</pre></div>
+<div class="highlight">
+  <pre><code>bosh<span class="w"> </span>upload-release<span class="w"> </span>--sha1=sha256:{{ .TarballSHA256 }}<span class="w"> </span>\
+<span class="w">  </span>"<a href="{{ .UserVisibleDownloadURL }}" style="color:inherit;">{{ .UserVisibleDownloadURL }}</a>"</code></pre>
+</div>
