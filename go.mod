@@ -5,7 +5,7 @@ go 1.25.0
 require (
 	github.com/bosh-dep-forks/bosh-provisioner v0.0.0-20241217205932-40fb8b191414
 	github.com/cloudfoundry-incubator/candiedyaml v0.0.0-20170901234223-a41693b7b7af
-	github.com/cloudfoundry/bosh-utils v0.0.628
+	github.com/cloudfoundry/bosh-utils v0.0.629
 	github.com/cppforlife/go-semi-semantic v0.0.0-20160921010311-576b6af77ae4
 	github.com/dpb587/metalink v0.5.0
 	github.com/dustin/go-humanize v1.0.1
@@ -20,17 +20,17 @@ require (
 )
 
 require (
-	code.cloudfoundry.org/clock v1.78.0 // indirect
+	code.cloudfoundry.org/clock v1.79.0 // indirect
 	code.cloudfoundry.org/tlsconfig v0.53.0 // indirect
 	github.com/BurntSushi/toml v1.6.0 // indirect
 	github.com/Masterminds/semver/v3 v3.5.0 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/bmatcuk/doublestar v1.3.4 // indirect
 	github.com/charlievieth/fs v0.0.3 // indirect
-	github.com/cloudfoundry/bosh-agent/v2 v2.863.0 // indirect
+	github.com/cloudfoundry/bosh-agent/v2 v2.864.0 // indirect
 	github.com/cloudfoundry/go-socks5 v0.0.0-20250423223041-4ad5fea42851 // indirect
-	github.com/cloudfoundry/gosigar v1.3.124 // indirect
-	github.com/cloudfoundry/socks5-proxy v0.2.181 // indirect
+	github.com/cloudfoundry/gosigar v1.3.125 // indirect
+	github.com/cloudfoundry/socks5-proxy v0.2.182 // indirect
 	github.com/codegangsta/inject v0.0.0-20150114235600-33e0aa1cb7c0 // indirect
 	github.com/go-logr/logr v1.4.3 // indirect
 	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
