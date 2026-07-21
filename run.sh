@@ -6,7 +6,8 @@ set -e
 # (https://github.com/shageman/buildpack-binary)
 
 configPath=$1
-debug=$2
+
+debug=${DEBUG:-}
 
 if [ -z "$configPath" ]; then
   configPath=prod-conf/web.json
