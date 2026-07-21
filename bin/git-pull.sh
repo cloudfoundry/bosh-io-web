@@ -4,6 +4,15 @@ set -e -x
 
 echo "Fetching"
 
+set +x
+PKEY=/tmp/pkey
+echo "${GIT_CLONE_KEY}" > "${PKEY}"
+echo >> "${PKEY}"
+chmod 0400 "${PKEY}"
+set -x
+
+export GIT_SSH_COMMAND="ssh -i ${PKEY} -o StrictHostKeyChecking=no"
+
 for dir in \
   prod-conf/releases \
   prod-conf/releases-index \
