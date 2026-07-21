@@ -9,6 +9,7 @@
             <label class="md-nav__title" for="toc">Table of contents</label>
             <ul class="md-nav__list" data-md-scrollfix>
               <li class="md-nav__item">
+                <a href="#ubuntu-resolute" title="Ubuntu Resolute" class="md-nav__link">Ubuntu Resolute</a>
                 <a href="#ubuntu-noble" title="Ubuntu Noble" class="md-nav__link">Ubuntu Noble</a>
                 <a href="#ubuntu-jammy" title="Ubuntu Jammy" class="md-nav__link">Ubuntu Jammy</a>
                 <a href="#windows2019" title="Windows 2019" class="md-nav__link">Windows 2019</a>
@@ -33,6 +34,9 @@
           {{ end }}
           {{ if (eq $osVersion "noble") }}
             {{ template "stemcells/_noble_notice" . }}
+          {{ end }}
+          {{ if (eq $osVersion "resolute") }}
+            {{ template "stemcells/_resolute_notice" . }}
           {{ end }}
           {{ $osName := ( index .Distro.OSMatches 0 ).OSName }}
           {{if (eq $osName "windows") }}

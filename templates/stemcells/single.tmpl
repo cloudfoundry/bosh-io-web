@@ -19,6 +19,9 @@
           {{ if (eq $s.OSVersion "noble") }}
             {{ template "stemcells/_noble_notice" . }}
           {{ end }}
+          {{ if (eq $s.OSVersion "resolute") }}
+            {{ template "stemcells/_resolute_notice" . }}
+          {{ end }}
 
         {{ template "stemcells/_defined" . }}
 

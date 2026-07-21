@@ -128,4 +128,13 @@ var (
 		vsphereInfrastructure,
 		wardenInfrastructure,
 	}
+	resoluteInfrastructures = Infrastructures{
+		awsInfrastructure,
+		googleInfrastructure,
+		azureInfrastructure,
+		alicloudInfrastructure,
+		openstackInfrastructure,
+		vsphereInfrastructure,
+		wardenInfrastructure,
+	}
 )
