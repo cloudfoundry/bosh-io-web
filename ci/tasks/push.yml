@@ -14,3 +14,4 @@ params:
   CF_SPACE:
   WEB_CONFIG:
   PRIVATE_KEY:
+  GIT_CLONE_KEY:

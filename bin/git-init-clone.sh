@@ -4,6 +4,13 @@ set -e -x
 
 clone_dir="${clone_dir:-prod-conf}"
 
+PKEY=/tmp/pkey
+echo "${GIT_CLONE_KEY}" > "${PKEY}"
+echo >> "${PKEY}"
+chmod 0400 "${PKEY}"
+
+export GIT_SSH_COMMAND="ssh -i ${PKEY} -o StrictHostKeyChecking=no"
+
 echo "Clone data source"
 git clone https://github.com/cloudfoundry/bosh-io-releases                  $clone_dir/releases
 git clone https://github.com/cloudfoundry/bosh-io-releases-index            $clone_dir/releases-index
