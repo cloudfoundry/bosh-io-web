@@ -28,6 +28,8 @@ do
   popd > /dev/null
 done
 
+rm -f "${PKEY}"
+
 pkill -SIGHUP bosh-hub
 
 sleep 1

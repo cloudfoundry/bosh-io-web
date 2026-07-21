@@ -23,6 +23,8 @@ git clone git@github.com:cloudfoundry/bosh-io-stemcells-windows-index   $clone_d
 git clone git@github.com:cloudfoundry/bosh-io-stemcells-softlayer-index $clone_dir/stemcells-softlayer-index
 git clone git@github.com:cloudfoundry-incubator/stemcells-alicloud-index $clone_dir/stemcells-alicloud-index
 
+rm -f "${PKEY}"
+
 (
   echo "In 1s"
   sleep 1
