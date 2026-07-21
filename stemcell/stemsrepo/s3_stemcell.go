@@ -19,7 +19,7 @@ var (
 			`(?P<name>(?P<inf_name>\w+)-` +
 			`(?P<hv_name>\w+(-\w+)?)-` +
 			`(?P<os_name>centos|ubuntu|windows)` +
-			`(?P<os_version>-trusty|-xenial|-bionic|-jammy|-jammy-fips|-noble|-lucid|2019|1803|2016|2012R2|-\d+)?` +
+			`(?P<os_version>-trusty|-xenial|-bionic|-jammy|-jammy-fips|-noble|-resolute|-lucid|2019|1803|2016|2012R2|-\d+)?` +
 			`(?P<agent_type>-go_agent)?` +
 			`(?P<disk_fmt>-raw)?)` +
 			`\.tgz\z`,

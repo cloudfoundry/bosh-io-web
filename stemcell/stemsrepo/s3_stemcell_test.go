@@ -283,6 +283,20 @@ var _ = Describe("NewS3Stemcell", func() {
 
 			AgentType: "",
 		},
+
+		// Ubuntu resolute
+		"aws/bosh-stemcell-0.59-aws-xen-hvm-ubuntu-resolute.tgz": ExtractedPieces{
+			Name:    "bosh-aws-xen-hvm-ubuntu-resolute",
+			Version: "0.59",
+
+			InfName: "aws",
+			HvName:  "xen-hvm",
+
+			OSName:    "ubuntu",
+			OSVersion: "resolute",
+
+			AgentType: "",
+		},
 	}
 
 	for p, e := range examples {
