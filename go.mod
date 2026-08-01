@@ -20,7 +20,7 @@ require (
 )
 
 require (
-	code.cloudfoundry.org/clock v1.80.0 // indirect
+	code.cloudfoundry.org/clock v1.81.0 // indirect
 	code.cloudfoundry.org/tlsconfig v0.53.0 // indirect
 	github.com/BurntSushi/toml v1.6.0 // indirect
 	github.com/Masterminds/semver/v3 v3.5.0 // indirect
@@ -45,10 +45,10 @@ require (
 	github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c // indirect
 	github.com/pivotal/go-smtpd v0.0.0-20140108210614-0af6982457e5 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	go.yaml.in/yaml/v3 v3.0.4 // indirect
+	go.yaml.in/yaml/v3 v3.0.5 // indirect
 	go4.org/netipx v0.0.0-20231129151722-fdeea329fbba // indirect
 	golang.org/x/crypto v0.54.0 // indirect
-	golang.org/x/exp/typeparams v0.0.0-20260718201538-764159d718ef // indirect
+	golang.org/x/exp/typeparams v0.0.0-20260727155853-b88d891fe743 // indirect
 	golang.org/x/mod v0.38.0 // indirect
 	golang.org/x/net v0.57.0 // indirect
 	golang.org/x/sync v0.22.0 // indirect
