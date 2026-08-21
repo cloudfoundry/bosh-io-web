@@ -20,7 +20,7 @@ jobs:
       CF_API:  https://api.de.a9s.eu
       CF_USERNAME: ((boshio_cf_user.username))
       CF_PASSWORD: ((boshio_cf_user.password))
-      CF_ORGANIZATION: sgreenberg_rscale_io
+      CF_ORGANIZATION: cclark_cloudfoundry_org
       CF_SPACE: boshio
       WEB_CONFIG: ((web_config))
       GIT_CLONE_KEY: ((bosh_admin_bot_github_ssh_key.private_key))
@@ -67,7 +67,7 @@ jobs:
       CF_API: https://api.de.a9s.eu
       CF_USERNAME: ((boshio_cf_user.username))
       CF_PASSWORD: ((boshio_cf_user.password))
-      CF_ORGANIZATION: sgreenberg_rscale_io
+      CF_ORGANIZATION: cclark_cloudfoundry_org
       CF_SPACE: boshio
 - name: bump-deps
   plan:
