@@ -22,6 +22,7 @@ type Stemcell struct {
 
 	OSName    string
 	OSVersion string
+	Variant   string
 
 	RegularSource *StemcellSource
 	LightSource   *StemcellSource
@@ -37,6 +38,7 @@ type StemcellSource struct {
 	friendlyName       string
 	infrastructureName string
 	hypervisorName     string
+	variantTitle       string
 	linkName           string
 
 	isLight    bool
@@ -63,6 +65,12 @@ type stemcellAPIRecord struct {
 	LightChina *StemcellSource `json:"light_china,omitempty"`
 }
 
+// Display titles for the stemcell name suffixes that denote a build variant of
+// an otherwise identical OS version. An unknown variant renders undecorated.
+var variantTitles = map[string]string{
+	"rosetta": "Rosetta",
+}
+
 type StemcellManifestNameSorting []Stemcell
 
 type StemcellVersionSorting []Stemcell
@@ -76,6 +84,7 @@ func NewStemcell(s bhstemsrepo.Stemcell) Stemcell {
 
 		OSName:    s.OSName(),
 		OSVersion: s.OSVersion(),
+		Variant:   s.Variant(),
 	}
 
 	stemcell.AddAsSource(s)
@@ -120,10 +129,21 @@ func (s *Stemcell) AddAsSource(s_ bhstemsrepo.Stemcell) {
 		linkName = fmt.Sprintf("%s (%s)", linkName, s_.DiskFormat())
 	}
 
+	// A variant shares its distro's OS version, so the infrastructure column is
+	// where it has to be distinguishable from the plain stemcell alongside it.
+	variantTitle := variantTitles[s_.Variant()]
+
+	optionalVariant := ""
+	if len(variantTitle) > 0 {
+		optionalVariant = fmt.Sprintf(" %s", variantTitle)
+		linkName = fmt.Sprintf("%s %s", variantTitle, linkName)
+	}
+
 	source := &StemcellSource{
-		friendlyName:       fmt.Sprintf("%s %s%s%s", infName, hvName, optionalDiskFormat, optionalLight),
+		friendlyName:       fmt.Sprintf("%s %s%s%s%s", infName, hvName, optionalVariant, optionalDiskFormat, optionalLight),
 		infrastructureName: infNameFull,
 		hypervisorName:     hvName,
+		variantTitle:       variantTitle,
 		linkName:           linkName,
 
 		URL:    s_.URL(),
@@ -242,10 +262,16 @@ func (s Stemcell) AllVersionsURL() string { return fmt.Sprintf("/stemcells/%s", 
 
 func (s StemcellSource) UserVisibleDownloadURL() string { return s.URL }
 func (s StemcellSource) FriendlyName() string           { return s.friendlyName }
-func (s StemcellSource) InfrastructureName() string     { return s.infrastructureName }
-func (s StemcellSource) HypervisorName() string         { return s.hypervisorName }
-func (s StemcellSource) FormattedSize() string          { return humanize.Bytes(s.Size) }
-func (s StemcellSource) LinkName() string               { return s.linkName }
+func (s StemcellSource) InfrastructureName() string {
+	if len(s.variantTitle) > 0 {
+		return fmt.Sprintf("%s — %s", s.infrastructureName, s.variantTitle)
+	}
+
+	return s.infrastructureName
+}
+func (s StemcellSource) HypervisorName() string { return s.hypervisorName }
+func (s StemcellSource) FormattedSize() string  { return humanize.Bytes(s.Size) }
+func (s StemcellSource) LinkName() string       { return s.linkName }
 func (s StemcellSource) Ignored() bool {
 	return s.infrastructureName == "Amazon Web Services" && s.hypervisorName == "Xen"
 }

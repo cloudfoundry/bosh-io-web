@@ -20,6 +20,8 @@ var _ = Describe("NewS3Stemcell", func() {
 
 		OSName    string
 		OSVersion string
+		Variant   string
+		Hidden    bool
 
 		AgentType string
 	}
@@ -297,6 +299,38 @@ var _ = Describe("NewS3Stemcell", func() {
 
 			AgentType: "",
 		},
+
+		// Ubuntu resolute, rosetta variant (arm64 bosh-lite on Apple Silicon).
+		// The variant is part of the name but not of the OS version.
+		"warden/bosh-stemcell-0.59-warden-boshlite-ubuntu-resolute-rosetta.tgz": ExtractedPieces{
+			Name:    "bosh-warden-boshlite-ubuntu-resolute-rosetta",
+			Version: "0.59",
+
+			InfName: "warden",
+			HvName:  "boshlite",
+
+			OSName:    "ubuntu",
+			OSVersion: "resolute",
+			Variant:   "rosetta",
+
+			AgentType: "",
+		},
+
+		// Ubuntu jammy, fips variant
+		"aws/light-bosh-stemcell-1.719-aws-xen-hvm-ubuntu-jammy-fips-go_agent.tgz": ExtractedPieces{
+			Name:    "bosh-aws-xen-hvm-ubuntu-jammy-fips-go_agent",
+			Version: "1.719",
+
+			InfName: "aws",
+			HvName:  "xen-hvm",
+
+			OSName:    "ubuntu",
+			OSVersion: "jammy",
+			Variant:   "fips",
+			Hidden:    true,
+
+			AgentType: "go",
+		},
 	}
 
 	for p, e := range examples {
@@ -316,6 +350,8 @@ var _ = Describe("NewS3Stemcell", func() {
 
 			Expect(s3Stemcell.OSName()).To(Equal(example.OSName))
 			Expect(s3Stemcell.OSVersion()).To(Equal(example.OSVersion))
+			Expect(s3Stemcell.Variant()).To(Equal(example.Variant))
+			Expect(s3Stemcell.IsHidden()).To(Equal(example.Hidden))
 
 			Expect(s3Stemcell.AgentType()).To(Equal(example.AgentType))
 		})

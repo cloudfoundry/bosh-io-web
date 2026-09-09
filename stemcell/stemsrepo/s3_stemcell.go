@@ -19,11 +19,18 @@ var (
 			`(?P<name>(?P<inf_name>\w+)-` +
 			`(?P<hv_name>\w+(-\w+)?)-` +
 			`(?P<os_name>centos|ubuntu|windows)` +
-			`(?P<os_version>-trusty|-xenial|-bionic|-jammy|-jammy-fips|-noble|-resolute|-lucid|2019|1803|2016|2012R2|-\d+)?` +
+			`(?P<os_version>-trusty|-xenial|-bionic|-jammy|-noble|-resolute|-lucid|2019|1803|2016|2012R2|-\d+)?` +
+			`(?P<variant>-fips|-rosetta)?` +
 			`(?P<agent_type>-go_agent)?` +
 			`(?P<disk_fmt>-raw)?)` +
 			`\.tgz\z`,
 	)
+
+	// Variants whose tarballs are not distributed
+	hiddenVariants = map[string]struct{}{
+		"fips": {},
+	}
+
 	// Previous verisons derived checksums from other locations instead of DB
 	minLinuxChecksumedVersion, _   = semiver.NewVersionFromString("3262.2") //nolint:errcheck
 	minWindowsChecksumedVersion, _ = semiver.NewVersionFromString("1079.0") //nolint:errcheck
@@ -49,6 +56,7 @@ type S3Stemcell struct {
 
 	osName    string // e.g. Ubuntu
 	osVersion string // e.g. Trusty
+	variant   string // e.g. fips, rosetta
 
 	agentType string // e.g. Go
 
@@ -67,12 +75,19 @@ func NewS3Stemcell(key, etag, sha1 string, sha256 string, size uint64, lastModif
 		return nil
 	}
 
-	var osName, osVersion, agentType string
+	var osName, osVersion, variant, agentType string
 
 	osName = m["os_name"]
 
 	if len(m["os_version"]) > 0 {
 		osVersion = strings.Trim(m["os_version"], "-")
+	}
+
+	// The variant is part of the stemcell name but not of the OS: a fips or
+	// rosetta stemcell still reports `operating_system: ubuntu-<version>` in its
+	// manifest, so keep it out of osVersion.
+	if len(m["variant"]) > 0 {
+		variant = strings.Trim(m["variant"], "-")
 	}
 
 	if len(m["agent_type"]) > 0 {
@@ -115,6 +130,7 @@ func NewS3Stemcell(key, etag, sha1 string, sha256 string, size uint64, lastModif
 
 		osName:    osName,
 		osVersion: osVersion,
+		variant:   variant,
 
 		agentType: strings.Replace(agentType, "_agent", "", 1),
 
@@ -140,6 +156,7 @@ func (f S3Stemcell) DiskFormat() string { return f.diskFormat }
 
 func (f S3Stemcell) OSName() string    { return f.osName }
 func (f S3Stemcell) OSVersion() string { return f.osVersion }
+func (f S3Stemcell) Variant() string   { return f.variant }
 
 func (f S3Stemcell) AgentType() string { return f.agentType }
 
@@ -158,6 +175,11 @@ func (f S3Stemcell) IsDeprecated() bool {
 	}
 
 	return f.osVersion == "lucid" || f.agentType == "ruby"
+}
+
+func (f S3Stemcell) IsHidden() bool {
+	_, found := hiddenVariants[f.variant]
+	return found
 }
 
 func (f S3Stemcell) URL() string { return f.url }
