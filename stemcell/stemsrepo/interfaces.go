@@ -23,6 +23,9 @@ type Stemcell interface {
 
 	OSName() string    // e.g. Ubuntu
 	OSVersion() string // e.g. Trusty
+	Variant() string   // e.g. fips, rosetta; empty for a plain stemcell
+
+	IsHidden() bool // variant is not publicly downloadable; omit it entirely
 
 	IsLight() bool
 	IsForChina() bool
