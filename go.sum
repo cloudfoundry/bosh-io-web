@@ -26,8 +26,8 @@ github.com/cloudfoundry/go-socks5 v0.0.0-20250423223041-4ad5fea42851 h1:oy59UYcs
 github.com/cloudfoundry/go-socks5 v0.0.0-20250423223041-4ad5fea42851/go.mod h1:72EEm1oq5oXqGfu9XGtaRPWEcAFYd/P10cMNln0QhA8=
 github.com/cloudfoundry/gosigar v1.3.127 h1:mdZkHWX+RO3zxMDFmXbs5COMf4EUKiOlfeDjrHiRs+U=
 github.com/cloudfoundry/gosigar v1.3.127/go.mod h1:+3ttPxt6o4khhx/B4iMKlXTwAzDqvasCNRk3WVEQ4Z4=
-github.com/cloudfoundry/socks5-proxy v0.2.188 h1:EDZcnN6LlWaKuAcn2ydLB4eCZtv7waXM+qMthEEwFQs=
-github.com/cloudfoundry/socks5-proxy v0.2.188/go.mod h1:f2gssQrrbrfdD5SrHSRREhtAqI60E215AaAJWktovRM=
+github.com/cloudfoundry/socks5-proxy v0.2.189 h1:2YPLhKLjXTlAaDXRm9FKiFpBAx37Y2r3pkAbOeQOhc0=
+github.com/cloudfoundry/socks5-proxy v0.2.189/go.mod h1:VoEL9xD0DAEVY2hBBPVr9FKF/vlHZMu2edUggfX6ZcM=
 github.com/codegangsta/inject v0.0.0-20150114235600-33e0aa1cb7c0 h1:sDMmm+q/3+BukdIpxwO365v/Rbspp2Nt5XntgQRXq8Q=
 github.com/codegangsta/inject v0.0.0-20150114235600-33e0aa1cb7c0/go.mod h1:4Zcjuz89kmFXt9morQgcfYZAYZ5n8WHjt81YYWIwtTM=
 github.com/cppforlife/go-semi-semantic v0.0.0-20160921010311-576b6af77ae4 h1:J+ghqo7ZubTzelkjo9hntpTtP/9lUCWH9icEmAW+B+Q=
@@ -35,8 +35,8 @@ github.com/cppforlife/go-semi-semantic v0.0.0-20160921010311-576b6af77ae4/go.mod
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/dpb587/metalink v0.5.0 h1:Y0YVluDXVfyvg01O9aDYTN6Pmscnq/p/a1TwRAVwnRU=
 github.com/dpb587/metalink v0.5.0/go.mod h1:hZo9TKJ4VSGjB4BjBGoM6gMCv5sS0TCEeNYm7pkcv3Q=
-github.com/dustin/go-humanize v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=
-github.com/dustin/go-humanize v1.0.1/go.mod h1:Mu1zIs6XwVuF/gI1OepvI0qD18qycQx+mFykh5fBlto=
+github.com/dustin/go-humanize v1.1.0 h1:dbKTrvD0klcbBV/h4AWJdMuZogJACoMlvWIWZ5b2xWg=
+github.com/dustin/go-humanize v1.1.0/go.mod h1:hc1CvRkJMsgxqjmjMQF3QNRAZBwY8AXBAzKYoSX9sFI=
 github.com/fsnotify/fsnotify v1.8.0 h1:dAwr6QBTBZIkG8roQaJjGof0pp0EeF+tNV7YBP3F/8M=
 github.com/fsnotify/fsnotify v1.8.0/go.mod h1:8jBTzvmWwFyi3Pb8djgCCO5IBqzKJ/Jwo8TRcHyHii0=
 github.com/gkampitakis/ciinfo v0.3.2 h1:JcuOPk8ZU7nZQjdUhctuhQofk7BGHuIy0c9Ez8BNhXs=
