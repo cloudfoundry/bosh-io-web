@@ -129,6 +129,9 @@
 /docs/terminology.html: /docs/terminology/
 /docs/tips.html: /docs/tips/
 /docs/trusted-certs.html: /docs/trusted-certs/
+/docs/ubuntu-os.html: &ubuntu-os /docs/stemcell-lines/
+/docs/ubuntu-os/: *ubuntu-os
+/docs/ubuntu-os: *ubuntu-os
 /docs/understanding-bosh.html: /docs/understanding-bosh/
 /docs/update-cloud-config.html: /docs/update-cloud-config/
 /docs/uploading-releases.html: /docs/uploading-releases/
@@ -147,5 +150,8 @@
 /docs/vsphere-network-partition.html: /docs/vsphere-network-partition/
 /docs/vsphere-vmotion-support.html: /docs/vsphere-vmotion-support/
 /docs/warden-cpi.html: /docs/warden-cpi/
+/docs/windows-os.html: &windows-os /docs/stemcell-lines/
+/docs/windows-os/: *windows-os
+/docs/windows-os: *windows-os
 /docs/windows-sample-release.html: /docs/windows-sample-release/
 /docs/windows.html: /docs/windows/
