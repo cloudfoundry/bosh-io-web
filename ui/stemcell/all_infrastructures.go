@@ -85,6 +85,16 @@ var (
 			},
 		},
 	}
+	ociInfrastructure = Infrastructure{
+		Name:             "oci",
+		Title:            "OCI Container Image",
+		DocumentationURL: "/docs/bosh-lite/",
+		SupportedHypervisors: InfrastructureHypervisors{
+			{
+				Hypervisor: containerHypervisor,
+			},
+		},
+	}
 	alicloudInfrastructure = Infrastructure{
 		Name:             "alicloud",
 		Title:            "Alibaba Cloud",
@@ -108,7 +118,7 @@ var (
 		vsphereInfrastructure,
 		wardenInfrastructure,
 	}
-	allInfrastructures = Infrastructures{
+	jammyInfrastructures = Infrastructures{
 		awsInfrastructure,
 		googleInfrastructure,
 		azureInfrastructure,
@@ -119,6 +129,7 @@ var (
 		vsphereInfrastructure,
 		wardenInfrastructure,
 	}
+	allInfrastructures   = append(jammyInfrastructures, ociInfrastructure)
 	nobleInfrastructures = Infrastructures{
 		awsInfrastructure,
 		googleInfrastructure,
@@ -135,6 +146,6 @@ var (
 		alicloudInfrastructure,
 		openstackInfrastructure,
 		vsphereInfrastructure,
-		wardenInfrastructure,
+		ociInfrastructure,
 	}
 )

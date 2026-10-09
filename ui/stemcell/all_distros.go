@@ -35,7 +35,7 @@ var (
 			{OSName: "ubuntu", OSVersion: "jammy"},
 		},
 
-		SupportedInfrastructures: allInfrastructures,
+		SupportedInfrastructures: jammyInfrastructures,
 
 		Sort: 3,
 	}

@@ -68,7 +68,7 @@ type stemcellAPIRecord struct {
 // Display titles for the stemcell name suffixes that denote a build variant of
 // an otherwise identical OS version. An unknown variant renders undecorated.
 var variantTitles = map[string]string{
-	"rosetta": "Rosetta",
+	"rosetta": "rosetta",
 }
 
 type StemcellManifestNameSorting []Stemcell
@@ -264,7 +264,7 @@ func (s StemcellSource) UserVisibleDownloadURL() string { return s.URL }
 func (s StemcellSource) FriendlyName() string           { return s.friendlyName }
 func (s StemcellSource) InfrastructureName() string {
 	if len(s.variantTitle) > 0 {
-		return fmt.Sprintf("%s — %s", s.infrastructureName, s.variantTitle)
+		return fmt.Sprintf("%s (%s)", s.infrastructureName, s.variantTitle)
 	}
 
 	return s.infrastructureName

@@ -25,6 +25,10 @@ var (
 		Name:  "boshlite",
 		Title: "BOSH Lite",
 	}
+	containerHypervisor = Hypervisor{
+		Name:  "container",
+		Title: "Container",
+	}
 )
 var (
 	allHypervisors = Hypervisors{
@@ -34,5 +38,6 @@ var (
 		kvmHypervisor,
 		hypervHypervisor,
 		boshliteHypervisor,
+		containerHypervisor,
 	}
 )
