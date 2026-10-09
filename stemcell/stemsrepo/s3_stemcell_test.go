@@ -18,10 +18,11 @@ var _ = Describe("NewS3Stemcell", func() {
 		HvName     string
 		DiskFormat string
 
-		OSName    string
-		OSVersion string
-		Variant   string
-		Hidden    bool
+		OSName     string
+		OSVersion  string
+		Variant    string
+		Hidden     bool
+		Superseded bool
 
 		AgentType string
 	}
@@ -309,6 +310,48 @@ var _ = Describe("NewS3Stemcell", func() {
 			InfName: "warden",
 			HvName:  "boshlite",
 
+			OSName:     "ubuntu",
+			OSVersion:  "resolute",
+			Variant:    "rosetta",
+			Superseded: true,
+
+			AgentType: "",
+		},
+
+		"warden/bosh-stemcell-0.59-warden-boshlite-ubuntu-resolute.tgz": ExtractedPieces{
+			Name:    "bosh-warden-boshlite-ubuntu-resolute",
+			Version: "0.59",
+
+			InfName: "warden",
+			HvName:  "boshlite",
+
+			OSName:     "ubuntu",
+			OSVersion:  "resolute",
+			Superseded: true,
+
+			AgentType: "",
+		},
+
+		"oci/bosh-stemcell-0.190-oci-container-ubuntu-resolute.tgz": ExtractedPieces{
+			Name:    "bosh-oci-container-ubuntu-resolute",
+			Version: "0.190",
+
+			InfName: "oci",
+			HvName:  "container",
+
+			OSName:    "ubuntu",
+			OSVersion: "resolute",
+
+			AgentType: "",
+		},
+
+		"oci/bosh-stemcell-0.190-oci-container-ubuntu-resolute-rosetta.tgz": ExtractedPieces{
+			Name:    "bosh-oci-container-ubuntu-resolute-rosetta",
+			Version: "0.190",
+
+			InfName: "oci",
+			HvName:  "container",
+
 			OSName:    "ubuntu",
 			OSVersion: "resolute",
 			Variant:   "rosetta",
@@ -352,6 +395,7 @@ var _ = Describe("NewS3Stemcell", func() {
 			Expect(s3Stemcell.OSVersion()).To(Equal(example.OSVersion))
 			Expect(s3Stemcell.Variant()).To(Equal(example.Variant))
 			Expect(s3Stemcell.IsHidden()).To(Equal(example.Hidden))
+			Expect(s3Stemcell.IsSuperseded()).To(Equal(example.Superseded))
 
 			Expect(s3Stemcell.AgentType()).To(Equal(example.AgentType))
 		})
