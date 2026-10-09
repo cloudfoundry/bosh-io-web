@@ -31,6 +31,12 @@ var (
 		"fips": {},
 	}
 
+	// Renamed stemcells that still have published versions
+	supersededNames = map[string]struct{}{
+		"bosh-warden-boshlite-ubuntu-resolute":         {},
+		"bosh-warden-boshlite-ubuntu-resolute-rosetta": {},
+	}
+
 	// Previous verisons derived checksums from other locations instead of DB
 	minLinuxChecksumedVersion, _   = semiver.NewVersionFromString("3262.2") //nolint:errcheck
 	minWindowsChecksumedVersion, _ = semiver.NewVersionFromString("1079.0") //nolint:errcheck
@@ -179,6 +185,11 @@ func (f S3Stemcell) IsDeprecated() bool {
 
 func (f S3Stemcell) IsHidden() bool {
 	_, found := hiddenVariants[f.variant]
+	return found
+}
+
+func (f S3Stemcell) IsSuperseded() bool {
+	_, found := supersededNames[f.name]
 	return found
 }
 

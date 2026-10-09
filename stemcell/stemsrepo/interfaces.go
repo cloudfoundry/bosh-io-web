@@ -25,7 +25,8 @@ type Stemcell interface {
 	OSVersion() string // e.g. Trusty
 	Variant() string   // e.g. fips, rosetta; empty for a plain stemcell
 
-	IsHidden() bool // variant is not publicly downloadable; omit it entirely
+	IsHidden() bool     // variant is not publicly downloadable; omit it entirely
+	IsSuperseded() bool // renamed; omit it from the latest versions listing
 
 	IsLight() bool
 	IsForChina() bool

@@ -25,6 +25,10 @@ func NewDistroGroups(ss []bhstemsrepo.Stemcell, filter StemcellFilter) DistroGro
 	}
 
 	for _, s := range ss {
+		if !filter.ShowingAllVersions() && s.IsSuperseded() {
+			continue
+		}
+
 		for i, g := range groups {
 			if g.Distro.Matches(s) {
 				groups[i].ss = append(groups[i].ss, s)
