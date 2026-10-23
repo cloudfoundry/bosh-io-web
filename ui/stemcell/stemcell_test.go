@@ -22,6 +22,7 @@ var _ = Describe("Stemcell", func() {
 		Entry("oci-container", "oci/bosh-stemcell-0.190-oci-container-ubuntu-resolute.tgz", "OCI Container Image"),
 		Entry("oci-container rosetta", "oci/bosh-stemcell-0.190-oci-container-ubuntu-resolute-rosetta.tgz", "OCI Container Image (rosetta)"),
 		Entry("warden-boshlite", "warden/bosh-stemcell-1.900-warden-boshlite-ubuntu-noble.tgz", "Warden (BOSH Lite)"),
+		Entry("gdch-kvm", "gdch/bosh-stemcell-1.900-gdch-kvm-ubuntu-noble.tgz", "Google Distributed Cloud"),
 	)
 })
 
