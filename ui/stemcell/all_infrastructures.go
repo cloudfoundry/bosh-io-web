@@ -25,6 +25,16 @@ var (
 			},
 		},
 	}
+	gdchInfrastructure = Infrastructure{
+		Name:             "gdch",
+		Title:            "Google Distributed Cloud",
+		DocumentationURL: "/docs/gdc-cpi/",
+		SupportedHypervisors: InfrastructureHypervisors{
+			{
+				Hypervisor: kvmHypervisor,
+			},
+		},
+	}
 	azureInfrastructure = Infrastructure{
 		Name:             "azure",
 		Title:            "Microsoft Azure",
@@ -129,10 +139,11 @@ var (
 		vsphereInfrastructure,
 		wardenInfrastructure,
 	}
-	allInfrastructures   = append(jammyInfrastructures, ociInfrastructure)
+	allInfrastructures   = append(jammyInfrastructures, ociInfrastructure, gdchInfrastructure)
 	nobleInfrastructures = Infrastructures{
 		awsInfrastructure,
 		googleInfrastructure,
+		gdchInfrastructure,
 		azureInfrastructure,
 		alicloudInfrastructure,
 		openstackInfrastructure,
