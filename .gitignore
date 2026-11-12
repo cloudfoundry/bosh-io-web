@@ -1,14 +1,9 @@
 *.DS_Store
-*.sublime-project
-*.sublime-workspace
 .vscode
+.idea
 
 out/
 
-*.gem
-*.tgz
-
-*~
 
 # Ignore binaries
 bosh-hub
