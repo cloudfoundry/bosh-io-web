@@ -23,14 +23,23 @@ echo "Pushing to cf"
 if cf app $new; then echo "$new must not exist"; exit 1; fi
 if cf app $old; then echo "$old must not exist"; exit 1; fi
 
+delete_new() {
+  echo "Deploy failed; removing $new"
+  cf logs $new --recent || true
+  cf delete -f $new
+}
+trap delete_new EXIT
+
 echo "Pushing new version"
-cf push $new -i 10 -k 2G -m 1G -b binary_buildpack -c './run.sh' --no-start
+cf push $new -i 10 -k 2G -m 1G -b binary_buildpack -c './run.sh' -t 180 --no-start
 cf set-env $new GIT_CLONE_KEY "${GIT_CLONE_KEY}"
 cf start $new
 rm prod-conf/web.json
 
 echo "Testing new version"
 ./bin/test-server "https://$new.de.a9sapp.eu"
+
+trap - EXIT
 
 echo "Mapping routes to new version"
 cf unmap-route $new de.a9sapp.eu -n $new
