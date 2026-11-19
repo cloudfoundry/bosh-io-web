@@ -12,6 +12,8 @@ bosh.io exposes a simple read-only JSON API for querying stemcells and releases.
 
 Returns a list of versions for a given stemcell name, sorted from latest to oldest.
 
+Only stemcells of distros listed on the bosh.io website are served. Stemcells of retired distros are treated as not found.
+
 ```
 GET /api/v1/stemcells/{name}
 ```
@@ -26,11 +28,11 @@ GET /api/v1/stemcells/{name}
 
 | Parameter | Description |
 |-----------|-------------|
-| `all` | Set to `1` or `true` to include all versions. By default only the latest unique versions are returned. |
+| `all` | Set to `1` or `true` to include all versions. By default only the latest unique versions are returned. This expands version history only for listed distros; retired distros still return `[]`. |
 
 **Response**
 
-`200 OK` — JSON array of stemcell objects. The first element is the latest version. Returns an empty array `[]` when no stemcells are found.
+`200 OK` — JSON array of stemcell objects. The first element is the latest version. Returns an empty array `[]` when no stemcells are found, including for stemcells of retired distros.
 
 ```json
 [
@@ -98,6 +100,8 @@ curl "https://bosh.io/api/v1/stemcells/bosh-aws-xen-hvm-ubuntu-jammy-go_agent" |
 
 Redirects to the actual stemcell tarball download URL. When no version is specified, redirects to the latest version.
 
+Only stemcells of distros listed on the bosh.io website can be downloaded (see [List stemcell versions](#list-stemcell-versions)). Requests for retired distros return `404`, with or without a pinned `v` version.
+
 ```
 GET /d/stemcells/{name}
 ```
@@ -125,7 +129,7 @@ GET /d/stemcells/{name}
 | Status | Description |
 |--------|-------------|
 | `400` | Invalid request parameters (for example, an empty stemcell name or an invalid `v` version string) |
-| `404` | Stemcell or requested version not found |
+| `404` | Stemcell or requested version not found, or the stemcell belongs to a retired distro |
 | `500` | Internal server error |
 
 **Examples**
