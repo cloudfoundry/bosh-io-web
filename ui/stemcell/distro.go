@@ -46,6 +46,17 @@ func (d Distro) Matches(s bhstemsrepo.Stemcell) bool {
 	return false
 }
 
+// IsListedDistro reports whether s belongs to a distro shown on the website (allDistros).
+func IsListedDistro(s bhstemsrepo.Stemcell) bool {
+	for _, distro := range allDistros {
+		if distro.Matches(s) {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (m StemcellOSMatch) Matches(s bhstemsrepo.Stemcell) bool {
 	return s.OSName() == m.OSName && s.OSVersion() == m.OSVersion
 }

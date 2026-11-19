@@ -87,7 +87,7 @@ func (c StemcellsController) Download(req *http.Request, r martrend.Render, para
 
 	// List of versions for the specific stemcell name
 	// todo really filtering below should be part of the repo instead of ui
-	uniqVerStems := bhstemui.NewUniqueVersionStemcells(stemcells, filter)
+	uniqVerStems := bhstemui.NewUniqueVersionStemcells(listedStemcells(stemcells), filter)
 
 	sortedStemcells := uniqVerStems.ForAPI()
 
@@ -149,6 +149,16 @@ func (c StemcellsController) isParamTrue(s string) bool {
 	return s == "1" || s == "true" || s == "t"
 }
 
+func listedStemcells(stemcells []bhstemsrepo.Stemcell) []bhstemsrepo.Stemcell {
+	listed := make([]bhstemsrepo.Stemcell, 0, len(stemcells))
+	for _, stemcell := range stemcells {
+		if bhstemui.IsListedDistro(stemcell) {
+			listed = append(listed, stemcell)
+		}
+	}
+	return listed
+}
+
 func (c StemcellsController) APIV1Index(req *http.Request, r martrend.Render, params mart.Params) {
 	filter := bhstemui.StemcellFilter{
 		Name:       params["_1"],
@@ -167,7 +177,7 @@ func (c StemcellsController) APIV1Index(req *http.Request, r martrend.Render, pa
 	}
 
 	// Show list of latest versions for the specific stemcell name
-	uniqVerStems := bhstemui.NewUniqueVersionStemcells(stemcells, filter)
+	uniqVerStems := bhstemui.NewUniqueVersionStemcells(listedStemcells(stemcells), filter)
 
 	r.JSON(200, uniqVerStems.ForAPI())
 }
